@@ -4,7 +4,7 @@ export PATH=/usr/local/sbin:/usr/local/Cellar:$PATH
 alias python='python3'
 #alias vim='nvim'
 alias showp='echo $PATH | tr -s ":" "\n"'
-alias zconfig='vim ~/.zshrc'
+alias configz='vim ~/.zshrc'
 alias nconfig='nvim ~/.config/nvim/init.vim'
 
 eval $( gdircolors -b $HOME/LS_COLORS )
@@ -107,12 +107,19 @@ source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# fd - cd to selected directory
+# fds - cd to selected directory
 fds() {
   local dir
   dir=$(find ${1:-.} -path '*/\.*' -prune \
 				  -o -type d -print 2> /dev/null | fzf +m) &&
   cd "$dir"
+}
+
+ff() {
+  local file
+  file=$(find ${1:-.} -path '*/\.*' -prune \
+                                  -o -type f -print 2> /dev/null | fzf --preview 'bat -p --color always {}' +m) &&
+  vim "$file"
 }
 
 # fh - search in your command history and execute selected command
