@@ -5,6 +5,7 @@ let mapleader = ","
 imap <leader>jj <Esc>
 imap <leader>ww <Esc>:w<CR>
 imap <leader>wq <Esc>:wq<CR>
+inoremap { {<CR>}<Esc>ko	
 
 " ==== Vim Drops
 filetype plugin on
@@ -24,9 +25,11 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'tpope/vim-surround'
+Plugin 'junegunn/goyo.vim'
 call vundle#end()
 
 " ==== Colors and other basic settings
+set autoindent
 set mouse=a
 nnoremap o o<Esc>
 syntax enable
