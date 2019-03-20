@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-export PATH=/usr/local/sbin:/usr/local/Cellar:$PATH
+export PATH=/usr/local/sbin:/usr/local/Cellar:$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
 
 alias python='python3'
 #alias vim='nvim'
@@ -135,3 +135,5 @@ autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 ### End of Zplugin's installer chunk
 alias config='/usr/bin/git --git-dir=/Users/Kahvi/.cfg/ --work-tree=/Users/Kahvi'
+
+eval $(thefuck --alias)
