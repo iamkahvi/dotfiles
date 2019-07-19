@@ -1,0 +1,13 @@
+{
+    "editor.formatOnPaste": true,
+    "window.zoomLevel": 1,
+    "editor.minimap.enabled": false,
+    "python.pythonPath": "/usr/bin/python3",
+    "workbench.colorTheme": "Atom One Dark",
+    "editor.acceptSuggestionOnEnter": "on",
+    "editor.tabCompletion": "onlySnippets",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "breadcrumbs.enabled": true,
+    "python.dataScience.sendSelectionToInteractiveWindow": false,
+    "files.trimTrailingWhitespace": true,
+}
