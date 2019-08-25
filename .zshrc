@@ -28,11 +28,11 @@ ZSH_THEME=sammy
 plugins=(git colored-man colorize pip python zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
-Preferred editor for local and remote sessions
+# Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
-  export EDITOR='mvim'
+  export EDITOR='nvim'
 fi
 
 # ssh
@@ -61,7 +61,7 @@ fh() {
 }
 
 ### Added by Zplugin's installer
-source '/Users/Kahvi/.zplugin/bin/zplugin.zsh'
+source $HOME/.zplugin/bin/zplugin.zsh
 autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 ### End of Zplugin's installer chunk
