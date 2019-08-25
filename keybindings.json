@@ -1,44 +1,30 @@
-// Place your key bindings in this file to override the defaults
+// Place your key bindings in this file to overwrite the defaults
 [
-    // Toggle between terminal and editor focus
-    { "key": "alt+t", "command": "workbench.action.terminal.focus"},
-    {
-        "key": "alt+t",
-        "command": "workbench.action.focusActiveEditorGroup",
-        "when": "terminalFocus"
-    },
-    {
-        "key": "ctrl+tab",
-        "command": "-workbench.action.quickOpenNavigateNextInEditorPicker",
-        "when": "inEditorsPicker && inQuickOpen"
-    },
-    {
-        "key": "ctrl+space",
-        "command": "editor.action.moveCarretRightAction",
-    },
-    {
-        "key": "ctrl+shift+[",
-        "command": "cursorHome"
-    },
-    {
-        "key": "ctrl+shift+]",
-        "command": "cursorEnd"
-    },
-    {
-        "key": "alt+right",
-        "command": "workbench.action.nextEditor"
-    },
-    {
-        "key": "alt+left",
-        "command": "workbench.action.previousEditor"
-    },
-    {
-        "key": "ctrl+d",
-        "command": "editor.action.copyLinesDownAction"
-    },
-    {
-        "key": "ctrl+e",
-        "command": "editor.action.deleteLines"
-    }
+	{
+		"key": "cmd+k",
+		"command": "-workbench.action.terminal.clear",
+		"when": "terminalFocus"
+	},
+	{
+		"key": "a",
+		"command": "-explorer.newFile",
+		"when": "filesExplorerFocus && !inputFocus"
+	},
+	{
+		"key": "cmd+t",
+		"command": "workbench.action.terminal.focus"
+	},
+	{
+		"key": "cmd+`",
+		"command": "workbench.action.focusPanel",
+		"when": "terminal.Focus"
+	},
+	{
+		"key": "cmd+d",
+		"command": "editor.action.copyLinesDownAction"
+	},
+	{
+		"key": "cmd+e",
+		"command": "editor.action.deleteLines"
+	}
 ]
-    

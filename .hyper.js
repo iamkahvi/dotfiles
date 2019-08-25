@@ -153,7 +153,7 @@ module.exports = {
   //   `project#1.0.1`
   plugins: [
     'hypercwd',
-	'hyper-ayu'
+	'hypersixteen'
   ],
 
   // in development, you can create a directory under
@@ -163,7 +163,8 @@ module.exports = {
 
   keymaps: {
     // Example
-	"pane:close": "ctrl+w",
-	"tab:new": "ctrl+t"
+	"pane:close": "cmd+w",
+	"tab:new": "cmd+t",
+	"pane:next": "alt+cmd+right"
   },
 };
