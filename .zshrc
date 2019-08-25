@@ -19,8 +19,6 @@ eval $( gdircolors -b $HOME/LS_COLORS )
 # Enable extended file globs
 setopt extendedglob
 
-
-
 setopt auto_cd
 setopt no_beep
 setopt correct
