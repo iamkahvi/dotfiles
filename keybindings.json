@@ -1,7 +1,7 @@
 // Place your key bindings in this file to overwrite the defaults
 [
 	{
-		"key": "cmd+k",
+		"key": "ctrl+k",
 		"command": "-workbench.action.terminal.clear",
 		"when": "terminalFocus"
 	},
@@ -11,20 +11,20 @@
 		"when": "filesExplorerFocus && !inputFocus"
 	},
 	{
-		"key": "cmd+t",
+		"key": "ctrl+t",
 		"command": "workbench.action.terminal.focus"
 	},
 	{
-		"key": "cmd+`",
+		"key": "ctrl+`",
 		"command": "workbench.action.focusPanel",
 		"when": "terminal.Focus"
 	},
 	{
-		"key": "cmd+d",
+		"key": "ctrl+d",
 		"command": "editor.action.copyLinesDownAction"
 	},
 	{
-		"key": "cmd+e",
+		"key": "ctrl+e",
 		"command": "editor.action.deleteLines"
 	}
 ]

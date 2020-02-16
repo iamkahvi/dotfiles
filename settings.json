@@ -24,5 +24,6 @@
         "editor.formatOnSave": true
     },
     "workbench.colorTheme": "One Dark Pro",
-    "workbench.activityBar.visible": false
+    "workbench.activityBar.visible": false,
+    "terminal.integrated.shell.linux": "/usr/bin/zsh"
 }

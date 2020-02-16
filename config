@@ -33,18 +33,23 @@ client.urgent               $rd        $rd         $tx
 # For gaps
 for_window [class="^.*"] border pixel 2
 
-#gaps inner 15
-#gaps outer 7
+gaps inner 15
+gaps outer 7
+
+# Network Manager
+exec --no-startup-id nm-applet &
 
 # Lock screen shortcut
 bindsym $mod+x exec i3lock -c 000000
 
 # Setting upt external display
-exec xrandr --output HDMI-1 --right-of eDP-1
-exec xrandr --output HDMI-1 --mode 3840x2160
+# exec xrandr --output HDMI-1 --right-of eDP-1
+# exec xrandr --output HDMI-1 --mode 3840x2160
 
 # Setting background
-exec feh --bg-scale ~/Pictures/full\ \(1\).jpg
+exec feh --bg-scale ~/Documents/wallpaper1.jpg
+
+
 
 # Ctrl for caps lock
 exec setxkbmap -layout us -option ctrl:nocaps
