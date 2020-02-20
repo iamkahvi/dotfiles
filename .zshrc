@@ -4,6 +4,9 @@
 # Adding VSCode
 export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
 
+# Adding pip
+export PATH=$PATH:$HOME/.local/bin
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -67,6 +70,5 @@ autoload -Uz _zplugin
 ### End of Zplugin's installer chunk
 alias config='/usr/bin/git --git-dir=/Users/Kahvi/.cfg/ --work-tree=/Users/Kahvi'
 
-eval $(thefuck --alias)
-source /home/kahvi/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting.git/zsh-syntax-highlighting.zsh
+source /home/kahvi/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 

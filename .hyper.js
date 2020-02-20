@@ -163,8 +163,8 @@ module.exports = {
 
   keymaps: {
     // Example
-	"pane:close": "cmd+w",
-	"tab:new": "cmd+t",
-	"pane:next": "alt+cmd+right"
+	"pane:close": "ctrl+w",
+	"tab:new": "ctrl+t",
+	"pane:next": "alt+ctrl+right"
   },
 };
