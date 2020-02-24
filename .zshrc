@@ -1,11 +1,22 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 # Adding VSCode
 export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
 
 # Adding pip
 export PATH=$PATH:$HOME/.local/bin
+
+# Adding nvm
+export PATH=$PATH:/root/.nvm
+
+# Ruby exports
+export GEM_HOME=$HOME/gems
+export PATH=$HOME/gems/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -14,8 +25,6 @@ alias python='python3'
 alias showp='echo $PATH | tr -s ":" "\n"'
 alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
-
-# eval $( gdircolors -b $HOME/LS_COLORS )
 
 # User Configuration
 
@@ -70,5 +79,4 @@ autoload -Uz _zplugin
 ### End of Zplugin's installer chunk
 alias config='/usr/bin/git --git-dir=/Users/Kahvi/.cfg/ --work-tree=/Users/Kahvi'
 
-source /home/kahvi/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+source $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
