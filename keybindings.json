@@ -26,5 +26,17 @@
 	{
 		"key": "cmd+e",
 		"command": "editor.action.deleteLines"
+	},
+	{
+		"key": "cmd+shift+g",
+		"command": "workbench.view.scm"
+	},
+	{
+		"key": "alt+shift+down",
+		"command": "workbench.action.terminal.focusNextPane"
+	},
+	{
+		"key": "alt+shift+up",
+		"command": "workbench.action.terminal.focusPreviousPane"
 	}
-]
+}

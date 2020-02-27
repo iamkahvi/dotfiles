@@ -4,6 +4,9 @@
 # Adding VSCode
 export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
 
+# Adding Go
+export PATH=$PATH:$HOME/go/bin
+
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 

@@ -24,5 +24,11 @@
         "editor.formatOnSave": true
     },
     "workbench.colorTheme": "One Dark Pro",
-    "workbench.activityBar.visible": false
+    "workbench.activityBar.visible": false,
+    "search.usePCRE2": true,
+    "eslint.enable": false,
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "workbench.sideBar.location": "left"
 }
