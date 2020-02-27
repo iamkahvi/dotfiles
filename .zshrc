@@ -4,8 +4,12 @@
 # Adding VSCode
 export PATH=$PATH:/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin
 
-# Adding Go
-export PATH=$PATH:$HOME/go/bin
+# Adding pip
+export PATH=$PATH:$HOME/.local/bin
+
+# Ruby exports
+export GEM_HOME=$HOME/gems
+export PATH=$HOME/gems/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -14,8 +18,6 @@ alias python='python3'
 alias showp='echo $PATH | tr -s ":" "\n"'
 alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
-
-eval $( gdircolors -b $HOME/LS_COLORS )
 
 # User Configuration
 
@@ -28,7 +30,7 @@ setopt correct
 
 ZSH_THEME=sammy
 
-plugins=(git colored-man colorize pip python zsh-syntax-highlighting)
+plugins=(git colorize pip python)
 source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
@@ -64,10 +66,10 @@ fh() {
 }
 
 ### Added by Zplugin's installer
-source $HOME/.zplugin/bin/zplugin.zsh
+# source $HOME/.zplugin/bin/zplugin.zsh
 autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 ### End of Zplugin's installer chunk
 alias config='/usr/bin/git --git-dir=/Users/Kahvi/.cfg/ --work-tree=/Users/Kahvi'
 
-eval $(thefuck --alias)
+source $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
