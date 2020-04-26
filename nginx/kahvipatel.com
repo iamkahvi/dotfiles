@@ -1,8 +1,5 @@
 server {
 
-	gzip on;
-	gzip_types application/javascript;
-
 	root /var/www/kahvipatel.com/site-build;
 	index index.html index.htm index.nginx-debian.html;
 
