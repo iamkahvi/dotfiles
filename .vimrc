@@ -1,11 +1,16 @@
 filetype off  " required
 set encoding=UTF-8
 
+set hls
+set ic
+set is
+set nu
+set noswf
+
 let mapleader = ","
 imap <leader>jj <Esc>
 imap <leader>ww <Esc>:w<CR>
 imap <leader>wq <Esc>:wq<CR>
-inoremap { {<CR>}<Esc>ko	
 
 " ==== Vim Drops
 filetype plugin on
@@ -29,6 +34,7 @@ Plugin 'vim-scripts/indentpython.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'tpope/vim-surround'
 Plugin 'junegunn/goyo.vim'
+Plugin 'rust-lang/rust.vim'
 call vundle#end()
 
 " ==== Colors and other basic settings
@@ -105,8 +111,33 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+" ==== Rust
+let g:rustfmt_autosave = 1
+
 set undolevels=9001
 " ==== Enable mouse
 " set mouse=a
 " ==== Hide command bar
 set noshowmode
+
+iab retrun   return
+iab rerturn  return
+iab rertrun  return
+iab retnru   return
+iab erturn   return
+iab ertnru   return
+iab thsi     this
+iab fcuntoin function
+iab functoin function
+iab fucntion function
+iab funcotin function
+iab funcoitn function
+iab funciton function
+iab funciotn function
+iab costn    const
+iab conts    const
+iab csont    const
+iab THe      The
+iab THis     This
+iab !+       !=
+iab +>       =>

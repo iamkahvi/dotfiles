@@ -101,6 +101,7 @@ local goright = {x = gw / 2, y = 0, w = gw / 2, h = gh}
 local gobig = {x = 0, y = 0, w = gw, h = gh}
 local gothirdleft = {x = 0, y = 0, w = gw * 0.34, h = gh}
 local gotwothirdsright = {x = gw * 0.34, y = 0, w = gw * 0.66, h = gh}
+local gosmall = {x = gw * 0.35, y = gh * 0.3, w = gw * 0.3, h = gh * 0.35}
 
 local fullApps = {
     "Safari", "Aurora", "Nightly", "Xcode", "Qt Creator", "Google Chrome",
@@ -122,6 +123,7 @@ definitions = {
     h = gridset(goleft),
     l = gridset(goright),
     k = gridset(gobig),
+    i = gridset(gosmall),
 
     -- g = layout2fn,
     u = grid.pushWindowNextScreen,
