@@ -1,1 +1,116 @@
-/Users/Kahvi/Library/Application Support/Code/User/settings.json
+{
+  "atomKeymap.promptV3Features": true,
+  "editor.formatOnPaste": true,
+  "editor.minimap.enabled": false,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.renderWhitespace": "none",
+  "files.associations": {
+    "*.java": "java"
+  },
+  "java.errors.incompleteClasspath.severity": "ignore",
+  "python.pythonPath": "/usr/local/bin/python3",
+  "git.autofetch": true,
+  "window.zoomLevel": 0,
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "files.trimTrailingWhitespace": true,
+  "editor.trimAutoWhitespace": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[c]": {
+    "editor.wordBasedSuggestions": false,
+    "editor.suggest.insertMode": "replace"
+  },
+  "[cpp]": {
+    "editor.wordBasedSuggestions": false,
+    "editor.suggest.insertMode": "replace",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.activityBar.visible": false,
+  "search.usePCRE2": true,
+  "eslint.enable": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.sideBar.location": "left",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "python.jediEnabled": false,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "HookyQR.beautify"
+  },
+  "[go]": {
+    "editor.insertSpaces": false,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    }
+  },
+  "workbench.statusBar.visible": true,
+  "remote.SSH.allowLocalServerDownload": true,
+  "tslint.autoFixOnSave": true,
+  "go.autocompleteUnimportedPackages": true,
+  "go.vetOnSave": "package",
+  "[css]": {
+    "editor.defaultFormatter": "HookyQR.beautify"
+  },
+  "[lua]": {
+    "editor.formatOnSave": true
+  },
+  "sqltools.highlightQuery": false,
+  "mssql.connections": [
+    {
+      "server": "{{put-server-name-here}}",
+      "database": "{{put-database-name-here}}",
+      "user": "{{put-username-here}}",
+      "password": ""
+    }
+  ],
+  "[sql]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": "mtxr.sqltools"
+  },
+  "python.linting.pylintArgs": ["--load-plugins=pylint_django"],
+  "python.languageServer": "Jedi",
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  "python.linting.enabled": true,
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": "/usr/local/bin/black",
+  "go.formatTool": "goimports",
+  "go.useLanguageServer": true,
+  "C_Cpp.autoAddFileAssociations": false,
+  "C_Cpp.configurationWarnings": "Disabled",
+  "C_Cpp.codeFolding": "Disabled",
+  "C_Cpp.autocomplete": "Disabled",
+  "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false,
+  "C_Cpp.default.enableConfigurationSquiggles": false,
+  "C_Cpp.dimInactiveRegions": false,
+  "window.newWindowDimensions": "inherit",
+  "editor.snippetSuggestions": "top",
+  "diffEditor.renderSideBySide": false,
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto"
+}

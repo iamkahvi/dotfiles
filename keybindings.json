@@ -1,1 +1,58 @@
-/Users/Kahvi/Library/Application Support/Code/User/keybindings.json
+// Place your key bindings in this file to overwrite the defaults
+[
+	{
+		"key": "cmd+q",
+		"command": "-workbench.action.quit"
+	},
+	{
+		"key": "cmd+q cmd+q",
+		"command": "workbench.action.quit"
+	},
+	{
+		"key": "cmd+k",
+		"command": "-workbench.action.terminal.clear",
+		"when": "terminalFocus"
+	},
+	{
+		"key": "a",
+		"command": "-explorer.newFile",
+		"when": "filesExplorerFocus && !inputFocus"
+	},
+	{
+		"key": "cmd+t",
+		"command": "workbench.action.terminal.focus"
+	},
+	{
+		"key": "cmd+`",
+		"command": "workbench.action.focusPanel",
+		"when": "terminal.Focus"
+	},
+	{
+		"key": "cmd+d",
+		"command": "editor.action.copyLinesDownAction"
+	},
+	{
+		"key": "cmd+e",
+		"command": "editor.action.deleteLines"
+	},
+	{
+		"key": "cmd+shift+g",
+		"command": "workbench.view.scm"
+	},
+	{
+		"key": "cmd+ctrl+down",
+		"command": "workbench.action.terminal.focusNextPane"
+	},
+	{
+		"key": "cmd+ctrl+up",
+		"command": "workbench.action.terminal.focusPreviousPane"
+	},
+	{
+		"key": "cmd+t",
+		"command": "workbench.action.terminal.toggleTerminal"
+	},
+	{
+		"key": "cmd+shift+e",
+		"command": "workbench.view.explorer"
+	}
+}
