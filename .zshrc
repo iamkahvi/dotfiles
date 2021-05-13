@@ -34,6 +34,7 @@ alias configv='vim ~/.vimrc'
 alias dev='cd /Users/Kahvi/Documents/dev'
 alias icloud='cd ~/Library/Mobile\ Documents/com\~apple\~CloudDocs'
 alias smlr='socat READLINE EXEC:sml'
+alias cppcompile='c++ -std=c++11 -stdlib=libc++'
 
 
 eval $( gdircolors -b $HOME/LS_COLORS )

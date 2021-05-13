@@ -1,5 +1,4 @@
 {
-  "ruby.interpreter.commandPath": "/Users/Kahvi/.rbenv/shims/ruby",
   "terminal.integrated.inheritEnv": true,
   "atomKeymap.promptV3Features": true,
   "editor.formatOnPaste": true,
@@ -128,5 +127,6 @@
     "**/.project": true,
     "**/.settings": true,
     "**/.factorypath": true
-  }
+  },
+  "ruby.interpreter.commandPath": "/Users/Kahvi/.rbenv/shims/ruby"
 }
