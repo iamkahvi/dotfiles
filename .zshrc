@@ -1,12 +1,19 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+# Adding ANTLR
+export ANTLR_PATH=$HOME/antlr.jar
+export PATH=$PATH:$ANTLR_PATH 
+export CLASSPATH=$PATH
+
 # Adding Julia
 export PATH=$PATH:/Applications/Julia-1.5.app/Contents/Resources/julia/bin
 
+export PATH=/usr/local/smlnj/bin:"$PATH"
+
 # Adding NVM
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 # Adding Maven
 export PATH=$PATH:/opt/apache-maven-3.6.3/bin
@@ -26,6 +33,8 @@ alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
 alias dev='cd /Users/Kahvi/Documents/dev'
 alias icloud='cd ~/Library/Mobile\ Documents/com\~apple\~CloudDocs'
+alias smlr='socat READLINE EXEC:sml'
+
 
 eval $( gdircolors -b $HOME/LS_COLORS )
 
@@ -97,4 +106,12 @@ export PATH="/usr/local/opt/bison/bin:$PATH"
 # eval "$(starship init zsh)"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+[[ -s "/Users/Kahvi/.gvm/scripts/gvm" ]] && source "/Users/Kahvi/.gvm/scripts/gvm"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+source /usr/local/share/chruby/chruby.sh
+source /usr/local/share/chruby/auto.sh
+chruby ruby-2.7.2
 

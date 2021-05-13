@@ -1,4 +1,6 @@
 {
+  "ruby.interpreter.commandPath": "/Users/Kahvi/.rbenv/shims/ruby",
+  "terminal.integrated.inheritEnv": true,
   "atomKeymap.promptV3Features": true,
   "editor.formatOnPaste": true,
   "editor.minimap.enabled": false,
@@ -10,11 +12,9 @@
   "java.errors.incompleteClasspath.severity": "ignore",
   "python.pythonPath": "/usr/local/bin/python3",
   "git.autofetch": true,
-  "window.zoomLevel": 0,
   "editor.suggestSelection": "first",
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "files.trimTrailingWhitespace": true,
-  "editor.trimAutoWhitespace": true,
+  "editor.trimAutoWhitespace": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
@@ -28,19 +28,17 @@
     "editor.suggest.insertMode": "replace"
   },
   "[cpp]": {
-    "editor.wordBasedSuggestions": false,
-    "editor.suggest.insertMode": "replace",
+    // "editor.wordBasedSuggestions": false,
+    // "editor.suggest.insertMode": "replace",
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },
   "workbench.colorTheme": "One Dark Pro",
   "workbench.activityBar.visible": false,
   "search.usePCRE2": true,
-  "eslint.enable": false,
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "workbench.sideBar.location": "left",
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
@@ -98,13 +96,13 @@
   "python.formatting.blackPath": "/usr/local/bin/black",
   "go.formatTool": "goimports",
   "go.useLanguageServer": true,
-  "C_Cpp.autoAddFileAssociations": false,
-  "C_Cpp.configurationWarnings": "Disabled",
-  "C_Cpp.codeFolding": "Disabled",
-  "C_Cpp.autocomplete": "Disabled",
-  "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false,
-  "C_Cpp.default.enableConfigurationSquiggles": false,
-  "C_Cpp.dimInactiveRegions": false,
+  // "C_Cpp.autoAddFileAssociations": false,
+  // "C_Cpp.configurationWarnings": "Disabled",
+  // "C_Cpp.codeFolding": "Disabled",
+  // "C_Cpp.autocomplete": "Disabled",
+  // "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false,
+  // "C_Cpp.default.enableConfigurationSquiggles": false,
+  // "C_Cpp.dimInactiveRegions": false,
   "window.newWindowDimensions": "inherit",
   "editor.snippetSuggestions": "top",
   "diffEditor.renderSideBySide": false,
@@ -112,5 +110,23 @@
   "editor.gotoLocation.multipleDefinitions": "goto",
   "editor.gotoLocation.multipleDeclarations": "goto",
   "editor.gotoLocation.multipleImplementations": "goto",
-  "editor.gotoLocation.multipleTypeDefinitions": "goto"
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "workbench.editorAssociations": [
+    {
+      "viewType": "jupyter.notebook.ipynb",
+      "filenamePattern": "*.ipynb"
+    }
+  ],
+  "window.zoomLevel": 1,
+  "eslint.alwaysShowStatus": true,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.format.enable": true,
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  }
 }
