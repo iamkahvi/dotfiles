@@ -1,6 +1,10 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 # Adding ANTLR
 export ANTLR_PATH=$HOME/antlr.jar
 export PATH=$PATH:$ANTLR_PATH 
@@ -32,7 +36,7 @@ alias showp='echo $PATH | tr -s ":" "\n"'
 alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
 alias dev='cd /Users/Kahvi/Documents/dev'
-alias icloud='cd ~/Library/Mobile\ Documents/com\~apple\~CloudDocs'
+alias icloud='fds ~/Library/Mobile\ Documents/com\~apple\~CloudDocs'
 alias smlr='socat READLINE EXEC:sml'
 alias cppcompile='c++ -std=c++11 -stdlib=libc++'
 
@@ -110,9 +114,11 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 [[ -s "/Users/Kahvi/.gvm/scripts/gvm" ]] && source "/Users/Kahvi/.gvm/scripts/gvm"
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
 source /usr/local/share/chruby/chruby.sh
-source /usr/local/share/chruby/auto.sh
 chruby ruby-2.7.2
 
+
+source /Users/Kahvi/.config/broot/launcher/bash/br
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"

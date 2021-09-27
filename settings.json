@@ -1,6 +1,10 @@
 {
+  "editor.autoClosingBrackets": "always",
   "terminal.integrated.inheritEnv": true,
   "atomKeymap.promptV3Features": true,
+  "[antlr]": {
+    "editor.formatOnPaste": false
+  },
   "editor.formatOnPaste": true,
   "editor.minimap.enabled": false,
   "editor.multiCursorModifier": "ctrlCmd",
@@ -59,7 +63,8 @@
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.organizeImports": true
-    }
+    },
+    "editor.autoClosingBrackets": "always"
   },
   "workbench.statusBar.visible": true,
   "remote.SSH.allowLocalServerDownload": true,
@@ -110,13 +115,9 @@
   "editor.gotoLocation.multipleDeclarations": "goto",
   "editor.gotoLocation.multipleImplementations": "goto",
   "editor.gotoLocation.multipleTypeDefinitions": "goto",
-  "workbench.editorAssociations": [
-    {
-      "viewType": "jupyter.notebook.ipynb",
-      "filenamePattern": "*.ipynb"
-    }
-  ],
-  "window.zoomLevel": 1,
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook"
+  },
   "eslint.alwaysShowStatus": true,
   "eslint.codeAction.showDocumentation": {
     "enable": true
@@ -128,5 +129,24 @@
     "**/.settings": true,
     "**/.factorypath": true
   },
-  "ruby.interpreter.commandPath": "/Users/Kahvi/.rbenv/shims/ruby"
+  "ruby.interpreter.commandPath": "/Users/Kahvi/.rbenv/shims/ruby",
+  "java.autobuild.enabled": false,
+  "python.linting.pylintEnabled": true,
+  "python.linting.flake8Enabled": false,
+  "python.linting.banditEnabled": false,
+  "python.defaultInterpreterPath": "/usr/local/bin/python3",
+  "go.toolsManagement.autoUpdate": true,
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+  "diffEditor.ignoreTrimWhitespace": false,
+  "window.zoomLevel": 1,
+  "editor.inlineSuggest.enabled": true,
+  "github.copilot.enable": {
+    "*": false,
+    "yaml": false,
+    "plaintext": false,
+    "markdown": false
+  }
 }

@@ -22,8 +22,8 @@ nnoremap <leader>] <C-w>l
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'honza/vim-snippets'
-Plugin 'SirVer/ultisnips'
 Plugin 'mlaursen/vim-react-snippets'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
