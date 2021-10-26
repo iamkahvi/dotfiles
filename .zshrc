@@ -4,13 +4,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Load configs for MacOS. Does nothing if not on MacOS
-if [ "$ZSH_HOST_OS" = "darwin" ]; then
-  source $DF_HOME/macos.zsh
-else
-  alias bat='batcat'
-fi
-
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
@@ -68,7 +61,7 @@ fds() {
 ff() {
   local file
   file=$(find ${1:-.} -path '*/\.*' -prune \
-                                  -o -type f -print 2> /dev/null | fzf --preview 'bat -p --color always {}' +m) &&
+                                  -o -type f -print 2> /dev/null | fzf --preview 'batcat -p --color always {}' +m) &&
   vim "$file"
 }
 
@@ -103,6 +96,11 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 fpath+=$HOME/.zsh/pure
 autoload -U promptinit; promptinit
 prompt pure
+
+# Load configs for MacOS. Does nothing if not on MacOS
+if [ "$ZSH_HOST_OS" = "darwin" ]; then
+  source $DF_HOME/macos.zsh
+fi
 
 # Adding dev
 [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh

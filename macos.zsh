@@ -32,3 +32,11 @@ export NVM_DIR="$HOME/.nvm"
 
 # Add alias for icloud directory
 alias icloud='fds ~/Library/Mobile\ Documents/com\~apple\~CloudDocs'
+
+# ff - find file with fzf and bat
+ff() {
+  local file
+  file=$(find ${1:-.} -path '*/\.*' -prune \
+                                  -o -type f -print 2> /dev/null | fzf --preview 'bat -p --color always {}' +m) &&
+  vim "$file"
+}
