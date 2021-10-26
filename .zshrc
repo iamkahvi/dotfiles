@@ -7,6 +7,8 @@ export NVM_DIR="$HOME/.nvm"
 # Load configs for MacOS. Does nothing if not on MacOS
 if [ "$ZSH_HOST_OS" = "darwin" ]; then
   source $DF_HOME/macos.zsh
+else
+  alias bat='batcat'
 fi
 
 # Path to your oh-my-zsh installation.
