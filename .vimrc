@@ -1,4 +1,3 @@
-filetype off  " required
 set encoding=UTF-8
 
 set hls
@@ -20,31 +19,35 @@ set omnifunc=syntaxcomplete#Complete
 nnoremap <leader>[ <C-w>h
 nnoremap <leader>] <C-w>l
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'honza/vim-snippets'
-Plugin 'mlaursen/vim-react-snippets'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'scrooloose/nerdtree'
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'tpope/vim-surround'
-Plugin 'junegunn/goyo.vim'
-Plugin 'rust-lang/rust.vim'
-call vundle#end()
+call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-sensible'
+Plug 'VundleVim/Vundle.vim'
+Plug 'honza/vim-snippets'
+Plug 'mlaursen/vim-react-snippets'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'scrooloose/nerdcommenter'
+Plug 'tmhedberg/SimpylFold'
+Plug 'scrooloose/nerdtree'
+Plug 'vim-scripts/indentpython.vim'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'tpope/vim-surround'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'rust-lang/rust.vim'
+call plug#end()
 
 " ==== Colors and other basic settings
 set autoindent
+set backspace=indent,eol,start
+set complete-=i
+set smarttab
 set mouse=a
 nnoremap o o<Esc>
+
 syntax enable
+
 let python_highlight_all=1
-" set background=dark
-" colorscheme solarized
 let g:airline_theme='minimalist'
 let g:airline_powerline_fonts = 1
 set clipboard=unnamed
@@ -57,10 +60,6 @@ set wildmenu
 set lazyredraw	
 set showmatch
 set backspace=indent,eol,start
-" Set indentation to 2 spaces for certain files
-autocmd FileType javascript,typescript,html,css,json setlocal shiftwidth=2
-autocmd FileType javascript,typescript,html,css,json setlocal softtabstop=2
-filetype plugin on
 
 " ==== VIM Search options
 set incsearch
@@ -116,7 +115,7 @@ let g:rustfmt_autosave = 1
 
 set undolevels=9001
 " ==== Enable mouse
-" set mouse=a
+set mouse=a
 " ==== Hide command bar
 set noshowmode
 
