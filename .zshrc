@@ -12,6 +12,10 @@ alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
 alias vim='nvim'
 
+if [[ -n $SPIN_WORKSPACE ]]; then
+ alias spin='echo $SPIN_WORKSPACE'
+fi
+
 # alias smlr='socat READLINE EXEC:sml'
 # alias cppcompile='c++ -std=c++11 -stdlib=libc++'
 
