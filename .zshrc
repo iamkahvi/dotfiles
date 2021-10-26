@@ -32,16 +32,18 @@ export PATH=$PATH:$HOME/go/bin
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+alias gosrc='fds ~/src/github.com/Shopify/'
+
 alias showp='echo $PATH | tr -s ":" "\n"'
 alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
-alias dev='cd /Users/Kahvi/Documents/dev'
+# alias dev='cd /Users/Kahvi/Documents/dev'
 alias icloud='fds ~/Library/Mobile\ Documents/com\~apple\~CloudDocs'
 alias smlr='socat READLINE EXEC:sml'
 alias cppcompile='c++ -std=c++11 -stdlib=libc++'
 
 
-eval $( gdircolors -b $HOME/LS_COLORS )
+# eval $( gdircolors -b $HOME/LS_COLORS )
 
 # User Configuration
 
@@ -61,7 +63,7 @@ setopt correct
 
 ZSH_THEME=sammy
 
-plugins=(git colored-man colorize pip python zsh-syntax-highlighting)
+plugins=(git colored-man-pages colorize pip python zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
 unalias pip
@@ -99,7 +101,7 @@ fh() {
 }
 
 ### Added by Zplugin's installer
-source $HOME/.zplugin/bin/zplugin.zsh
+source $HOME/.zinit/bin/zplugin.zsh
 autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 ### End of Zplugin's installer chunk
@@ -114,11 +116,23 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 [[ -s "/Users/Kahvi/.gvm/scripts/gvm" ]] && source "/Users/Kahvi/.gvm/scripts/gvm"
 
-source /usr/local/share/chruby/chruby.sh
-chruby ruby-2.7.2
+# source /usr/local/share/chruby/chruby.sh
+# chruby ruby-2.7.2
+
+# Adding pure prompt
+autoload -U promptinit; promptinit
+prompt pure
 
 
-source /Users/Kahvi/.config/broot/launcher/bash/br
+# source /Users/Kahvi/.config/broot/launcher/bash/br
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+export YVM_DIR=/Users/kahvipatel/.yvm
+[ -r $YVM_DIR/yvm.sh ] && . $YVM_DIR/yvm.sh
+
+[ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
+if [ -e /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+[[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
