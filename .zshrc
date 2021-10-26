@@ -95,8 +95,6 @@ if [ -e $DF_HOME/dircolors ]; then
   eval $(dircolors $DF_HOME/dircolors)
 fi
 
-eval $(thefuck --alias)
-
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Adding pure prompt
