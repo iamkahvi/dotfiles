@@ -9,7 +9,11 @@ ln -sf $HOME/dotfiles/.tmux.conf $HOME
 ln -sf $HOME/dotfiles/.gitconfig $HOME
 
 # installing
-sudo apt-get install -y fzf bat neovim thefuck
+sudo apt-get install -y fzf bat 
+sudo apt-get install neovim thefuck
+
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
 # Moving vimrc for nvim
 mkdir -p $HOME/.config/nvim
