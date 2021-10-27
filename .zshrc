@@ -65,7 +65,7 @@ fds() {
 ff() {
   local file
   file=$(find ${1:-.} -path '*/\.*' -prune \
-                                  -o -type f -print 2> /dev/null | fzf --preview 'batcat -p --color always {}' +m) &&
+                                  -o -type f -print 2> /dev/null | fzf --preview 'cat {}' +m) &&
   vim "$file"
 }
 
