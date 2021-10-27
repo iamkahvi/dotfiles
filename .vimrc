@@ -20,6 +20,7 @@ nnoremap <leader>[ <C-w>h
 nnoremap <leader>] <C-w>l
 
 call plug#begin('~/.vim/plugged')
+Plug 'junegunn/goyo.vim'
 Plug 'tpope/vim-sensible'
 Plug 'VundleVim/Vundle.vim'
 Plug 'honza/vim-snippets'
