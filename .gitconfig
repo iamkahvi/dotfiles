@@ -1,9 +1,20 @@
 [user]
 	name = Kahvi Patel
-	username = iamkahvi
+	email = kahvi.patel@shopify.com
+[github]
+	user = iamkahvi
 [core]
 	editor = nvim
 	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	pager = delta
+	commitGraph = true
+[diff]
+	algorithm = patience
+[gc]
+	writeCommitGraph = true
 [color]
 	ui = auto
+[pull]
+	ff = only
+[push]
+	default = simple
