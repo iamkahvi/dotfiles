@@ -2,6 +2,31 @@ hs.hotkey.bind({"cmd", "alt", "ctrl"}, "W", function()
     hs.notify.new({title = "Hammerspoon", informativeText = "Hello World"}):send()
 end)
 
+function launchIterm()
+	if hs.application.find("iTerm2") then
+		hs.applescript.applescript([[
+			tell application "iTerm2"
+				create window with default profile
+			end tell
+		]])
+	else
+		hs.application.open("iTerm")
+	end
+end
+
+function launchChrome()
+	if hs.application.find("Chrome") then
+		hs.applescript.applescript([[
+			tell application "Chrome"
+				make new window
+                activate
+			end tell
+		]])
+	else
+		hs.application.open("Chrome")
+	end
+end
+
 hs.window.animationDuration = 0
 
 local application = require "hs.application"
@@ -99,8 +124,8 @@ local gomiddle = {x = 0.025 * gw, y = 0.025 * gh, w = gw * 0.95, h = gh * 0.95}
 local goleft = {x = 0, y = 0, w = gw / 2, h = gh}
 local goright = {x = gw / 2, y = 0, w = gw / 2, h = gh}
 local gobig = {x = 0, y = 0, w = gw, h = gh}
-local gothirdleft = {x = 0, y = 0, w = gw * 0.34, h = gh}
-local gotwothirdsright = {x = gw * 0.34, y = 0, w = gw * 0.66, h = gh}
+local gothirdleft = {x = 0.020 * gw, y = 0.025 * gh, w = gw * 0.66, h = gh * 0.95}
+local gothirdright = {x = gw * 0.34, y = 0, w = gw * 0.66, h = gh}
 local gosmall = {x = gw * 0.35, y = gh * 0.3, w = gw * 0.3, h = gh * 0.35}
 
 local fullApps = {
@@ -124,6 +149,9 @@ definitions = {
     l = gridset(goright),
     k = gridset(gobig),
     i = gridset(gosmall),
+    o = gridset(gothirdleft),
+    t = launchIterm,
+    c = launchChrome,
 
     -- g = layout2fn,
     u = grid.pushWindowNextScreen,

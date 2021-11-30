@@ -1710,7 +1710,7 @@
 			<key>Close Sessions On End</key>
 			<true/>
 			<key>Columns</key>
-			<integer>80</integer>
+			<integer>110</integer>
 			<key>Command</key>
 			<string></string>
 			<key>Cursor Boost</key>
@@ -1775,6 +1775,8 @@
 			<string>65349ACE-3CC1-4157-9D4D-51E7FB7D9436</string>
 			<key>Has Hotkey</key>
 			<false/>
+			<key>Hide After Opening</key>
+			<false/>
 			<key>Horizontal Spacing</key>
 			<real>1</real>
 			<key>HotKey Activated By Modifier</key>
@@ -1807,13 +1809,8 @@
 			<false/>
 			<key>Jobs to Ignore</key>
 			<array>
-				<string>rlogin</string>
 				<string>ssh</string>
-				<string>slogin</string>
-				<string>telnet</string>
-				<string>npm start</string>
-				<string>npm develop</string>
-				<string>jekyll serve</string>
+				<string>zsh</string>
 			</array>
 			<key>Keyboard Map</key>
 			<dict>

@@ -62,9 +62,5 @@
   {
     "key": "cmd+\\",
     "command": "workbench.action.toggleSidebarVisibility"
-  },
-  {
-    "key": "ctrl+u ctrl+b",
-    "command": "editor.emmet.action.updateTag"
   }
 ]
