@@ -97,7 +97,8 @@ fi
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Adding pure prompt
-fpath+=$HOME/.zsh/pure
+# fpath+=$HOME/.zsh/pure
+fpath+=/opt/homebrew/share/zsh/site-functions
 autoload -U promptinit; promptinit
 prompt pure
 
@@ -107,5 +108,5 @@ if [ "$ZSH_HOST_OS" = "darwin" ]; then
 fi
 
 # Adding dev
-[ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
-if [ -e /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+# [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
+# if [ -e /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
