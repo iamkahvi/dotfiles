@@ -97,7 +97,7 @@ fi
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Adding pure prompt
-if [ "$ZSH_HOST_OS" = "darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
   fpath+=/opt/homebrew/share/zsh/site-functions
 else
   fpath+=$HOME/.zsh/pure
@@ -106,7 +106,7 @@ autoload -U promptinit; promptinit
 prompt pure
 
 # Load configs for MacOS. Does nothing if not on MacOS
-if [ "$ZSH_HOST_OS" = "darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
   source $DF_HOME/macos.zsh
   # Adding dev
   [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
