@@ -97,16 +97,22 @@ fi
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Adding pure prompt
-# fpath+=$HOME/.zsh/pure
-fpath+=/opt/homebrew/share/zsh/site-functions
+if [ "$ZSH_HOST_OS" = "darwin" ]; then
+  fpath+=/opt/homebrew/share/zsh/site-functions
+else
+  fpath+=$HOME/.zsh/pure
+fi
 autoload -U promptinit; promptinit
 prompt pure
 
 # Load configs for MacOS. Does nothing if not on MacOS
 if [ "$ZSH_HOST_OS" = "darwin" ]; then
   source $DF_HOME/macos.zsh
-fi
+  # Adding dev
+  [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
+  if [ -e /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
-# Adding dev
-# [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
-# if [ -e /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+  [[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
+
+  [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
+fi
