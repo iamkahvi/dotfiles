@@ -18,9 +18,6 @@
 	ff = only
 [push]
 	default = simple
-[credential]
-	helper = 
-	helper = store --file /opt/dev/var/private/git_credential_store
 [protocol]
 	version = 2
 [url "https://github.com/Shopify/"]
