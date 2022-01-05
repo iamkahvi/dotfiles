@@ -55,12 +55,11 @@
     "key": "cmd+shift+e",
     "command": "workbench.view.explorer"
   },
+  { "key": "cmd+/", "command": "editor.action.commentLine" },
+  { "key": "ctrl+`", "command": "workbench.action.terminal.focus" },
   {
-    "key": "cmd+/",
-    "command": "editor.action.commentLine"
-  },
-  {
-    "key": "cmd+\\",
-    "command": "workbench.action.toggleSidebarVisibility"
+    "key": "ctrl+`",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "terminalFocus"
   }
 ]
