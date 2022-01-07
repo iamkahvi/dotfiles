@@ -1,23 +1,48 @@
 {
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.activityBar.visible": false,
+  "workbench.editor.enablePreview": false,
+  "editor.copyWithSyntaxHighlighting": false,
+  "editor.emptySelectionClipboard": true,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "editor.inlineSuggest.enabled": true,
+  "editor.snippetSuggestions": "top",
+  "editor.detectIndentation": false,
+  "editor.formatOnPaste": true,
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "none",
   "editor.autoClosingBrackets": "always",
+  "editor.suggestSelection": "first",
+  "editor.trimAutoWhitespace": false,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.renderSideBySide": false,
+  "window.nativeFullScreen": true,
+  "window.newWindowDimensions": "inherit",
+  "window.openFoldersInNewWindow": "on",
+  "window.zoomLevel": 1,
   "terminal.integrated.inheritEnv": true,
-  "atomKeymap.promptV3Features": true,
+  "git.autofetch": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "remote.SSH.localServerDownload": "always",
+  "eslint.alwaysShowStatus": true,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.format.enable": true,
   "[antlr]": {
     "editor.formatOnPaste": false
   },
-  "editor.formatOnPaste": true,
-  "editor.minimap.enabled": false,
-  "editor.multiCursorModifier": "ctrlCmd",
-  "editor.renderWhitespace": "none",
   "files.associations": {
     "*.java": "java"
   },
-  "java.errors.incompleteClasspath.severity": "ignore",
-  "python.pythonPath": "/usr/local/bin/python3",
-  "git.autofetch": true,
-  "editor.suggestSelection": "first",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "editor.trimAutoWhitespace": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
@@ -26,37 +51,35 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "[c]": {
-    "editor.wordBasedSuggestions": false,
-    "editor.suggest.insertMode": "replace"
-  },
-  "[cpp]": {
-    // "editor.wordBasedSuggestions": false,
-    // "editor.suggest.insertMode": "replace",
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "ms-vscode.cpptools"
-  },
-  "workbench.colorTheme": "One Dark Pro",
-  "workbench.activityBar.visible": false,
-  "search.usePCRE2": true,
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.tabSize": 2
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   },
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "python.jediEnabled": false,
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[scss]": {
-    "editor.defaultFormatter": "HookyQR.beautify"
+    "editor.defaultFormatter": "mrmlnc.vscode-scss"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[c]": {
+    "editor.wordBasedSuggestions": false,
+    "editor.suggest.insertMode": "replace"
+  },
+  "[cpp]": {
+    "editor.wordBasedSuggestions": false,
+    "editor.suggest.insertMode": "replace",
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[go]": {
     "editor.insertSpaces": false,
@@ -66,87 +89,27 @@
     },
     "editor.autoClosingBrackets": "always"
   },
-  "workbench.statusBar.visible": true,
-  "remote.SSH.allowLocalServerDownload": true,
-  "tslint.autoFixOnSave": true,
-  "go.autocompleteUnimportedPackages": true,
-  "go.vetOnSave": "package",
-  "[css]": {
-    "editor.defaultFormatter": "HookyQR.beautify"
-  },
   "[lua]": {
     "editor.formatOnSave": true
   },
-  "sqltools.highlightQuery": false,
-  "mssql.connections": [
-    {
-      "server": "{{put-server-name-here}}",
-      "database": "{{put-database-name-here}}",
-      "user": "{{put-username-here}}",
-      "password": ""
-    }
-  ],
   "[sql]": {
-    "editor.formatOnSave": false,
-    "editor.defaultFormatter": "mtxr.sqltools"
+    "editor.formatOnSave": false
   },
-  "python.linting.pylintArgs": ["--load-plugins=pylint_django"],
-  "python.languageServer": "Jedi",
   "[python]": {
     "editor.formatOnSave": true
   },
-  "python.linting.enabled": true,
-  "python.formatting.provider": "black",
-  "python.formatting.blackPath": "/usr/local/bin/black",
-  "go.formatTool": "goimports",
-  "go.useLanguageServer": true,
-  // "C_Cpp.autoAddFileAssociations": false,
-  // "C_Cpp.configurationWarnings": "Disabled",
-  // "C_Cpp.codeFolding": "Disabled",
-  // "C_Cpp.autocomplete": "Disabled",
-  // "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false,
-  // "C_Cpp.default.enableConfigurationSquiggles": false,
-  // "C_Cpp.dimInactiveRegions": false,
-  "window.newWindowDimensions": "inherit",
-  "editor.snippetSuggestions": "top",
-  "diffEditor.renderSideBySide": false,
-  "editor.gotoLocation.multipleReferences": "goto",
-  "editor.gotoLocation.multipleDefinitions": "goto",
-  "editor.gotoLocation.multipleDeclarations": "goto",
-  "editor.gotoLocation.multipleImplementations": "goto",
-  "editor.gotoLocation.multipleTypeDefinitions": "goto",
   "workbench.editorAssociations": {
     "*.ipynb": "jupyter-notebook"
   },
-  "eslint.alwaysShowStatus": true,
-  "eslint.codeAction.showDocumentation": {
-    "enable": true
-  },
-  "eslint.format.enable": true,
   "files.exclude": {
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
     "**/.factorypath": true
   },
-  "java.autobuild.enabled": false,
-  "python.linting.pylintEnabled": true,
-  "python.linting.flake8Enabled": false,
-  "python.linting.banditEnabled": false,
-  "python.defaultInterpreterPath": "/usr/local/bin/python3",
-  "go.toolsManagement.autoUpdate": true,
   "notebook.cellToolbarLocation": {
     "default": "right",
     "jupyter-notebook": "left"
-  },
-  "diffEditor.ignoreTrimWhitespace": false,
-  "editor.inlineSuggest.enabled": true,
-  "github.copilot.enable": {
-    "*": false,
-    "yaml": false,
-    "plaintext": false,
-    "markdown": false
-  },
-  "window.openFoldersInNewWindow": "on",
-  "window.zoomLevel": 1
+},
+"oneDarkPro.vivid": true
 }
