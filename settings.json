@@ -1,115 +1,117 @@
 {
-  "workbench.colorTheme": "One Dark Pro",
-  "workbench.activityBar.visible": false,
-  "workbench.editor.enablePreview": false,
-  "editor.copyWithSyntaxHighlighting": false,
-  "editor.emptySelectionClipboard": true,
-  "editor.multiCursorModifier": "ctrlCmd",
-  "editor.gotoLocation.multipleReferences": "goto",
-  "editor.gotoLocation.multipleDefinitions": "goto",
-  "editor.gotoLocation.multipleDeclarations": "goto",
-  "editor.gotoLocation.multipleImplementations": "goto",
-  "editor.gotoLocation.multipleTypeDefinitions": "goto",
-  "editor.inlineSuggest.enabled": true,
-  "editor.snippetSuggestions": "top",
-  "editor.detectIndentation": false,
-  "editor.formatOnPaste": true,
-  "editor.minimap.enabled": false,
-  "editor.renderWhitespace": "none",
-  "editor.autoClosingBrackets": "always",
-  "editor.suggestSelection": "first",
-  "editor.trimAutoWhitespace": false,
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true,
-  "diffEditor.ignoreTrimWhitespace": false,
-  "diffEditor.renderSideBySide": false,
-  "window.nativeFullScreen": true,
-  "window.newWindowDimensions": "inherit",
-  "window.openFoldersInNewWindow": "on",
-  "window.zoomLevel": 1,
-  "terminal.integrated.inheritEnv": true,
-  "git.autofetch": true,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "remote.SSH.localServerDownload": "always",
-  "eslint.alwaysShowStatus": true,
-  "eslint.codeAction.showDocumentation": {
-    "enable": true
-  },
-  "eslint.format.enable": true,
-  "[antlr]": {
-    "editor.formatOnPaste": false
-  },
-  "files.associations": {
-    "*.java": "java"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "mrmlnc.vscode-scss"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
-  },
-  "[c]": {
-    "editor.wordBasedSuggestions": false,
-    "editor.suggest.insertMode": "replace"
-  },
-  "[cpp]": {
-    "editor.wordBasedSuggestions": false,
-    "editor.suggest.insertMode": "replace",
-    "editor.formatOnSave": true
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[go]": {
-    "editor.insertSpaces": false,
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+    "workbench.colorTheme": "One Dark Pro",
+    "oneDarkPro.vivid": true,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.showTabs": false,
+    "workbench.sideBar.location": "right",
+    "editor.copyWithSyntaxHighlighting": false,
+    "editor.emptySelectionClipboard": true,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.gotoLocation.multipleReferences": "goto",
+    "editor.gotoLocation.multipleDefinitions": "goto",
+    "editor.gotoLocation.multipleDeclarations": "goto",
+    "editor.gotoLocation.multipleImplementations": "goto",
+    "editor.gotoLocation.multipleTypeDefinitions": "goto",
+    "editor.inlineSuggest.enabled": true,
+    "editor.snippetSuggestions": "top",
+    "editor.detectIndentation": false,
+    "editor.formatOnPaste": true,
+    "editor.minimap.enabled": false,
+    "editor.renderWhitespace": "none",
+    "editor.autoClosingBrackets": "always",
+    "editor.suggestSelection": "first",
+    "editor.trimAutoWhitespace": false,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.renderSideBySide": false,
+    "window.nativeFullScreen": true,
+    "window.newWindowDimensions": "inherit",
+    "window.openFoldersInNewWindow": "on",
+    "window.zoomLevel": 1,
+    "terminal.integrated.inheritEnv": true,
+    "git.autofetch": true,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "remote.SSH.localServerDownload": "always",
+    "eslint.alwaysShowStatus": true,
+    "eslint.codeAction.showDocumentation": {
+        "enable": true
     },
-    "editor.autoClosingBrackets": "always"
-  },
-  "[lua]": {
-    "editor.formatOnSave": true
-  },
-  "[sql]": {
-    "editor.formatOnSave": false
-  },
-  "[python]": {
-    "editor.formatOnSave": true
-  },
-  "workbench.editorAssociations": {
-    "*.ipynb": "jupyter-notebook"
-  },
-  "files.exclude": {
-    "**/.classpath": true,
-    "**/.project": true,
-    "**/.settings": true,
-    "**/.factorypath": true
-  },
-  "notebook.cellToolbarLocation": {
-    "default": "right",
-    "jupyter-notebook": "left"
-},
-"oneDarkPro.vivid": true
+    "eslint.format.enable": true,
+    "[antlr]": {
+        "editor.formatOnPaste": false
+    },
+    "files.associations": {
+        "*.java": "java"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2
+    },
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "mrmlnc.vscode-scss"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "vscode.css-language-features"
+    },
+    "[c]": {
+        "editor.wordBasedSuggestions": false,
+        "editor.suggest.insertMode": "replace"
+    },
+    "[cpp]": {
+        "editor.wordBasedSuggestions": false,
+        "editor.suggest.insertMode": "replace",
+        "editor.formatOnSave": true
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[go]": {
+        "editor.insertSpaces": false,
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+        "editor.autoClosingBrackets": "always"
+    },
+    "[lua]": {
+        "editor.formatOnSave": true
+    },
+    "[sql]": {
+        "editor.formatOnSave": false
+    },
+"[python]": {
+        "editor.formatOnSave": true
+    },
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+    "workbench.activityBar.visible": false,
 }
