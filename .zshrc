@@ -97,7 +97,7 @@ fi
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Adding pure prompt
-if [ "$(uname)" = "Darwin" ] && [ "$(uname -p)" = "arm64" ]; then
+if [ "$(uname)" = "Darwin" ] && [ "$(uname -p)" = "arm" ]; then
   fpath+=/opt/homebrew/share/zsh/site-functions
 else
   fpath+=$HOME/.zsh/pure
