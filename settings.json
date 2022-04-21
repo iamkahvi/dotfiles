@@ -1,132 +1,132 @@
 {
-    "workbench.colorTheme": "One Dark Pro",
-    "oneDarkPro.vivid": true,
-    "workbench.editor.enablePreview": false,
-    "workbench.sideBar.location": "right",
-    "editor.copyWithSyntaxHighlighting": false,
-    "editor.emptySelectionClipboard": true,
-    "editor.multiCursorModifier": "ctrlCmd",
-    "editor.gotoLocation.multipleReferences": "goto",
-    "editor.gotoLocation.multipleDefinitions": "goto",
-    "editor.gotoLocation.multipleDeclarations": "goto",
-    "editor.gotoLocation.multipleImplementations": "goto",
-    "editor.gotoLocation.multipleTypeDefinitions": "goto",
-    "editor.inlineSuggest.enabled": true,
-    "editor.snippetSuggestions": "top",
-    "editor.detectIndentation": false,
-    "editor.formatOnPaste": true,
-    "editor.minimap.enabled": false,
-    "editor.renderWhitespace": "none",
-    "editor.autoClosingBrackets": "always",
-    "editor.suggestSelection": "first",
-    "editor.trimAutoWhitespace": false,
-    "editor.bracketPairColorization.enabled": true,
-    "editor.guides.bracketPairs": true,
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "diffEditor.ignoreTrimWhitespace": false,
-    "diffEditor.renderSideBySide": false,
-    "window.nativeFullScreen": true,
-    "window.newWindowDimensions": "inherit",
-    "window.openFoldersInNewWindow": "on",
-    "terminal.integrated.inheritEnv": true,
-    "git.autofetch": true,
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    "remote.SSH.localServerDownload": "always",
-    "eslint.alwaysShowStatus": true,
-    "editor.tabSize": 2,
-    "eslint.codeAction.showDocumentation": {
-        "enable": true
+  "workbench.colorTheme": "One Dark Pro",
+  "oneDarkPro.vivid": true,
+  "workbench.editor.enablePreview": false,
+  "workbench.sideBar.location": "right",
+  "editor.copyWithSyntaxHighlighting": false,
+  "editor.emptySelectionClipboard": true,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "editor.inlineSuggest.enabled": true,
+  "editor.snippetSuggestions": "top",
+  "editor.detectIndentation": false,
+  "editor.formatOnPaste": true,
+  "editor.minimap.enabled": false,
+  "editor.renderWhitespace": "none",
+  "editor.autoClosingBrackets": "always",
+  "editor.suggestSelection": "first",
+  "editor.trimAutoWhitespace": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.renderSideBySide": false,
+  "window.nativeFullScreen": true,
+  "window.newWindowDimensions": "inherit",
+  "window.openFoldersInNewWindow": "on",
+  "terminal.integrated.inheritEnv": true,
+  "git.autofetch": true,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "remote.SSH.localServerDownload": "always",
+  "eslint.alwaysShowStatus": true,
+  "editor.tabSize": 2,
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "eslint.format.enable": true,
+  "[antlr]": {
+    "editor.formatOnPaste": false
+  },
+  "files.associations": {
+    "*.java": "java"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "mrmlnc.vscode-scss"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[c]": {
+    "editor.wordBasedSuggestions": false,
+    "editor.suggest.insertMode": "replace"
+  },
+  "[cpp]": {
+    "editor.wordBasedSuggestions": false,
+    "editor.suggest.insertMode": "replace",
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[go]": {
+    "editor.insertSpaces": false,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
     },
-    "eslint.format.enable": true,
-    "[antlr]": {
-        "editor.formatOnPaste": false
-    },
-    "files.associations": {
-        "*.java": "java"
-    },
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true,
-        "editor.tabSize": 2
-    },
-    "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": true
-    },
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[scss]": {
-        "editor.defaultFormatter": "mrmlnc.vscode-scss"
-    },
-    "[css]": {
-        "editor.defaultFormatter": "vscode.css-language-features"
-    },
-    "[c]": {
-        "editor.wordBasedSuggestions": false,
-        "editor.suggest.insertMode": "replace"
-    },
-    "[cpp]": {
-        "editor.wordBasedSuggestions": false,
-        "editor.suggest.insertMode": "replace",
-        "editor.formatOnSave": true
-    },
-    "[jsonc]": {
-        "editor.defaultFormatter": "vscode.json-language-features"
-    },
-    "[go]": {
-        "editor.insertSpaces": false,
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": true
-        },
-        "editor.autoClosingBrackets": "always"
-    },
-    "[lua]": {
-        "editor.formatOnSave": true
-    },
-    "[sql]": {
-        "editor.formatOnSave": false
-    },
-    "[python]": {
-        "editor.formatOnSave": true
-    },
-    "workbench.editorAssociations": {
-        "*.ipynb": "jupyter-notebook"
-    },
-    "files.exclude": {
-        "**/.classpath": true,
-        "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
-    },
-    "notebook.cellToolbarLocation": {
-        "default": "right",
-        "jupyter-notebook": "left"
-    },
-    "files.watcherExclude": {
-        "**/.bloop": true,
-        "**/.metals": true,
-        "**/.ammonite": true
-    },
-    "metals.javaHome": "/Users/kahvi/.jabba/jdk/adopt@1.11.0-11/Contents/Home",
-    "github.copilot.enable": {
-        "*": true,
-        "yaml": false,
-        "plaintext": false,
-        "markdown": false
-    },
-    "workbench.editor.showTabs": false,
-    "files.autoSave": "afterDelay",
-    "window.zoomLevel": 1
+    "editor.autoClosingBrackets": "always"
+  },
+  "[lua]": {
+    "editor.formatOnSave": true
+  },
+  "[sql]": {
+    "editor.formatOnSave": false
+  },
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook"
+  },
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  },
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+  "files.watcherExclude": {
+    "**/.bloop": true,
+    "**/.metals": true,
+    "**/.ammonite": true
+  },
+  "metals.javaHome": "/Users/kahvi/.jabba/jdk/adopt@1.11.0-11/Contents/Home",
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": false,
+    "plaintext": false,
+    "markdown": false
+  },
+  "workbench.editor.showTabs": false,
+  "files.autoSave": "afterDelay",
+  "window.zoomLevel": 1
 }
