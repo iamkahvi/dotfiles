@@ -2,7 +2,6 @@
     "workbench.colorTheme": "One Dark Pro",
     "oneDarkPro.vivid": true,
     "workbench.editor.enablePreview": false,
-    "workbench.editor.showTabs": false,
     "workbench.sideBar.location": "right",
     "editor.copyWithSyntaxHighlighting": false,
     "editor.emptySelectionClipboard": true,
@@ -21,6 +20,8 @@
     "editor.autoClosingBrackets": "always",
     "editor.suggestSelection": "first",
     "editor.trimAutoWhitespace": false,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
@@ -29,12 +30,12 @@
     "window.nativeFullScreen": true,
     "window.newWindowDimensions": "inherit",
     "window.openFoldersInNewWindow": "on",
-    "window.zoomLevel": 1,
     "terminal.integrated.inheritEnv": true,
     "git.autofetch": true,
     "javascript.updateImportsOnFileMove.enabled": "always",
     "remote.SSH.localServerDownload": "always",
     "eslint.alwaysShowStatus": true,
+    "editor.tabSize": 2,
     "eslint.codeAction.showDocumentation": {
         "enable": true
     },
@@ -97,7 +98,7 @@
     "[sql]": {
         "editor.formatOnSave": false
     },
-"[python]": {
+    "[python]": {
         "editor.formatOnSave": true
     },
     "workbench.editorAssociations": {
@@ -113,5 +114,19 @@
         "default": "right",
         "jupyter-notebook": "left"
     },
-    "workbench.activityBar.visible": false,
+    "files.watcherExclude": {
+        "**/.bloop": true,
+        "**/.metals": true,
+        "**/.ammonite": true
+    },
+    "metals.javaHome": "/Users/kahvi/.jabba/jdk/adopt@1.11.0-11/Contents/Home",
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": false,
+        "plaintext": false,
+        "markdown": false
+    },
+    "workbench.editor.showTabs": false,
+    "files.autoSave": "afterDelay",
+    "window.zoomLevel": 1
 }
