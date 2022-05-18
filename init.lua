@@ -113,10 +113,10 @@ hyper = {"cmd", "ctrl"}
 hs.window.animationDuration = 0;
 -- hints.style = "vimperator"
 -- Set grid size.
-grid.GRIDWIDTH = 6
+grid.GRIDWIDTH = 5
 grid.GRIDHEIGHT = 8
-grid.MARGINX = 0
-grid.MARGINY = 0
+grid.MARGINX = 0.25
+grid.MARGINY = 0.25
 local gw = grid.GRIDWIDTH
 local gh = grid.GRIDHEIGHT
 
@@ -124,9 +124,10 @@ local gomiddle = {x = 0.025 * gw, y = 0.025 * gh, w = gw * 0.95, h = gh * 0.95}
 local goleft = {x = 0, y = 0, w = gw / 2, h = gh}
 local goright = {x = gw / 2, y = 0, w = gw / 2, h = gh}
 local gobig = {x = 0, y = 0, w = gw, h = gh}
-local gothirdleft = {x = 0.020 * gw, y = 0.025 * gh, w = gw * 0.66, h = gh * 0.95}
+local gothirdleft = {x = 0.33 * gw, y = 0.025 * gh, w = gw * 0.66, h = gh * 0.95}
 local gothirdright = {x = gw * 0.34, y = 0, w = gw * 0.66, h = gh}
 local gosmall = {x = gw * 0.35, y = gh * 0.3, w = gw * 0.3, h = gh * 0.35}
+local narrowmiddle = {x = 1, y = 0, w = 3 * 1.025, h = 8}
 
 local fullApps = {
     "Safari", "Aurora", "Nightly", "Xcode", "Qt Creator", "Google Chrome",
@@ -149,9 +150,10 @@ definitions = {
     l = gridset(goright),
     k = gridset(gobig),
     i = gridset(gosmall),
-    o = gridset(gothirdleft),
+    o = gridset(narrowmiddle),
     t = launchIterm,
     c = launchChrome,
+
 
     -- g = layout2fn,
     u = grid.pushWindowNextScreen,

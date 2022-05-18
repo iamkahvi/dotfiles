@@ -40,12 +40,12 @@
     "command": "workbench.view.scm"
   },
   {
-    "key": "cmd+ctrl+down",
-    "command": "workbench.action.terminal.focusNextPane"
+    "key": "cmd+ctrl+right",
+    "command": "workbench.action.terminal.focusNext"
   },
   {
-    "key": "cmd+ctrl+up",
-    "command": "workbench.action.terminal.focusPreviousPane"
+    "key": "cmd+ctrl+left",
+    "command": "workbench.action.terminal.focusPrevious"
   },
   {
     "key": "cmd+t",
@@ -80,5 +80,13 @@
   {
     "key": "cmd+shift+t",
     "command": "workbench.action.reopenClosedEditor"
+  },
+  {
+    "key": "cmd+ctrl+f",
+    "command": "workbench.action.toggleMaximizedPanel"
+  },
+  {
+    "key": "ctrl+cmd+up",
+    "command": "workbench.action.terminal.resizePaneUp"
   }
 ]

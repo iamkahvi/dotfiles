@@ -1,5 +1,5 @@
 {
-  "workbench.colorTheme": "One Dark Pro",
+  "workbench.colorTheme": "One Dark Pro Darker",
   "oneDarkPro.vivid": true,
   "workbench.editor.enablePreview": false,
   "workbench.sideBar.location": "right",
@@ -44,7 +44,8 @@
     "editor.formatOnPaste": false
   },
   "files.associations": {
-    "*.java": "java"
+    "*.java": "java",
+    "*.html.erb": "erb"
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -64,7 +65,8 @@
     "editor.formatOnSave": true
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
   },
   "[scss]": {
     "editor.defaultFormatter": "mrmlnc.vscode-scss"
@@ -128,5 +130,8 @@
   },
   "workbench.editor.showTabs": false,
   "files.autoSave": "afterDelay",
+  "remote.SSH.defaultExtensions": [
+    "eamodio.gitlens",
+  ],
   "window.zoomLevel": 1
 }

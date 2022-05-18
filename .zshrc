@@ -11,6 +11,7 @@ alias showp='echo $PATH | tr -s ":" "\n"'
 alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
 alias vim='nvim'
+alias python='python3'
 
 if [[ -n $SPIN_WORKSPACE ]]; then
  alias spin='echo $SPIN_WORKSPACE'
