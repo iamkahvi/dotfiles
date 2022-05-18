@@ -88,5 +88,9 @@
   {
     "key": "ctrl+cmd+up",
     "command": "workbench.action.terminal.resizePaneUp"
+  },
+  {
+    "key": "ctrl+cmd+down",
+    "command": "workbench.action.terminal.resizePaneDown"
   }
 ]

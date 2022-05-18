@@ -12,5 +12,5 @@
 	ff = only
 [push]
 	default = simple
-# [include]
-# 	path = /Users/kahvi/.config/dev/gitconfig
+[include]
+	path = /Users/kahvi/.config/dev/gitconfig
