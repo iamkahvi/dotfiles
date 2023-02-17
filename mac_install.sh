@@ -16,7 +16,7 @@ brew install rustup
 
 pip install --upgrade setuptools pip
 
-brew install node nvm go gvm
+brew install node nvm go gvm fd
 
 brew install --cask hammerspoon visual-studio-code iterm2
 

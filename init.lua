@@ -109,6 +109,7 @@ end
 
 -- Actual config =================================
 
+hs.application.enableSpotlightForNameSearches(true)
 hyper = {"cmd", "ctrl"}
 hs.window.animationDuration = 0;
 -- hints.style = "vimperator"

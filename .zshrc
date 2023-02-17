@@ -117,3 +117,5 @@ if [ "$(uname)" = "Darwin" ]; then
 
   [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
 fi
+
+source /Users/kahvi/.config/broot/launcher/bash/br

@@ -1,7 +1,6 @@
 {
   "workbench.colorTheme": "One Dark Pro Darker",
   "oneDarkPro.vivid": true,
-  "workbench.editor.enablePreview": false,
   "workbench.sideBar.location": "right",
   "editor.copyWithSyntaxHighlighting": false,
   "editor.emptySelectionClipboard": true,
@@ -133,5 +132,45 @@
   "remote.SSH.defaultExtensions": [
     "eamodio.gitlens",
   ],
-  "window.zoomLevel": 1
+  "shopifyGlobal.mysqlEditor": "external",
+  "ruby.useLanguageServer": false,
+  "ruby.lint": {
+    "rubocop": false
+  },
+  "ruby.codeCompletion": false,
+  "ruby.intellisense": false,
+  "ruby.format": false,
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.formatOnType": true
+  },
+  "byesig.fold": false,
+  "byesig.enabled": true,
+  "byesig.opacity": 0.5,
+  "byesig.showIcon": false,
+  "editor.rulers": [
+    120
+  ],
+  "git.mergeEditor": false,
+  "workbench.editor.enablePreview": false,
+  "explorer.compactFolders": false,
+  "window.zoomLevel": 1,
+  "workbench.colorCustomizations": {
+    "editorInlayHint.typeForeground": "#666666",
+    "editorInlayHint.typeBackground": "#232323",
+    "editorInlayHint.foreground": "#666666",
+    "editorInlayHint.background": "#232323",
+    "editorInlayHint.parameterForeground": "#666666",
+    "editorInlayHint.parameterBackground": "#232323",
+  },
+  "[rust]": {
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true,
+  },
+  "rust-analyzer.check.command": "clippy",
+  "rust-analyzer.checkOnSave": true
 }
