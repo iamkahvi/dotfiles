@@ -1,7 +1,7 @@
 export DF_HOME="$HOME/dotfiles"
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # Path to your oh-my-zsh installation.
@@ -14,7 +14,7 @@ alias vim='nvim'
 alias python='python3'
 
 if [[ -n $SPIN_WORKSPACE ]]; then
- alias spin='echo $SPIN_WORKSPACE'
+  alias spin='echo $SPIN_WORKSPACE'
 fi
 
 # alias smlr='socat READLINE EXEC:sml'
@@ -24,7 +24,7 @@ fi
 HISTSIZE=500000
 SAVEHIST=500000
 setopt appendhistory
-setopt INC_APPEND_HISTORY  
+setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
 
 # Enable extended file globs
@@ -58,16 +58,16 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 fds() {
   local dir
   dir=$(find ${1:-.} -path '*/\.*' -prune \
-				  -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
+    -o -type d -print 2>/dev/null | fzf +m) &&
+    cd "$dir"
 }
 
 # ff - find file with fzf and bat
 ff() {
   local file
   file=$(find ${1:-.} -path '*/\.*' -prune \
-                                  -o -type f -print 2> /dev/null | fzf --preview 'cat {}' +m) &&
-  vim "$file"
+    -o -type f -print 2>/dev/null | fzf --preview 'cat {}' +m) &&
+    vim "$file"
 }
 
 # fh - search in your command history and execute selected command
@@ -76,19 +76,22 @@ fh() {
 }
 
 # fs - determine size of a file or total size of a directory.
-fs()
-{
-	if du -b /dev/null > /dev/null 2>&1; then
-		local arg=-sbh;
-	else
-		local arg=-sh;
-	fi
+fs() {
+  if du -b /dev/null >/dev/null 2>&1; then
+    local arg=-sbh
+  else
+    local arg=-sh
+  fi
 
-	if [[ -n "$@" ]]; then
-		du $arg -- "$@";
-	else
-		du $arg .[^.]* *;
-	fi
+  if [[ -n "$@" ]]; then
+    du $arg -- "$@"
+  else
+    du $arg .[^.]* *
+  fi
+}
+
+supw() {
+  spin up web --name $1 --wait --open && spin code --latest web
 }
 
 if [ -e $DF_HOME/dircolors ]; then
@@ -103,7 +106,8 @@ if [ "$(uname)" = "Darwin" ] && [ "$(uname -p)" = "arm" ]; then
 else
   fpath+=$HOME/.zsh/pure
 fi
-autoload -U promptinit; promptinit
+autoload -U promptinit
+promptinit
 prompt pure
 
 # Load configs for MacOS. Does nothing if not on MacOS
@@ -113,7 +117,10 @@ if [ "$(uname)" = "Darwin" ]; then
   [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
   if [ -e /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
-  [[ -f /opt/dev/sh/chruby/chruby.sh ]] && type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; }
+  [[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby() {
+    source /opt/dev/sh/chruby/chruby.sh
+    chruby "$@"
+  }; }
 
   [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
 fi
