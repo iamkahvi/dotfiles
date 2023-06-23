@@ -13,6 +13,7 @@ alias configv='vim ~/.vimrc'
 alias vim='nvim'
 alias python='python3'
 
+alias whereami='SPIN_INSTANCE_FQDN'
 if [[ -n $SPIN_WORKSPACE ]]; then
   alias spin='echo $SPIN_WORKSPACE'
 fi
@@ -91,7 +92,15 @@ fs() {
 }
 
 supw() {
-  spin up web --name $1 --wait --open && spin code --latest web
+  spin up web --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest web
+}
+
+sups() {
+  spin up shopify --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest shopify
+}
+
+supwpm() {
+  spin up web-pixels-manager --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest shopify
 }
 
 if [ -e $DF_HOME/dircolors ]; then
