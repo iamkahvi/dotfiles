@@ -1,176 +1,172 @@
 {
-  "workbench.colorTheme": "One Dark Pro",
-  "oneDarkPro.vivid": true,
-  "workbench.sideBar.location": "right",
-  "editor.copyWithSyntaxHighlighting": false,
-  "editor.emptySelectionClipboard": true,
-  "editor.multiCursorModifier": "ctrlCmd",
-  "editor.gotoLocation.multipleReferences": "goto",
-  "editor.gotoLocation.multipleDefinitions": "goto",
-  "editor.gotoLocation.multipleDeclarations": "goto",
-  "editor.gotoLocation.multipleImplementations": "goto",
-  "editor.gotoLocation.multipleTypeDefinitions": "goto",
-  "editor.inlineSuggest.enabled": true,
-  "editor.snippetSuggestions": "top",
-  "editor.detectIndentation": false,
-  "editor.formatOnPaste": true,
-  "editor.minimap.enabled": false,
-  "editor.renderWhitespace": "none",
-  "editor.autoClosingBrackets": "always",
-  "editor.suggestSelection": "first",
-  "editor.trimAutoWhitespace": false,
-  "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": true,
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true,
   "diffEditor.ignoreTrimWhitespace": false,
   "diffEditor.renderSideBySide": false,
-  "window.nativeFullScreen": true,
-  "window.newWindowDimensions": "inherit",
-  "window.openFoldersInNewWindow": "on",
-  "terminal.integrated.inheritEnv": true,
-  "git.autofetch": true,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "remote.SSH.localServerDownload": "always",
-  "eslint.alwaysShowStatus": true,
+  "editor.autoClosingBrackets": "always",
+  "editor.bracketPairColorization.enabled": true,
+  "editor.copyWithSyntaxHighlighting": false,
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.detectIndentation": false,
+  "editor.emptySelectionClipboard": true,
+  "editor.fontLigatures": true,
+  "editor.formatOnPaste": true,
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+  "editor.guides.bracketPairs": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.minimap.enabled": false,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.renderWhitespace": "none",
+  "editor.rulers": [
+    120
+  ],
+  "editor.snippetSuggestions": "top",
+  "editor.suggestSelection": "first",
   "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": false,
   "eslint.codeAction.showDocumentation": {
     "enable": true
   },
   "eslint.format.enable": true,
+  "explorer.compactFolders": false,
+  "files.associations": {
+    "*.html.erb": "erb",
+    "*.java": "java"
+  },
+  "files.autoSave": "afterDelay",
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.factorypath": true,
+    "**/.project": true,
+    "**/.settings": true
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "files.watcherExclude": {
+    "**/.ammonite": true,
+    "**/.bloop": true,
+    "**/.metals": true
+  },
+  "git.autofetch": true,
+  "git.mergeEditor": false,
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": false,
+    "plaintext": false,
+    "scminput": false,
+    "yaml": false
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "notebook.cellToolbarLocation": {
+    "default": "right",
+    "jupyter-notebook": "left"
+  },
+  "oneDarkPro.vivid": true,
+  "remote.SSH.defaultExtensions": [
+    "eamodio.gitlens"
+  ],
+  "remote.SSH.localServerDownload": "always",
+  "shopifyGlobal.mysqlEditor": "external",
+  "terminal.integrated.inheritEnv": true,
+  "window.nativeFullScreen": true,
+  "window.newWindowDimensions": "inherit",
+  "window.openFoldersInNewWindow": "on",
+  "window.title": "${activeEditorShort}${separator}${rootName}",
+  "window.titleBarStyle": "custom",
+  "window.zoomLevel": 1,
+  "workbench.colorCustomizations": {
+    "editorInlayHint.background": "#232323",
+    "editorInlayHint.foreground": "#666666",
+    "editorInlayHint.parameterBackground": "#232323",
+    "editorInlayHint.parameterForeground": "#666666",
+    "editorInlayHint.typeBackground": "#232323",
+    "editorInlayHint.typeForeground": "#666666"
+  },
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.labelFormat": "short",
+  "workbench.editor.revealIfOpen": true,
+  "workbench.editor.showTabs": false,
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter-notebook"
+  },
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.sideBar.location": "right",
+  "workbench.startupEditor": "newUntitledFile",
+  "workbench.tree.indent": 10,
   "[antlr]": {
     "editor.formatOnPaste": false
   },
-  "files.associations": {
-    "*.java": "java",
-    "*.html.erb": "erb"
+  "[c]": {
+    "editor.suggest.insertMode": "replace",
+    "editor.wordBasedSuggestions": false
+  },
+  "[cpp]": {
+    "editor.formatOnSave": true,
+    "editor.suggest.insertMode": "replace",
+    "editor.wordBasedSuggestions": false
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[go]": {
+    "editor.autoClosingBrackets": "always",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": false
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
   },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
     "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[lua]": {
+    "editor.formatOnSave": true
+  },
+  "[python]": {
+    "editor.formatOnSave": true
+  },
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.insertSpaces": true,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.tabSize": 2
+  },
+  "[rust]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "mrmlnc.vscode-scss"
+  },
+  "[sql]": {
+    "editor.formatOnSave": false
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.tabSize": 2
   },
-  "[json]": {
+  "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": false,
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "mrmlnc.vscode-scss"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
-  },
-  "[c]": {
-    "editor.wordBasedSuggestions": false,
-    "editor.suggest.insertMode": "replace"
-  },
-  "[cpp]": {
-    "editor.wordBasedSuggestions": false,
-    "editor.suggest.insertMode": "replace",
-    "editor.formatOnSave": true
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[go]": {
-    "editor.insertSpaces": false,
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    },
-    "editor.autoClosingBrackets": "always"
-  },
-  "[lua]": {
-    "editor.formatOnSave": true
-  },
-  "[sql]": {
-    "editor.formatOnSave": false
-  },
-  "[python]": {
-    "editor.formatOnSave": true
-  },
-  "workbench.editorAssociations": {
-    "*.ipynb": "jupyter-notebook"
-  },
-  "files.exclude": {
-    "**/.classpath": true,
-    "**/.project": true,
-    "**/.settings": true,
-    "**/.factorypath": true
-  },
-  "notebook.cellToolbarLocation": {
-    "default": "right",
-    "jupyter-notebook": "left"
-  },
-  "files.watcherExclude": {
-    "**/.bloop": true,
-    "**/.metals": true,
-    "**/.ammonite": true
-  },
-  "metals.javaHome": "/Users/kahvi/.jabba/jdk/adopt@1.11.0-11/Contents/Home",
-  "github.copilot.enable": {
-    "*": true,
-    "yaml": false,
-    "plaintext": false,
-    "markdown": false
-  },
-  "workbench.editor.showTabs": false,
-  "files.autoSave": "afterDelay",
-  "remote.SSH.defaultExtensions": [
-    "eamodio.gitlens",
-  ],
-  "shopifyGlobal.mysqlEditor": "external",
-  "ruby.useLanguageServer": false,
-  "ruby.lint": {
-    "rubocop": false
-  },
-  "ruby.codeCompletion": false,
-  "ruby.intellisense": false,
-  "ruby.format": false,
-  "[ruby]": {
-    "editor.defaultFormatter": "Shopify.ruby-lsp",
-    "editor.formatOnSave": true,
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.semanticHighlighting.enabled": true,
-    "editor.formatOnType": true
-  },
-  "byesig.fold": false,
-  "byesig.enabled": true,
-  "byesig.opacity": 0.5,
-  "byesig.showIcon": false,
-  "editor.rulers": [
-    120
-  ],
-  "git.mergeEditor": false,
-  "workbench.editor.enablePreview": false,
-  "explorer.compactFolders": false,
-  "workbench.colorCustomizations": {
-    "editorInlayHint.typeForeground": "#666666",
-    "editorInlayHint.typeBackground": "#232323",
-    "editorInlayHint.foreground": "#666666",
-    "editorInlayHint.background": "#232323",
-    "editorInlayHint.parameterForeground": "#666666",
-    "editorInlayHint.parameterBackground": "#232323",
-  },
-  "[rust]": {
-    "editor.tabSize": 4,
-    "editor.formatOnSave": true,
-  },
-  "rust-analyzer.check.command": "clippy",
-  "rust-analyzer.checkOnSave": true,
-  "window.zoomLevel": 1
 }

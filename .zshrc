@@ -14,9 +14,12 @@ alias vim='nvim'
 alias python='python3'
 
 alias whereami='SPIN_INSTANCE_FQDN'
+
 if [[ -n $SPIN_WORKSPACE ]]; then
   alias spin='echo $SPIN_WORKSPACE'
 fi
+
+alias sl="spin list -o name"
 
 # alias smlr='socat READLINE EXEC:sml'
 # alias cppcompile='c++ -std=c++11 -stdlib=libc++'
@@ -92,15 +95,15 @@ fs() {
 }
 
 supw() {
-  spin up web --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest web
+  spin up web --privileged --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest web
 }
 
 sups() {
-  spin up shopify --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest shopify
+  spin up shopify --privileged --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest shopify
 }
 
 supwpm() {
-  spin up web-pixels-manager --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest shopify
+  spin up web-pixels-manager --privileged --name $1 --cpu 32 --memory 128 --wait --open && spin code --latest shopify
 }
 
 if [ -e $DF_HOME/dircolors ]; then
@@ -135,3 +138,12 @@ if [ "$(uname)" = "Darwin" ]; then
 fi
 
 source /Users/kahvi/.config/broot/launcher/bash/br
+
+[[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; } }
+
+# bun completions
+[ -s "/Users/kahvi/.bun/_bun" ] && source "/Users/kahvi/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
