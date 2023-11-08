@@ -3,32 +3,34 @@ hs.hotkey.bind({"cmd", "alt", "ctrl"}, "W", function()
 end)
 
 function launchIterm()
-	if hs.application.find("iTerm2") then
-		hs.applescript.applescript([[
+    if hs.application.find("iTerm2") then
+        hs.applescript.applescript([[
 			tell application "iTerm2"
 				create window with default profile
 			end tell
 		]])
-	else
-		hs.application.open("iTerm")
-	end
+    else
+        hs.application.open("iTerm")
+    end
 end
 
 function launchChrome()
-	if hs.application.find("Chrome") then
-		hs.applescript.applescript([[
+    if hs.application.find("Chrome") then
+        hs.applescript.applescript([[
 			tell application "Chrome"
 				make new window
                 activate
 			end tell
 		]])
-	else
-		hs.application.open("Chrome")
-	end
+    else
+        hs.application.open("Chrome")
+    end
 end
 
 hs.window.animationDuration = 0
 
+-- Import the necessary Hammerspoon modules
+local fs = require "hs.fs"
 local application = require "hs.application"
 local window = require "hs.window"
 local hotkey = require "hs.hotkey"
@@ -125,7 +127,12 @@ local gomiddle = {x = 0.025 * gw, y = 0.025 * gh, w = gw * 0.95, h = gh * 0.95}
 local goleft = {x = 0, y = 0, w = gw / 2, h = gh}
 local goright = {x = gw / 2, y = 0, w = gw / 2, h = gh}
 local gobig = {x = 0, y = 0, w = gw, h = gh}
-local gothirdleft = {x = 0.33 * gw, y = 0.025 * gh, w = gw * 0.66, h = gh * 0.95}
+local gothirdleft = {
+    x = 0.33 * gw,
+    y = 0.025 * gh,
+    w = gw * 0.66,
+    h = gh * 0.95
+}
 local gothirdright = {x = gw * 0.34, y = 0, w = gw * 0.66, h = gh}
 local gosmall = {x = gw * 0.35, y = gh * 0.3, w = gw * 0.3, h = gh * 0.35}
 local narrowmiddle = {x = 1, y = 0, w = 3 * 1.025, h = 8}
@@ -155,7 +162,6 @@ definitions = {
     t = launchIterm,
     c = launchChrome,
 
-
     -- g = layout2fn,
     u = grid.pushWindowNextScreen,
     r = hs.reload,
@@ -163,8 +169,41 @@ definitions = {
     ["9"] = function() window.focusedWindow():focusTab(9000) end
 }
 
+-- Function to create and open a markdown file
+function createAndOpenMarkdownFile()
+    -- Get the current date and time
+    local date = os.date("%Y-%m-%dT%H.%M.%S")
+
+    -- Create the file name
+    local fileName = date .. ".md"
+
+    -- Create the file path
+    local filePath = fs.pathToAbsolute("~") .. "/" .. fileName
+
+    -- Create the file
+    local file = io.open(filePath, "w")
+
+    -- Check if the file was created successfully
+    if file then
+        -- Write "# " at the beginning of the file
+        file:write("# ")
+
+        -- Close the file
+        file:close()
+
+        -- Open the file with TextMate and position the cursor at line 1, character 3
+        hs.execute("/usr/local/bin/mate " .. filePath .. " -l 1:3")
+    else
+        print("Failed to create file")
+    end
+end
+
 function init()
     createHotkeys()
+
+    hotkey.bind({}, "f13", launchIterm)
+    hotkey.bind({}, "f14", launchChrome)
+    hotkey.bind({}, "f15", createAndOpenMarkdownFile)
 
     alert.show("Hammerspoon, at your service.")
 end
