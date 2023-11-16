@@ -161,6 +161,7 @@ definitions = {
     o = gridset(narrowmiddle),
     t = launchIterm,
     c = launchChrome,
+    m = createAndOpenMarkdownFile,
 
     -- g = layout2fn,
     u = grid.pushWindowNextScreen,
@@ -171,14 +172,21 @@ definitions = {
 
 -- Function to create and open a markdown file
 function createAndOpenMarkdownFile()
+  print("HWLLOOO")
+  alert.show("HELLOO")
     -- Get the current date and time
     local date = os.date("%Y-%m-%dT%H.%M.%S")
+
+    -- Create the date string
+    local dateString = os.date("%A, %B %e")
 
     -- Create the file name
     local fileName = date .. ".md"
 
     -- Create the file path
-    local filePath = fs.pathToAbsolute("~") .. "/" .. fileName
+    local filePath = fs.pathToAbsolute("~") .. "/notes/" .. fileName
+
+    alert.show("Create file at " .. filePath .. "")
 
     -- Create the file
     local file = io.open(filePath, "w")
@@ -186,13 +194,13 @@ function createAndOpenMarkdownFile()
     -- Check if the file was created successfully
     if file then
         -- Write "# " at the beginning of the file
-        file:write("# ")
+        file:write("# " .. dateString .. "\n\n")
 
         -- Close the file
         file:close()
 
-        -- Open the file with TextMate and position the cursor at line 1, character 3
-        hs.execute("/usr/local/bin/mate " .. filePath .. " -l 1:3")
+        -- Open the file with SublimeText and position the cursor at line 1, character 3
+        hs.execute("/Applications/Sublime\\ Text.app/Contents/SharedSupport/bin/subl " .. filePath .. ":3 -n")
     else
         print("Failed to create file")
     end
@@ -201,9 +209,9 @@ end
 function init()
     createHotkeys()
 
-    hotkey.bind({}, "f13", launchIterm)
-    hotkey.bind({}, "f14", launchChrome)
-    hotkey.bind({}, "f15", createAndOpenMarkdownFile)
+    hotkey.bind({}, "f10", launchIterm)
+    hotkey.bind({}, "f11", launchChrome)
+    hotkey.bind({}, "f12", createAndOpenMarkdownFile)
 
     alert.show("Hammerspoon, at your service.")
 end
