@@ -161,7 +161,6 @@ definitions = {
     o = gridset(narrowmiddle),
     t = launchIterm,
     c = launchChrome,
-    m = createAndOpenMarkdownFile,
 
     -- g = layout2fn,
     u = grid.pushWindowNextScreen,
@@ -172,16 +171,17 @@ definitions = {
 
 -- Function to create and open a markdown file
 function createAndOpenMarkdownFile()
-  print("HWLLOOO")
-  alert.show("HELLOO")
     -- Get the current date and time
     local date = os.date("%Y-%m-%dT%H.%M.%S")
 
     -- Create the date string
     local dateString = os.date("%A, %B %e")
 
+    -- Ask for a file name
+    local button, fileNameInputted = hs.dialog.textPrompt("File name:", "", date)
+
     -- Create the file name
-    local fileName = date .. ".md"
+    local fileName = fileNameInputted .. ".md"
 
     -- Create the file path
     local filePath = fs.pathToAbsolute("~") .. "/notes/" .. fileName
