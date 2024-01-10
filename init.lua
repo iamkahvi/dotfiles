@@ -209,9 +209,9 @@ end
 function init()
     createHotkeys()
 
-    hotkey.bind({}, "f10", launchIterm)
-    hotkey.bind({}, "f11", launchChrome)
-    hotkey.bind({}, "f12", createAndOpenMarkdownFile)
+    hotkey.bind({}, "f13", launchIterm)
+    hotkey.bind({}, "f14", launchChrome)
+    hotkey.bind({}, "f15", createAndOpenMarkdownFile)
 
     alert.show("Hammerspoon, at your service.")
 end

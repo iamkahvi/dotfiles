@@ -1,6 +1,7 @@
 {
   "diffEditor.ignoreTrimWhitespace": false,
   "diffEditor.renderSideBySide": false,
+  "editor.wordWrap": "on",
   "editor.autoClosingBrackets": "always",
   "editor.bracketPairColorization.enabled": true,
   "editor.copyWithSyntaxHighlighting": false,
@@ -55,8 +56,8 @@
   "git.mergeEditor": false,
   "github.copilot.enable": {
     "*": true,
-    "markdown": false,
     "plaintext": false,
+    "markdown": false,
     "scminput": false,
     "yaml": false
   },
@@ -90,7 +91,6 @@
   "workbench.editor.enablePreview": false,
   "workbench.editor.labelFormat": "short",
   "workbench.editor.revealIfOpen": true,
-  "workbench.editor.showTabs": false,
   "workbench.editorAssociations": {
     "*.ipynb": "jupyter-notebook"
   },
@@ -111,12 +111,12 @@
     "editor.wordBasedSuggestions": false
   },
   "[css]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[go]": {
     "editor.autoClosingBrackets": "always",
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     },
     "editor.formatOnSave": true,
     "editor.insertSpaces": false
@@ -168,5 +168,18 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
+  },
+  "window.nativeTabs": true,
+  "remote.SSH.connectTimeout": 300,
+  "workbench.editor.showTabs": "single",
+  "rust-analyzer.linkedProjects": [
+    "/Users/kahvi/advent-of-code-2023/day7/part1/Cargo.toml"
+  ],
+  "rust-analyzer.inlayHints.typeHints.enable": false,
+  "rust-analyzer.inlayHints.parameterHints.enable": false,
+  "rust-analyzer.inlayHints.chainingHints.enable": false,
+  "rust-analyzer.inlayHints.closingBraceHints.enable": false,
+  "[c][cpp]": {
+    "editor.wordBasedSuggestions": "off"
   },
 }
