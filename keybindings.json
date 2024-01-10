@@ -40,12 +40,14 @@
     "command": "workbench.view.scm"
   },
   {
-    "key": "cmd+ctrl+right",
-    "command": "workbench.action.terminal.focusNext"
+    "key": "cmd+ctrl+]",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus"
   },
   {
-    "key": "cmd+ctrl+left",
-    "command": "workbench.action.terminal.focusPrevious"
+    "key": "cmd+ctrl+[",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus"
   },
   {
     "key": "cmd+t",
@@ -92,5 +94,9 @@
   {
     "key": "ctrl+cmd+down",
     "command": "workbench.action.terminal.resizePaneDown"
+  },
+  {
+    "key": "cmd+shift+d",
+    "command": "editor.action.addSelectionToNextFindMatch"
   }
 ]
