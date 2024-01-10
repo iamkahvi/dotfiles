@@ -174,7 +174,7 @@ definitions = {
 -- Function to create and open a markdown file
 function createAndOpenMarkdownFile()
     -- Get the current date and time
-    local date = os.date("%Y-%m-%dT%H.%M.%S")
+    local date = os.date("%y.%m.%d")
 
     -- Create the date string
     local dateString = os.date("%A, %B %e")
@@ -186,7 +186,7 @@ function createAndOpenMarkdownFile()
     local fileName = fileNameInputted .. ".md"
 
     -- Create the file path
-    local filePath = fs.pathToAbsolute("~") .. "/notes/" .. fileName
+    local filePath = "/Users/kahvi/kpdx/logs/" .. fileName
 
     alert.show("Create file at " .. filePath .. "")
 
@@ -202,7 +202,7 @@ function createAndOpenMarkdownFile()
         file:close()
 
         -- Open the file with SublimeText and position the cursor at line 1, character 3
-        hs.execute("subl " .. filePath .. ":3 -n")
+        hs.execute("/Applications/Sublime\\ Text.app/Contents/SharedSupport/bin/subl " .. filePath .. ":3 -n")
     else
         print("Failed to create file")
     end
