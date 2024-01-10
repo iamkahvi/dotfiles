@@ -136,6 +136,7 @@ local gothirdleft = {
 local gothirdright = {x = gw * 0.34, y = 0, w = gw * 0.66, h = gh}
 local gosmall = {x = gw * 0.35, y = gh * 0.3, w = gw * 0.3, h = gh * 0.35}
 local narrowmiddle = {x = 1, y = 0, w = 3 * 1.025, h = 8}
+local narrowshortmiddle = {x = 1, y = 1, w = 3 * 1.025, h = 6}
 
 local fullApps = {
     "Safari", "Aurora", "Nightly", "Xcode", "Qt Creator", "Google Chrome",
@@ -159,11 +160,12 @@ definitions = {
     k = gridset(gobig),
     i = gridset(gosmall),
     o = gridset(narrowmiddle),
+    u = gridset(narrowshortmiddle),
     t = launchIterm,
     c = launchChrome,
 
     -- g = layout2fn,
-    u = grid.pushWindowNextScreen,
+    -- u = grid.pushWindowNextScreen,
     r = hs.reload,
 
     ["9"] = function() window.focusedWindow():focusTab(9000) end
@@ -200,7 +202,7 @@ function createAndOpenMarkdownFile()
         file:close()
 
         -- Open the file with SublimeText and position the cursor at line 1, character 3
-        hs.execute("/Applications/Sublime\\ Text.app/Contents/SharedSupport/bin/subl " .. filePath .. ":3 -n")
+        hs.execute("subl " .. filePath .. ":3 -n")
     else
         print("Failed to create file")
     end

@@ -137,7 +137,7 @@ if [ "$(uname)" = "Darwin" ]; then
   [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
 fi
 
-source /Users/kahvi/.config/broot/launcher/bash/br
+# source /Users/kahvi/.config/broot/launcher/bash/br
 
 [[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; } }
 
@@ -147,3 +147,13 @@ source /Users/kahvi/.config/broot/launcher/bash/br
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# subl
+export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
+
+# source /Users/iamkahvi/.config/broot/launcher/bash/br
+
+# bun completions
+[ -s "/Users/iamkahvi/.bun/_bun" ] && source "/Users/iamkahvi/.bun/_bun"
+
+eval $(opam config env)
