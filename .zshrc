@@ -7,11 +7,13 @@ export NVM_DIR="$HOME/.nvm"
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+alias mkdir="mkdir -p"
 alias showp='echo $PATH | tr -s ":" "\n"'
 alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
 alias vim='nvim'
 alias python='python3'
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 alias whereami='SPIN_INSTANCE_FQDN'
 
