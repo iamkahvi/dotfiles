@@ -159,3 +159,7 @@ export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 [ -s "/Users/iamkahvi/.bun/_bun" ] && source "/Users/iamkahvi/.bun/_bun"
 
 eval $(opam config env)
+
+eval "$(atuin init zsh --disable-up-arrow)"
+
+export PATH="/Users/iamkahvi/.local/bin:$PATH"
