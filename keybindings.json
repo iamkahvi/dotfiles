@@ -19,10 +19,6 @@
     "when": "filesExplorerFocus && !inputFocus"
   },
   {
-    "key": "cmd+t",
-    "command": "workbench.action.terminal.focus"
-  },
-  {
     "key": "cmd+`",
     "command": "workbench.action.focusPanel",
     "when": "terminal.Focus"
@@ -40,14 +36,12 @@
     "command": "workbench.view.scm"
   },
   {
-    "key": "cmd+ctrl+]",
-    "command": "workbench.action.terminal.focusNext",
-    "when": "terminalFocus"
+    "key": "cmd+ctrl+right",
+    "command": "workbench.action.terminal.focusNext"
   },
   {
-    "key": "cmd+ctrl+[",
-    "command": "workbench.action.terminal.focusPrevious",
-    "when": "terminalFocus"
+    "key": "cmd+ctrl+left",
+    "command": "workbench.action.terminal.focusPrevious"
   },
   {
     "key": "cmd+t",
@@ -96,7 +90,29 @@
     "command": "workbench.action.terminal.resizePaneDown"
   },
   {
-    "key": "cmd+shift+d",
+    "key": "shift+cmd+d",
     "command": "editor.action.addSelectionToNextFindMatch"
-  }
+  },
+  {
+    "key": "cmd+r",
+    "command": "editor.action.smartSelect.expand"
+  },
+  {
+    "key": "cmd+shift+w",
+    "command": "workbench.action.closeAllEditors"
+  },
+  {
+    "key": "cmd+shift+r",
+    "command": "editor.action.rename",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "cmd+l",
+    "command": "editor.action.selectLine"
+  },
+  {
+    "key": "cmd+l",
+    "command": "expandLineSelection",
+    "when": "textInputFocus"
+  },
 ]
