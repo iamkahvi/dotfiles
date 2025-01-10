@@ -1,7 +1,6 @@
 {
   "diffEditor.ignoreTrimWhitespace": false,
   "diffEditor.renderSideBySide": false,
-  "editor.wordWrap": "on",
   "editor.autoClosingBrackets": "always",
   "editor.bracketPairColorization.enabled": true,
   "editor.copyWithSyntaxHighlighting": false,
@@ -10,7 +9,7 @@
   "editor.detectIndentation": false,
   "editor.emptySelectionClipboard": true,
   "editor.fontLigatures": true,
-  "editor.formatOnPaste": true,
+  "editor.formatOnPaste": false,
   "editor.gotoLocation.multipleDeclarations": "goto",
   "editor.gotoLocation.multipleDefinitions": "goto",
   "editor.gotoLocation.multipleImplementations": "goto",
@@ -56,8 +55,8 @@
   "git.mergeEditor": false,
   "github.copilot.enable": {
     "*": true,
-    "plaintext": false,
     "markdown": false,
+    "plaintext": false,
     "scminput": false,
     "yaml": false
   },
@@ -73,7 +72,6 @@
   "remote.SSH.localServerDownload": "always",
   "shopifyGlobal.mysqlEditor": "external",
   "terminal.integrated.inheritEnv": true,
-  "window.nativeFullScreen": true,
   "window.newWindowDimensions": "inherit",
   "window.openFoldersInNewWindow": "on",
   "window.title": "${activeEditorShort}${separator}${rootName}",
@@ -103,15 +101,13 @@
   },
   "[c]": {
     "editor.suggest.insertMode": "replace",
-    "editor.wordBasedSuggestions": false
   },
   "[cpp]": {
     "editor.formatOnSave": true,
     "editor.suggest.insertMode": "replace",
-    "editor.wordBasedSuggestions": false
   },
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.css-language-features"
   },
   "[go]": {
     "editor.autoClosingBrackets": "always",
@@ -122,7 +118,7 @@
     "editor.insertSpaces": false
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "vscode.html-language-features",
     "editor.formatOnSave": false
   },
   "[javascript]": {
@@ -169,17 +165,34 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  "window.nativeTabs": true,
-  "remote.SSH.connectTimeout": 300,
-  "workbench.editor.showTabs": "single",
+  "[astro]": {
+    "editor.formatOnSave": true
+  },
   "rust-analyzer.linkedProjects": [
-    "/Users/kahvi/advent-of-code-2023/day7/part1/Cargo.toml"
+    "/Users/iamkahvi/Developer/advent-of-code-2023/day3/part2/Cargo.toml",
+    "/Users/iamkahvi/Developer/advent-of-code-2023/day7/part1/Cargo.toml",
+    "/Users/iamkahvi/Developer/advent-of-code-2023/day7/part2/Cargo.toml",
+    "/Users/iamkahvi/rust-web-server-uploader/Cargo.toml"
   ],
-  "rust-analyzer.inlayHints.typeHints.enable": false,
-  "rust-analyzer.inlayHints.parameterHints.enable": false,
-  "rust-analyzer.inlayHints.chainingHints.enable": false,
-  "rust-analyzer.inlayHints.closingBraceHints.enable": false,
+  "editor.inlayHints.enabled": "offUnlessPressed",
   "[c][cpp]": {
     "editor.wordBasedSuggestions": "off"
   },
+  "cloudcode.duetAI.project": "wired-axis-246505",
+  "vim.vimrc.enable": true,
+  "vim.vimrc.path": "/Users/iamkahvi/.vimrc",
+  "breadcrumbs.symbolPath": "off",
+  "cSpell.userWords": [
+    "contentful",
+    "Kahvi",
+    "preact"
+  ],
+  "remote.SSH.connectTimeout": 150,
+  "editor.accessibilitySupport": "off",
+  "workbench.activityBar.location": "top",
+  "github.copilot.editor.enableAutoCompletions": true,
+  "stylelint.enable": false,
+  "typescript.tsserver.log": "verbose",
+  "githubPullRequests.pullBranch": "never",
+  "workbench.editor.showTabs": "none",
 }

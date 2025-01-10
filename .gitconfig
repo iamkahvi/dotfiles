@@ -81,4 +81,4 @@
   unhideall = "!git hidden | awk {'print $2'} | xargs git unhide"
   hideall = "!git status -s | awk {'print $2'} | xargs git hide"
 [include]
-	# path = /Users/kahvi/.config/dev/gitconfig
+	path = /Users/kahvi/.config/dev/gitconfig

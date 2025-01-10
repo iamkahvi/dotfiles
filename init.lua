@@ -202,7 +202,7 @@ function createAndOpenMarkdownFile()
         file:close()
 
         -- Open the file with SublimeText and position the cursor at line 1, character 3
-        hs.execute("/Applications/Sublime\\ Text.app/Contents/SharedSupport/bin/subl " .. filePath .. ":3 -n")
+        hs.execute("/Applications/Sublime\\ Text.app/Contents/SharedSupport/bin/subl " .. filePath .. ":3")
     else
         print("Failed to create file")
     end
@@ -212,8 +212,8 @@ function init()
     createHotkeys()
 
     hotkey.bind({}, "f13", launchIterm)
-    hotkey.bind({}, "f14", launchChrome)
-    hotkey.bind({}, "f15", createAndOpenMarkdownFile)
+    hotkey.bind({}, "f16", launchChrome)
+    hotkey.bind({}, "f12", createAndOpenMarkdownFile)
 
     alert.show("Hammerspoon, at your service.")
 end
