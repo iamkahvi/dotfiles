@@ -7,11 +7,13 @@ export NVM_DIR="$HOME/.nvm"
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
+alias mkdir="mkdir -p"
 alias showp='echo $PATH | tr -s ":" "\n"'
 alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
 alias vim='nvim'
 alias python='python3'
+alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 alias whereami='SPIN_INSTANCE_FQDN'
 
@@ -137,7 +139,7 @@ if [ "$(uname)" = "Darwin" ]; then
   [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
 fi
 
-source /Users/kahvi/.config/broot/launcher/bash/br
+# source /Users/kahvi/.config/broot/launcher/bash/br
 
 [[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; } }
 
@@ -147,3 +149,17 @@ source /Users/kahvi/.config/broot/launcher/bash/br
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# subl
+export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
+
+# source /Users/iamkahvi/.config/broot/launcher/bash/br
+
+# bun completions
+[ -s "/Users/iamkahvi/.bun/_bun" ] && source "/Users/iamkahvi/.bun/_bun"
+
+eval $(opam config env)
+
+eval "$(atuin init zsh --disable-up-arrow)"
+
+export PATH="/Users/iamkahvi/.local/bin:$PATH"

@@ -19,10 +19,6 @@
     "when": "filesExplorerFocus && !inputFocus"
   },
   {
-    "key": "cmd+t",
-    "command": "workbench.action.terminal.focus"
-  },
-  {
     "key": "cmd+`",
     "command": "workbench.action.focusPanel",
     "when": "terminal.Focus"
@@ -98,5 +94,13 @@
   {
     "key": "cmd+shift+d",
     "command": "editor.action.addSelectionToNextFindMatch"
-  }
+  },
+  {
+    "key": "cmd+shift+r",
+    "command": "editor.action.smartSelect.expand"
+  },
+  {
+    "key": "cmd+shift+w",
+    "command": "workbench.action.closeAllEditors"
+  },
 ]
