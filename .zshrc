@@ -12,6 +12,7 @@ alias configz='vim ~/.zshrc'
 alias configv='vim ~/.vimrc'
 alias vim='nvim'
 alias python='python3'
+alias cursor='/Applications/Cursor.app/Contents/Resources/app/bin/code'
 
 alias whereami='SPIN_INSTANCE_FQDN'
 
@@ -156,6 +157,20 @@ export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 # bun completions
 [ -s "/Users/iamkahvi/.bun/_bun" ] && source "/Users/iamkahvi/.bun/_bun"
 
+fpath=(~/.zsh/functions $fpath)
+autoload -Uz ~/.zsh/functions/[^_]*(:t)
+
 eval $(opam config env)
+
+function shipped() {
+    # Check if a PR number is provided
+    if [ -z "$1" ]; then
+        echo "Usage: check_if_shipped <PR_NUMBER>"
+        return 1
+    fi
+
+    # Your command to get the merge commit and check if it's shipped
+    gh pr view "$1" --json mergeCommit | jq -r .mergeCommit.oid | xargs -I {} zsh -c "source ~/.zshrc; dev conveyor is-it-shipped {}"
+}
 
 eval "$(zoxide init zsh)"
