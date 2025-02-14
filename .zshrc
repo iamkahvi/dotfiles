@@ -67,12 +67,12 @@ fds() {
     cd "$dir"
 }
 
-# ff - find file with fzf and bat
+# ff - find file with fzf and print the file path
 ff() {
   local file
   file=$(find ${1:-.} -path '*/\.*' -prune \
-    -o -type f -print 2>/dev/null | fzf --preview 'cat {}' +m) &&
-    vim "$file"
+    -o -type f -print 2>/dev/null | fzf --preview 'bat --color=always {}' +m) &&
+    printf '%s\n' "$file"
 }
 
 # fh - search in your command history and execute selected command
@@ -156,11 +156,6 @@ export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 
 # bun completions
 [ -s "/Users/iamkahvi/.bun/_bun" ] && source "/Users/iamkahvi/.bun/_bun"
-
-fpath=(~/.zsh/functions $fpath)
-autoload -Uz ~/.zsh/functions/[^_]*(:t)
-
-eval $(opam config env)
 
 function shipped() {
     # Check if a PR number is provided
