@@ -1,15 +1,21 @@
 set encoding=UTF-8
 
+let mapleader = ","
+
 set hls
 set ic
 set is
 set nu
 set noswf
 
-let mapleader = ","
+set clipboard=unnamedplus
+
 imap <leader>jj <Esc>
 imap <leader>ww <Esc>:w<CR>
 imap <leader>wq <Esc>:wq<CR>
+
+nnoremap <leader>ww :w<CR>
+nnoremap <leader>wq :wq<CR>
 
 " ==== Vim Drops
 filetype plugin on
@@ -19,22 +25,17 @@ set omnifunc=syntaxcomplete#Complete
 nnoremap <leader>[ <C-w>h
 nnoremap <leader>] <C-w>l
 
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/goyo.vim'
-Plug 'tpope/vim-sensible'
-Plug 'VundleVim/Vundle.vim'
-Plug 'honza/vim-snippets'
-Plug 'mlaursen/vim-react-snippets'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter'
-Plug 'tmhedberg/SimpylFold'
 Plug 'scrooloose/nerdtree'
-Plug 'vim-scripts/indentpython.vim'
-Plug 'nathanaelkane/vim-indent-guides'
 Plug 'tpope/vim-surround'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'rust-lang/rust.vim'
 call plug#end()
 
@@ -48,17 +49,41 @@ nnoremap o o<Esc>
 
 syntax enable
 
+" Disable arrow keys in normal mode
+nnoremap <Up> <Nop>
+nnoremap <Down> <Nop>
+nnoremap <Left> <Nop>
+nnoremap <Right> <Nop>
+
+" Disable arrow keys in visual mode
+vnoremap <Up> <Nop>
+vnoremap <Down> <Nop>
+vnoremap <Left> <Nop>
+vnoremap <Right> <Nop>
+
+nnoremap j j^
+nnoremap k k^
+
+nnoremap J 5j^
+nnoremap K 5k^
+
+" Indent with Tab in normal mode
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+
+" Indent selection with Tab in visual mode
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv
+
 let python_highlight_all=1
-let g:airline_theme='minimalist'
-let g:airline_powerline_fonts = 1
-set clipboard=unnamed
 set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 set number
+set relativenumber
 set cursorline
 set wildmenu
-set lazyredraw	
+set lazyredraw
 set showmatch
 set backspace=indent,eol,start
 
@@ -66,6 +91,15 @@ set backspace=indent,eol,start
 set incsearch
 set hlsearch
 nnoremap <leader>n :nohlsearch<CR>
+
+" TODO 
+" - shortcut for searching whole file for word under cursor  (not just forward
+" and back)
+" - shortcut for centering cursor on screen (zz) whenever I go to a specific
+"   line
+" - shortcut for deleting word in insert mode (opt + backspace)
+" - shortcut to undo from insert mode
+" - shortcut to redo with U in normal mode
 
 " ==== Python Options
 " (https://realpython.com/vim-and-python-a-match-made-in-heaven/#macos-os-x)
@@ -86,11 +120,6 @@ set foldmethod=indent
 nnoremap <space> za
 vnoremap <space> zf
 
-" ==== Custome Key Bindings
-" move vertically by visual line
-nnoremap j gj
-nnoremap k gk
-
 " ==== NERDTREE
 let NERDTreeIgnore = ['__pycache__', '\.pyc$', '\.o$', '\.so$', '\.a$', '\.swp', '*\.swp', '\.swo', '\.swn', '\.swh', '\.swm', '\.swl', '\.swk', '\.sw*$', '[a-zA-Z]*egg[a-zA-Z]*', '.DS_Store']
 
@@ -101,24 +130,12 @@ map <silent><leader>ne :NERDTreeToggle<CR>
 let NERDTreeMinimalUI = 1
 let NERDTreeDirArrows = 1
 
-" ==== Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
 " ==== Rust
 let g:rustfmt_autosave = 1
 
 set undolevels=9001
 " ==== Enable mouse
 set mouse=a
-" ==== Hide command bar
-set noshowmode
 
 iab retrun   return
 iab rerturn  return
