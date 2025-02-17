@@ -72,7 +72,6 @@
   "remote.SSH.localServerDownload": "always",
   "shopifyGlobal.mysqlEditor": "external",
   "terminal.integrated.inheritEnv": true,
-  "window.nativeFullScreen": true,
   "window.newWindowDimensions": "inherit",
   "window.openFoldersInNewWindow": "on",
   "window.title": "${activeEditorShort}${separator}${rootName}",
@@ -85,11 +84,10 @@
     "editorInlayHint.typeBackground": "#232323",
     "editorInlayHint.typeForeground": "#666666"
   },
-  "workbench.colorTheme": "One Dark Pro",
+  "workbench.colorTheme": "One Dark Pro Darker",
   "workbench.editor.enablePreview": false,
   "workbench.editor.labelFormat": "short",
   "workbench.editor.revealIfOpen": true,
-  "workbench.editor.showTabs": "single",
   "workbench.editorAssociations": {
     "*.ipynb": "jupyter-notebook"
   },
@@ -123,7 +121,7 @@
     "editor.formatOnSave": false
   },
   "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
   "[json]": {
@@ -158,12 +156,12 @@
     "editor.formatOnSave": false
   },
   "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.tabSize": 2
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
   "[astro]": {
@@ -183,5 +181,28 @@
   "vim.vimrc.enable": true,
   "vim.vimrc.path": "/Users/iamkahvi/.vimrc",
   "window.zoomLevel": 1,
-  "breadcrumbs.symbolPath": "off"
+  "breadcrumbs.symbolPath": "off",
+  "cSpell.userWords": [
+    "contentful",
+    "Kahvi",
+    "preact"
+  ],
+  "remote.SSH.connectTimeout": 150,
+  "editor.accessibilitySupport": "off",
+  "workbench.activityBar.location": "top",
+  "github.copilot.editor.enableAutoCompletions": true,
+  "stylelint.enable": false,
+  "typescript.tsserver.log": "verbose",
+  "githubPullRequests.pullBranch": "never",
+  "workbench.editor.showTabs": "none",
+  "vim.handleKeys": {
+    "<C-d>": true,
+    "<C-s>": false,
+    "<C-z>": false
+  },
+  "vim.leader": " ",
+  "vim.neovimUseConfigFile": true,
+  "vim.neovimConfigPath": "~/.config/nvim/init.lua",
+  "vim.neovimPath": "/opt/homebrew/bin/nvim",
+  "editor.cursorSurroundingLines": 999,
 }
