@@ -1,36 +1,116 @@
+" ==== Leader Key ====
+let mapleader = " "
+
+" ==== General Settings ====
 set encoding=UTF-8
-
-let mapleader = ","
-
-set hls
-set ic
-set is
-set nu
-set noswf
-
 set clipboard=unnamedplus
+set autoindent
+set backspace=indent,eol,start
+set complete-=i
+set smarttab
+set mouse=a
 
+" ==== Indentation and Formatting ====
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+
+" ==== UI Enhancements ====
+set number
+set relativenumber
+set cursorline
+set wildmenu
+set lazyredraw
+set showmatch
+
+" ==== Undo and Folding ====
+set undolevels=9001
+set foldlevel=99
+set foldmethod=indent
+
+" ==== Keep cursor centered ====
+set scrolloff=999
+
+" ==== Interface and Appearance ====
+set hls            " Highlight search results
+set ic             " Ignore case in searches
+set is             " Incremental search
+set nu             " Show line numbers
+set noswf          " Disable swap files
+set incsearch      " Enable incremental search
+set hlsearch       " Enable search highlighting
+syntax enable      " Enable syntax highlighting
+
+" ==== Key Mappings ====
+
+" Insert Mode Shortcuts
 imap <leader>jj <Esc>
 imap <leader>ww <Esc>:w<CR>
 imap <leader>wq <Esc>:wq<CR>
 
+" Normal Mode Shortcuts
 nnoremap <leader>ww :w<CR>
 nnoremap <leader>wq :wq<CR>
 
-" ==== Vim Drops
-filetype plugin on
-set omnifunc=syntaxcomplete#Complete
-
-" ==== Vim Splits
+" Window Navigation
 nnoremap <leader>[ <C-w>h
 nnoremap <leader>] <C-w>l
 
+" Cursor Movement
+nnoremap j j^
+nnoremap k k^
+nnoremap J 5j^
+nnoremap K 5k^
+
+" Indentation
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv
+
+" Disable Arrow Keys in Normal and Visual Mode
+nnoremap <Up> <Nop>
+nnoremap <Down> <Nop>
+nnoremap <Left> <Nop>
+nnoremap <Right> <Nop>
+vnoremap <Up> <Nop>
+vnoremap <Down> <Nop>
+vnoremap <Left> <Nop>
+vnoremap <Right> <Nop>
+
+" Insert new line in Normal Mode
+nnoremap <leader>o :put _<CR>
+nnoremap <leader>O :put! _<CR>
+
+" Search Options
+nnoremap <leader>n :nohlsearch<CR>
+
+" Undo & Redo
+inoremap <C-z> <C-o>u
+nnoremap U <C-r>
+
+" Deleting and Moving Words
+nnoremap <leader>d "_dd
+inoremap <M-BS> <C-w>
+inoremap <Esc>b <C-Left>
+inoremap <M-Left> <C-o>b
+inoremap <Esc>f <C-Right>
+inoremap <M-Right> <C-o>w
+
+" Folding
+nnoremap <leader>f za
+vnoremap <leader>f zf
+
+" ==== Plugins and Plugin Manager ====
+
+" Ensure vim-plug is installed
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
   silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+" Plugin Installation
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/goyo.vim'
 Plug 'scrooloose/nerdcommenter'
@@ -39,70 +119,21 @@ Plug 'tpope/vim-surround'
 Plug 'rust-lang/rust.vim'
 call plug#end()
 
-" ==== Colors and other basic settings
-set autoindent
-set backspace=indent,eol,start
-set complete-=i
-set smarttab
-set mouse=a
-nnoremap o o<Esc>
+" ==== Plugin Configurations ====
 
-syntax enable
+" NERDTree
+let NERDTreeIgnore = ['__pycache__', '\.pyc$', '\.o$', '\.so$', '\.a$', '\.swp', '*\.swp', '\.swo', '\.swn', '\.swh', '\.swm', '\.swl', '\.swk', '\.sw*$', '[a-zA-Z]*egg[a-zA-Z]*', '.DS_Store']
+let NERDTreeShowHidden=1
+let g:NERDTreeWinPos="left"
+let g:NERDTreeDirArrows=1
+let NERDTreeMinimalUI = 1
+map <silent><leader>ne :NERDTreeToggle<CR>
 
-" Disable arrow keys in normal mode
-nnoremap <Up> <Nop>
-nnoremap <Down> <Nop>
-nnoremap <Left> <Nop>
-nnoremap <Right> <Nop>
+" Rust
+let g:rustfmt_autosave = 1
 
-" Disable arrow keys in visual mode
-vnoremap <Up> <Nop>
-vnoremap <Down> <Nop>
-vnoremap <Left> <Nop>
-vnoremap <Right> <Nop>
-
-nnoremap j j^
-nnoremap k k^
-
-nnoremap J 5j^
-nnoremap K 5k^
-
-" Indent with Tab in normal mode
-nnoremap <Tab> >>
-nnoremap <S-Tab> <<
-
-" Indent selection with Tab in visual mode
-vnoremap <Tab> >gv
-vnoremap <S-Tab> <gv
-
-let python_highlight_all=1
-set shiftwidth=4
-set tabstop=4
-set softtabstop=4
-set number
-set relativenumber
-set cursorline
-set wildmenu
-set lazyredraw
-set showmatch
-set backspace=indent,eol,start
-
-" ==== VIM Search options
-set incsearch
-set hlsearch
-nnoremap <leader>n :nohlsearch<CR>
-
-" TODO 
-" - shortcut for searching whole file for word under cursor  (not just forward
-" and back)
-" - shortcut for centering cursor on screen (zz) whenever I go to a specific
-"   line
-" - shortcut for deleting word in insert mode (opt + backspace)
-" - shortcut to undo from insert mode
-" - shortcut to redo with U in normal mode
-
-" ==== Python Options
-" (https://realpython.com/vim-and-python-a-match-made-in-heaven/#macos-os-x)
+" ==== Filetype Specific Configurations ====
+" Python
 autocmd FileType python
     \ set tabstop=4 |
     \ set softtabstop=4 |
@@ -112,49 +143,5 @@ autocmd FileType python
     \ set autoindent |
     \ set fileformat=unix
 
-"au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+let python_highlight_all=1
 
-" ==== VIM Folding
-set foldlevel=99
-set foldmethod=indent
-nnoremap <space> za
-vnoremap <space> zf
-
-" ==== NERDTREE
-let NERDTreeIgnore = ['__pycache__', '\.pyc$', '\.o$', '\.so$', '\.a$', '\.swp', '*\.swp', '\.swo', '\.swn', '\.swh', '\.swm', '\.swl', '\.swk', '\.sw*$', '[a-zA-Z]*egg[a-zA-Z]*', '.DS_Store']
-
-let NERDTreeShowHidden=1
-let g:NERDTreeWinPos="left"
-let g:NERDTreeDirArrows=0
-map <silent><leader>ne :NERDTreeToggle<CR>
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 1
-
-" ==== Rust
-let g:rustfmt_autosave = 1
-
-set undolevels=9001
-" ==== Enable mouse
-set mouse=a
-
-iab retrun   return
-iab rerturn  return
-iab rertrun  return
-iab retnru   return
-iab erturn   return
-iab ertnru   return
-iab thsi     this
-iab fcuntoin function
-iab functoin function
-iab fucntion function
-iab funcotin function
-iab funcoitn function
-iab funciton function
-iab funciotn function
-iab costn    const
-iab conts    const
-iab csont    const
-iab THe      The
-iab THis     This
-iab !+       !=
-iab +>       =>
