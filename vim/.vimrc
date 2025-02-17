@@ -101,34 +101,6 @@ inoremap <M-Right> <C-o>w
 nnoremap <leader>f za
 vnoremap <leader>f zf
 
-" ==== Plugins and Plugin Manager ====
-
-" Ensure vim-plug is installed
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-" Plugin Installation
-call plug#begin('~/.vim/plugged')
-Plug 'junegunn/goyo.vim'
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
-Plug 'tpope/vim-surround'
-Plug 'rust-lang/rust.vim'
-call plug#end()
-
-" ==== Plugin Configurations ====
-
-" NERDTree
-let NERDTreeIgnore = ['__pycache__', '\.pyc$', '\.o$', '\.so$', '\.a$', '\.swp', '*\.swp', '\.swo', '\.swn', '\.swh', '\.swm', '\.swl', '\.swk', '\.sw*$', '[a-zA-Z]*egg[a-zA-Z]*', '.DS_Store']
-let NERDTreeShowHidden=1
-let g:NERDTreeWinPos="left"
-let g:NERDTreeDirArrows=1
-let NERDTreeMinimalUI = 1
-map <silent><leader>ne :NERDTreeToggle<CR>
-
 " Rust
 let g:rustfmt_autosave = 1
 
