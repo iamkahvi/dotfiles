@@ -61,6 +61,8 @@ nnoremap j j^
 nnoremap k k^
 nnoremap J 5j^
 nnoremap K 5k^
+vnoremap J 5j^
+vnoremap K 5k^
 
 " Indentation
 nnoremap <Tab> >>

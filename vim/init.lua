@@ -1,1 +1,0 @@
-/Users/iamkahvi/.config/nvim/init.lua
