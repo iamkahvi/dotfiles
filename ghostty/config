@@ -3,3 +3,9 @@ clipboard-read = allow
 clipboard-write = allow
 copy-on-select = true
 macos-option-as-alt = true
+window-save-state = always
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+quick-terminal-position = center
+quick-terminal-animation-duration = 0
+window-height = 52
+window-width = 141
