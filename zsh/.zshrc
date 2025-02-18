@@ -1,16 +1,18 @@
 export DF_HOME="$HOME/dotfiles"
-
 export NVM_DIR="$HOME/.nvm"
+export ZSH=$HOME/.oh-my-zsh
+
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+if [ "$WORK" = "1" ]; then
+    source "$DF_HOME/zsh/work.zsh"
+fi
 
-alias mkdir="mkdir -p"
 alias showp='echo $PATH | tr -s ":" "\n"'
-alias configz='vim ~/.zshrc'
-alias configv='vim ~/.vimrc'
+alias mkdir="mkdir -p"
+alias configz="vim $HOME/.zshrc"
+alias configv="vim $HOME/.vimrc"
 alias vim='nvim'
 alias python='python3'
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
@@ -29,6 +31,11 @@ setopt auto_cd
 setopt no_beep
 setopt correct
 
+# configs for MacOS
+if [ "$(uname)" = "Darwin" ]; then
+  [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
+fi
+
 ZSH_THEME=""
 
 plugins=(git colored-man-pages colorize pip python zsh-syntax-highlighting zsh-autosuggestions)
@@ -42,7 +49,7 @@ else
 fi
 
 # ssh
-export SSH_KEY_PATH="~/.ssh/rsa_id"
+export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -104,9 +111,14 @@ export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 # bun completions
 [ -s "/Users/iamkahvi/.bun/_bun" ] && source "/Users/iamkahvi/.bun/_bun"
 
+# deno
 export PATH="/Users/iamkahvi/.local/bin:/Users/iamkahvi/.deno/bin:$PATH"
 
-source ~/.oh-my-zsh/completions/_deno
+if [[ -f ~/.oh-my-zsh/completions/_deno ]]; then
+  source ~/.oh-my-zsh/completions/_deno
+fi
 
 # init zoxide
 eval "$(zoxide init zsh)"
+
+echo "hello there"
