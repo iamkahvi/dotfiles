@@ -14,6 +14,7 @@ alias configv='vim ~/.vimrc'
 alias vim='nvim'
 alias python='python3'
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+alias lg='lazygit'
 
 # Setting up history backup
 HISTSIZE=500000
