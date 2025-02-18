@@ -103,6 +103,21 @@ inoremap <M-Right> <C-o>w
 nnoremap <leader>f za
 vnoremap <leader>f zf
 
+" Move lines up and down in normal mode
+nnoremap <C-j> :m .+1<CR>==
+nnoremap <C-k> :m .-2<CR>==
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+
+" Move lines up and down in insert mode
+inoremap <C-j> <Esc>:m .+1<CR>==gi
+inoremap <C-k> <Esc>:m .-2<CR>==gi
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+
+" Keep cursor at the end after yanking in visual mode
+vnoremap y y`]
+
 " Rust
 let g:rustfmt_autosave = 1
 

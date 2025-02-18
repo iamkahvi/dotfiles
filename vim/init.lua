@@ -68,19 +68,3 @@ vim.keymap.set("n", "<leader>fg", builtin.live_grep, opts)
 vim.keymap.set("n", "<leader>ff", builtin.find_files, opts)
 vim.keymap.set("n", "<leader>fb", builtin.buffers, opts)
 vim.keymap.set("n", "<leader>fh", builtin.help_tags, opts)
-
--- Move lines up and down in normal mode
-vim.keymap.set("n", "<C-j>", ":m .+1<CR>==", opts)
-vim.keymap.set("n", "<C-k>", ":m .-2<CR>==", opts)
-vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", opts)
-vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", opts)
-
--- Move lines up and down in insert mode
-vim.keymap.set("i", "<C-j>", "<Esc>:m .+1<CR>==gi", opts)
-vim.keymap.set("i", "<C-k>", "<Esc>:m .-2<CR>==gi", opts)
-vim.keymap.set("i", "<A-j>", "<Esc>:m .+1<CR>==gi", opts)
-vim.keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
-
--- Keep cursor at the end after yanking in visual mode
-vim.keymap.set("v", "y", "y`]", opts)
-
