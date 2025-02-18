@@ -17,6 +17,7 @@ alias vim='nvim'
 alias python='python3'
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 alias lg='lazygit'
+alias cn='cursor -n .'
 
 # Setting up history backup
 HISTSIZE=500000
@@ -121,4 +122,4 @@ fi
 # init zoxide
 eval "$(zoxide init zsh)"
 
-echo "hello there"
+[[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; } }

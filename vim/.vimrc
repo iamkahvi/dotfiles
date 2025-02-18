@@ -84,6 +84,9 @@ vnoremap <Right> <Nop>
 nnoremap <leader>o :put _<CR>
 nnoremap <leader>O :put! _<CR>
 
+" Duplicate line
+nnoremap <C-d> Yp
+
 " Search Options
 nnoremap <leader>n :nohlsearch<CR>
 
