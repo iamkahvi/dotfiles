@@ -76,7 +76,7 @@ ff() {
 # fh - search in your command history and print selected command
 fh() {
 	local cmd=$(( [ -n "$ZSH_NAME" ] && fc -l 1 || history ) | fzf +s --tac | sed 's/ *[0-9]* *//')
-	[[ -n "$cmd" ]] && print -z -- "$cmd"
+	[[ -n "$cmd" ]] && echo "$cmd" | pbcopy && print -z -- "$cmd"
 }
 
 # fs - determine size of a file or total size of a directory.
