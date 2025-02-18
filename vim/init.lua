@@ -58,6 +58,7 @@ local opts = { noremap = true, silent = true }
 
 vim.keymap.set("n", "<leader>ne", ":NERDTreeToggle<CR>", opts)
 vim.g.NERDTreeShowHidden = 1
+vim.g.NERDTreeMapOpen = 'go'
 vim.o.timeoutlen = 300
 
 -- Telescope
@@ -82,3 +83,4 @@ vim.keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi", opts)
 
 -- Keep cursor at the end after yanking in visual mode
 vim.keymap.set("v", "y", "y`]", opts)
+
