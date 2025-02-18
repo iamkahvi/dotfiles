@@ -107,3 +107,5 @@ export PATH="/Users/iamkahvi/.local/bin:/Users/iamkahvi/.deno/bin:$PATH"
 
 source ~/.oh-my-zsh/completions/_deno
 
+# init zoxide
+eval "$(zoxide init zsh)"

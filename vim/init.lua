@@ -34,3 +34,7 @@ require("lazy").setup({
 
 vim.cmd.colorscheme "catppuccin-frappe"
 
+-- Key mappings
+local opts = { noremap = true, silent = true }
+
+vim.keymap.set("n", "<leader>ne", ":NERDTreeToggle<CR>", opts)
