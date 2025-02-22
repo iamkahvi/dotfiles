@@ -30,24 +30,31 @@ require("lazy").setup({
   { "tpope/vim-surround" },
   { "rust-lang/rust.vim" },
   { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-    { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" }, config = function()
-      require("telescope").setup({
-        defaults = {
-          file_ignore_patterns = { "node_modules", ".git/" },
-          mappings = {
-            i = {
-              ["<C-j>"] = "move_selection_next",
-              ["<C-k>"] = "move_selection_previous",
-            },
-          },
-        },
-		pickers = {
-			find_files = {
-				hidden = true, -- Show hidden files
-			},
-	    },
-      })
-    end
+	{ 
+		"nvim-telescope/telescope.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			local actions = require("telescope.actions")
+			require("telescope").setup({
+				defaults = {
+					file_ignore_patterns = { "node_modules", ".git/" },
+					mappings = {
+						i = {
+							["<C-j>"] = "move_selection_next",
+							["<C-k>"] = "move_selection_previous",
+							["<esc>"] = actions.close,
+							["<C-u>"] = false,
+							["<CR>"] = actions.select_tab,
+						},
+					},
+				},
+				pickers = {
+					find_files = {
+						hidden = true, -- Show hidden files
+					},
+				},
+			})
+		end
   }
 })
 
@@ -65,6 +72,4 @@ vim.o.timeoutlen = 300
 local builtin = require("telescope.builtin")
 
 vim.keymap.set("n", "<leader>fg", builtin.live_grep, opts)
-vim.keymap.set("n", "<leader>ff", builtin.find_files, opts)
-vim.keymap.set("n", "<leader>fb", builtin.buffers, opts)
-vim.keymap.set("n", "<leader>fh", builtin.help_tags, opts)
+vim.keymap.set("n", "<leader>f", builtin.find_files, opts)

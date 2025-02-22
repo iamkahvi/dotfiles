@@ -56,6 +56,10 @@ nnoremap <leader>wq :wq<CR>
 nnoremap <leader>[ <C-w>h
 nnoremap <leader>] <C-w>l
 
+" Tab Navigation
+nnoremap <C-l> :tabnext<CR>
+nnoremap <C-h> :tabprev<CR>
+
 " Cursor Movement
 nnoremap j j^
 nnoremap k k^
