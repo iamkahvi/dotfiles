@@ -25,8 +25,6 @@
   grep = grep -Ii
   l = log --graph --abbrev-commit --decorate --all --date=short --format=format:'%C(yellow)%h%C(reset) %C(bold blue)%ad%C(reset)%C(auto)%d%C(reset) %C(bold white)%s%C(reset)%C(magenta) - %an%C(reset)'
   ll = !git l --simplify-by-decoration
-  quick-stats = ! /usr/local/bin/git-quick-stats
-  stat = quick-stats
   rank = shortlog -sn --no-merges
   history = log -u # list commits related to a file
   gone = !git branch -vv | grep ': gone]'
