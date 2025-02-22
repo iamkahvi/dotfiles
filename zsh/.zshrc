@@ -31,6 +31,7 @@ setopt extendedglob
 setopt auto_cd
 setopt no_beep
 setopt correct
+setopt globdots
 
 # configs for MacOS
 if [ "$(uname)" = "Darwin" ]; then
