@@ -121,6 +121,10 @@ inoremap <A-k> <Esc>:m .-2<CR>==gi
 " Keep cursor at the end after yanking in visual mode
 vnoremap y y`]
 
+" Select all
+nnoremap <leader>a ggVG
+vnoremap <leader>a ggVG
+
 " Rust
 let g:rustfmt_autosave = 1
 
