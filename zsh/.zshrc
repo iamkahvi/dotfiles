@@ -18,6 +18,7 @@ alias python='python3'
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 alias lg='lazygit'
 alias cn='cursor -n .'
+alias tx='tmuxinator'
 
 # Setting up history backup
 HISTSIZE=500000

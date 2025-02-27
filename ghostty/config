@@ -9,3 +9,4 @@ quick-terminal-position = center
 quick-terminal-animation-duration = 0
 window-height = 52
 window-width = 141
+working-directory = home
