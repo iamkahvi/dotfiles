@@ -18,7 +18,7 @@ alias python='python3'
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 alias lg='lazygit'
 alias cn='cursor -n .'
-alias tx='tmuxinator'
+alias tx="$DF_HOME/tmux/tmux-sessions.sh" 
 
 # Setting up history backup
 HISTSIZE=500000
@@ -101,6 +101,46 @@ fs() {
     du $arg -- "$@"
   else
     du $arg .[^.]* *
+  fi
+}
+
+# Kill all processes running on specified port
+port_kill() {
+  if [[ -z $1 ]]; then
+    echo "Usage: port_kill <port_number>"
+    return 1
+  fi
+  
+  local port=$1
+  local pids=($(lsof -i :"$port" -t))
+  
+  if [[ ${#pids[@]} -eq 0 ]]; then
+    echo "No processes found running on port $port"
+    return 1
+  fi
+  
+  echo "Found ${#pids[@]} process(es) using port $port:"
+  lsof -i :"$port" | grep -E "LISTEN|ESTABLISHED"
+  
+  echo -n "Kill these processes? [y/N] "
+  read confirm
+  
+  if [[ "$confirm" =~ ^[Yy]$ ]]; then
+    echo "Attempting graceful termination of PIDs: ${pids[@]}"
+    kill ${pids[@]} 2>/dev/null
+    sleep 2
+    
+    # Check if any processes are still running
+    local remaining_pids=($(lsof -i :"$port" -t))
+    if [[ ${#remaining_pids[@]} -gt 0 ]]; then
+      echo "Some processes still running, forcing termination..."
+      kill -9 ${remaining_pids[@]} 2>/dev/null
+      echo "All processes on port $port terminated"
+    else
+      echo "All processes terminated successfully"
+    fi
+  else
+    echo "Operation cancelled"
   fi
 }
 

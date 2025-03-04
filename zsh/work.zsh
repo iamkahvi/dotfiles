@@ -7,3 +7,5 @@ if [ -e /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kah
 	source /opt/dev/sh/chruby/chruby.sh
 	chruby "$@"
 }; }
+
+alias gwpm="dev cd web-pixels-manager"
