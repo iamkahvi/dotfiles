@@ -100,6 +100,7 @@ nnoremap U <C-r>
 
 " Deleting and Moving Words
 nnoremap <leader>d "_dd
+nnoremap C "_C
 inoremap <M-BS> <C-w>
 inoremap <Esc>b <C-Left>
 inoremap <M-Left> <C-o>b
