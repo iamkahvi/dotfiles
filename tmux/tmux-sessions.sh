@@ -27,15 +27,10 @@ main() {
     echo '';
     echo -e '${BLUE}Git info:${NC}';
     root=\$(grep 'root:' '$TMUXINATOR_DIR/{}.yml' | sed 's/root: //' | sed 's|\\\$HOME|$HOME|' | sed 's|<%= ENV\\[\\\"HOME\\\"\\] %>|$HOME|');
-    if [ -d \"\$root/.git\" ]; then
       echo -e \"${CYAN}Directory: \$root${NC}\";
       echo -e \"${YELLOW}Branch: \$(cd \"\$root\" && git branch --show-current)${NC}\";
       echo -e \"${BLUE}Changes:${NC}\";
-      (cd \"\$root\" && git status --short | grep -E --color=always '^(.M|M.|.A|A.|.D|D.|.R|R.|.C|C.|.U|U.)' || echo -e \"${GREEN}No changes${NC}\");
-    else
-      echo -e \"${CYAN}Directory: \$root${NC}\";
-      echo -e \"${RED}Not a git repository or no root defined${NC}\";
-    fi" \
+      (cd \"\$root\" && git status --short | grep -E --color=always '^(.M|M.|.A|A.|.D|D.|.R|R.|.C|C.|.U|U.)' || echo -e \"${GREEN}No changes${NC}\");" \
     --bind "ctrl-e:execute(echo {} | sed 's/^/editor:/')+accept" \
     --header "Enter: Open git window | Ctrl+E: Open editor window")
 
