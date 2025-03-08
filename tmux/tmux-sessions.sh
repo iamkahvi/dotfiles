@@ -3,6 +3,9 @@
 # Path to tmuxinator configs
 TMUXINATOR_DIR="$HOME/.config/tmuxinator"
 
+# Handle Ctrl+C gracefully
+trap 'echo; gum style --foreground 9 "Operation cancelled"; exit 0' INT
+
 main() {
   # Get all available sessions using tmuxinator ls
   local sessions_output=$(tmuxinator ls)
@@ -31,7 +34,8 @@ main() {
   local root=$(grep 'root:' "$TMUXINATOR_DIR/$selected.yml" | sed 's/root: //' | sed 's|\$HOME|'"$HOME"'|' | sed 's|<%= ENV\["HOME"\] %>|'"$HOME"'|')
 
   # Display session info
-  gum style --foreground 39 --bold "Session: $selected"
+  gum style --align center --width 50 --margin "1 2" --padding "1 2" --border-foreground 39 --border rounded \
+    --foreground 39 --bold "[$selected]"
 
   if tmux has-session -t "$selected" 2>/dev/null; then
     gum style --foreground 10 "Status: Running"
@@ -40,39 +44,55 @@ main() {
   fi
 
   echo
-  gum style --foreground 39 --bold "Git info:"
-  gum style --foreground 51 "Directory: $root"
+  local branch=$(cd "$root" && git branch --show-current 2>/dev/null)
+  gum style --foreground 39 "Branch: $branch"
 
-  if [ -d "$root/.git" ]; then
-    local branch=$(cd "$root" && git branch --show-current)
-    gum style --foreground 220 "Branch: $branch"
-
-    gum style --foreground 39 "Changes:"
-    local changes=$(cd "$root" && git status --short)
-    if [ -n "$changes" ]; then
-      echo "$changes" | gum format
-    else
-      gum style --foreground 10 "No changes"
-    fi
+  gum style --foreground 39 "Changes:"
+  local changes=$(cd "$root" && git status --short 2>/dev/null)
+  if [ -n "$changes" ]; then
+    echo "$changes" | gum format
   else
-    gum style --foreground 9 "Not a git repository"
+    gum style --foreground 10 "No changes"
   fi
 
-  # Ask user what to do
+  # Ask user what to do with expanded options
   echo
-  local action=$(gum choose "Open tmux session" "Open editor")
+  local action=$(gum choose \
+    "editor" \
+    "server" \
+    "git")
 
-  if [ "$action" = "Open editor" ]; then
-    # Open cursor in the project directory
-    cd "$root" && cursor -n .
-  else
-    # Open tmux session
-    if tmux has-session -t "$selected" 2>/dev/null; then
-      tmux attach -t "$selected"
-    else
-      tmuxinator start "$selected"
-    fi
+  # Check if action was selected (could be empty if user pressed Ctrl+C)
+  if [ -z "$action" ]; then
+    gum style --foreground 9 "No action selected"
+    exit 0
   fi
+
+  case "$action" in
+    "editor")
+      # Open cursor in the project directory
+      cd "$root" && cursor -n .
+      ;;
+    "server")
+      # Open tmux session to the server window
+      if tmux has-session -t "$selected" 2>/dev/null; then
+        tmux a -t "$selected:server"
+      else
+        gum style --foreground 220 "Session not running. Starting session..."
+        tmuxinator start "$selected" startup=server
+      fi
+      ;;
+    "git")
+      # Open tmux session to the server window
+      if tmux has-session -t "$selected" 2>/dev/null; then
+        tmux a -t "$selected:git"
+      else
+        gum style --foreground 220 "Session not running. Starting session..."
+        tmuxinator start "$selected" startup=git
+      fi
+      ;;
+    *)
+  esac
 }
 
 # Run main function
