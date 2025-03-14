@@ -12,6 +12,7 @@ export OPENAI_API_KEY=""
 
 alias gwpm="dev cd web-pixels-manager"
 alias llmc="llm chat -m openai_proxy"
+alias devups="dev up && dev s"
 
 function feat() {
   if [ -z "$1" ]; then

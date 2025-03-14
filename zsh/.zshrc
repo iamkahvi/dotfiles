@@ -2,7 +2,7 @@ export DF_HOME="$HOME/dotfiles"
 export NVM_DIR="$HOME/.nvm"
 export ZSH=$HOME/.oh-my-zsh
 export ICLOUD_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/"
-export TERM=xterm
+export TERM=xterm-256color
 
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
