@@ -11,4 +11,4 @@ window-height = 52
 window-width = 141
 working-directory = home
 window-inherit-working-directory = false
-theme = Ayu Mirage
+theme = catppuccin-frappe
