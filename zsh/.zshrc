@@ -29,6 +29,8 @@ SAVEHIST=500000
 setopt appendhistory
 setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
+setopt inc_append_history_time
+setopt EXTENDED_HISTORY
 
 # Enable extended file globs
 setopt extendedglob
@@ -88,8 +90,13 @@ ff() {
 
 # fh - search in your command history and print selected command
 fh() {
-	local cmd=$(( [ -n "$ZSH_NAME" ] && fc -l 1 || history ) | fzf +s --tac | sed 's/ *[0-9]* *//')
-	[[ -n "$cmd" ]] && echo "$cmd" | print -z -- "$cmd" && test "$(uname)" = "Darwin" && echo "$cmd" | pbcopy
+  local cmd=$(history | fzf --tac | sed 's/^[ ]*[0-9]*[ ]*//')
+  if [[ -n "$cmd" ]]; then
+    echo "$cmd" | print -z -- "$cmd"
+    if [[ "$(uname)" == "Darwin" ]]; then
+      echo "$cmd" | pbcopy
+    fi
+  fi
 }
 
 # fs - determine size of a file or total size of a directory.
