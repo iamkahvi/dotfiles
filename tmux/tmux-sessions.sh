@@ -58,9 +58,8 @@ main() {
   # Ask user what to do with expanded options
   echo
   local action=$(gum choose \
-    "editor" \
     "server" \
-    "git")
+    "1")
 
   # Check if action was selected (could be empty if user pressed Ctrl+C)
   if [ -z "$action" ]; then

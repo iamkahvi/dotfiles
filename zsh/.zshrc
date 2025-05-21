@@ -81,6 +81,11 @@ fds() {
     cd "$dir"
 }
 
+# Fuzzy focus on a window
+fw() {
+    aerospace list-windows --all | fzf | cut -d'|' -f1 | xargs aerospace focus --window-id
+}
+
 # ff - find file with fzf and bat
 ff() {
 	local file
