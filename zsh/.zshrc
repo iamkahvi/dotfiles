@@ -172,6 +172,8 @@ export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 # deno
 export PATH="/Users/iamkahvi/.local/bin:/Users/iamkahvi/.deno/bin:$PATH"
 
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+
 if [[ -f ~/.oh-my-zsh/completions/_deno ]]; then
   source ~/.oh-my-zsh/completions/_deno
 fi
