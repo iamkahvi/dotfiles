@@ -1,0 +1,18 @@
+# Stow configuration file
+# This file contains default options for GNU Stow
+
+# Ignore common files that shouldn't be symlinked
+--ignore=\.DS_Store
+--ignore=\.git
+--ignore=\.gitignore
+--ignore=README.*
+--ignore=LICENSE.*
+--ignore=setup\.sh
+--ignore=unstow\.sh
+--ignore=\.stowrc
+
+# Use verbose output by default (can be overridden with -v0)
+--verbose=1
+
+# Target directory is home by default
+--target=$HOME
