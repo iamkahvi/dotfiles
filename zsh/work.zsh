@@ -14,6 +14,7 @@ alias gwpm="dev cd web-pixels-manager"
 alias llmc="llm chat -m openai_proxy"
 alias dus="dev up && dev s"
 alias gtco="gt checkout"
+alias c="devx claude"
 
 function feat() {
   if [ -z "$1" ]; then

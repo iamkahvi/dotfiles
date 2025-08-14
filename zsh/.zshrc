@@ -19,7 +19,7 @@ alias vim='nvim'
 alias python='python3'
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 alias lg='lazygit'
-alias cn='cursor -n .'
+alias cn='code -n .'
 alias tx="$DF_HOME/tmux/tmux-sessions.sh"
 alias mux="/usr/local/bin/tmuxinator"
 
