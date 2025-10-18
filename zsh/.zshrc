@@ -22,6 +22,7 @@ alias lg='lazygit'
 alias cn='code -n .'
 alias tx="$DF_HOME/tmux/tmux-sessions.sh"
 alias mux="/usr/local/bin/tmuxinator"
+alias j="zellij"
 
 # Setting up history backup
 HISTSIZE=500000
@@ -72,6 +73,10 @@ promptinit
 prompt pure
 
 ## FUNCTIONS
+
+name() {
+	kitty @ set-tab-title $1
+}
 
 # fds - cd to selected directory
 fds() {
@@ -182,3 +187,6 @@ fi
 eval "$(zoxide init zsh)"
 
 [[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; } }
+
+# Added by tec agent
+[[ -x /Users/kahvi/.local/state/tec/profiles/base/current/global/init ]] && eval "$(/Users/kahvi/.local/state/tec/profiles/base/current/global/init zsh)"
