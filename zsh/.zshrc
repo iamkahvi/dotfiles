@@ -190,3 +190,5 @@ eval "$(zoxide init zsh)"
 
 # Added by tec agent
 [[ -x /Users/kahvi/.local/state/tec/profiles/base/current/global/init ]] && eval "$(/Users/kahvi/.local/state/tec/profiles/base/current/global/init zsh)"
+
+eval "$(ruby ~/.local/try.rb init ~/src/tries)"
