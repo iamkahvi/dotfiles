@@ -1,4 +1,3 @@
-// Place your key bindings in this file to overwrite the defaults
 [
   {
     "key": "cmd+q",
@@ -102,5 +101,5 @@
   {
     "key": "cmd+shift+w",
     "command": "workbench.action.closeAllEditors"
-  },
+  }
 ]
