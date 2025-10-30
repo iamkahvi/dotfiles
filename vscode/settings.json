@@ -99,11 +99,11 @@
     "editor.formatOnPaste": false
   },
   "[c]": {
-    "editor.suggest.insertMode": "replace"
+    "editor.suggest.insertMode": "replace",
   },
   "[cpp]": {
     "editor.formatOnSave": true,
-    "editor.suggest.insertMode": "replace"
+    "editor.suggest.insertMode": "replace",
   },
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"
@@ -204,5 +204,5 @@
   "vim.neovimUseConfigFile": true,
   "vim.neovimConfigPath": "~/.config/nvim/init.lua",
   "vim.neovimPath": "/opt/homebrew/bin/nvim",
-  "editor.cursorSurroundingLines": 999
+  "editor.cursorSurroundingLines": 999,
 }

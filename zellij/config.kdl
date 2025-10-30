@@ -10,6 +10,10 @@ keybinds {
 				unbind "Alt Right"
 				unbind "Alt f"
 				bind "Alt F" { ToggleFloatingPanes; }
+        bind "Alt Ctrl h" { MoveFocus "Left"; }
+        bind "Alt Ctrl l" { MoveFocus "Right"; }
+        bind "Alt Ctrl j" { MoveFocus "Down"; }
+        bind "Alt Ctrl k" { MoveFocus "Up"; }
     }
     locked {
         bind "Ctrl g" { SwitchToMode "Normal"; }
