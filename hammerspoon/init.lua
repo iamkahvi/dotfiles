@@ -151,22 +151,22 @@ local mouseOrigin
 local inMove = 0
 
 definitions = {
-    [";"] = saveFocus,
-    a = focusSaved,
+--    [";"] = saveFocus,
+--    a = focusSaved,
 
-    j = gridset(gomiddle),
-    h = gridset(goleft),
-    l = gridset(goright),
-    k = gridset(gobig),
-    i = gridset(gosmall),
-    o = gridset(narrowmiddle),
-    u = gridset(narrowshortmiddle),
-    t = launchIterm,
-    c = launchChrome,
+--    j = gridset(gomiddle),
+--    h = gridset(goleft),
+--    l = gridset(goright),
+--    k = gridset(gobig),
+--    i = gridset(gosmall),
+--    o = gridset(narrowmiddle),
+--    u = gridset(narrowshortmiddle),
+--    t = launchIterm,
+--    c = launchChrome,
 
     -- g = layout2fn,
     -- u = grid.pushWindowNextScreen,
-    r = hs.reload,
+--    r = hs.reload,
 
     ["9"] = function() window.focusedWindow():focusTab(9000) end
 }
