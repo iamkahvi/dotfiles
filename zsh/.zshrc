@@ -23,6 +23,7 @@ alias cn='code -n .'
 alias tx="$DF_HOME/tmux/tmux-sessions.sh"
 alias mux="/usr/local/bin/tmuxinator"
 alias j="zellij"
+alias oc="opencode"
 
 # Setting up history backup
 HISTSIZE=500000
@@ -96,6 +97,31 @@ ff() {
 	local file
 	file=$(find "${1:-.}" -type f -not -path '*/.*' 2>/dev/null | \
     fzf --preview 'bat --style=numbers --color=always --line-range=:100 {}' --preview-window=right:70%:wrap )  && print -z -- "vim $file"
+}
+
+# frg - fuzzy ripgrep: search file contents with ripgrep and preview with bat
+frg() {
+  local selected
+  selected=$(rg --color=always --line-number --no-heading --smart-case "${*:-}" |
+    fzf --ansi \
+        --color "hl:-1:underline,hl+:-1:underline:reverse" \
+        --delimiter : \
+        --preview 'bat --color=always {1} --highlight-line {2}' \
+        --preview-window 'up,60%,border-bottom,+{2}+3/3,~3')
+  
+  if [[ -n "$selected" ]]; then
+    local file=$(echo "$selected" | cut -d':' -f1)
+    local line=$(echo "$selected" | cut -d':' -f2)
+    print -z -- "vim +${line} ${file}"
+  fi
+}
+
+# frf - fuzzy ripgrep files: find files using ripgrep and preview with bat
+frf() {
+  local file
+  file=$(rg --files --hidden --follow --glob '!.git/*' "${1:-.}" 2>/dev/null | \
+    fzf --preview 'bat --style=numbers --color=always --line-range=:100 {}' \
+        --preview-window=right:70%:wrap) && print -z -- "vim $file"
 }
 
 # fh - search in your command history and print selected command
