@@ -7,14 +7,13 @@ DOTFILES="$HOME/dotfiles"
 
 # Core tools
 sudo apt-get update
-sudo apt-get install -y fzf bat neovim ripgrep fd-find zsh stow zoxide
+sudo apt-get install -y fzf bat neovim ripgrep fd-find zsh zoxide
 
-# Symlink configs using stow
-cd "$DOTFILES"
-stow -t "$HOME" zsh
-stow -t "$HOME" vim
-stow -t "$HOME" git
-stow -t "$HOME" tmux
+# Symlink configs
+ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
+ln -sf "$DOTFILES/vim/.vimrc" "$HOME/.vimrc"
+ln -sf "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig"
+ln -sf "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
 
 # Neovim config
 mkdir -p "$HOME/.config/nvim"

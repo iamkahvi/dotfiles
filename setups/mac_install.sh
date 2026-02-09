@@ -15,7 +15,7 @@ if ! command -v brew &>/dev/null; then
 fi
 
 # Core tools
-brew install curl wget git zsh neovim bat fzf ripgrep fd tree stow zoxide
+brew install curl wget git zsh neovim bat fzf ripgrep fd tree zoxide
 
 # Languages
 brew install node nvm go python3 rustup-init
@@ -30,16 +30,19 @@ if [ ! -d "$DOTFILES" ]; then
   git clone https://github.com/iamkahvi/dotfiles "$DOTFILES"
 fi
 
-# Symlink configs using stow
-cd "$DOTFILES"
-stow -t "$HOME" zsh
-stow -t "$HOME" vim
-stow -t "$HOME" git
-stow -t "$HOME" tmux
+# Symlink configs
+ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
+ln -sf "$DOTFILES/vim/.vimrc" "$HOME/.vimrc"
+ln -sf "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig"
+ln -sf "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
 
 # Neovim config
 mkdir -p "$HOME/.config/nvim"
 ln -sf "$DOTFILES/vim/init.lua" "$HOME/.config/nvim/init.lua"
+
+# Hammerspoon config
+mkdir -p "$HOME/.hammerspoon"
+ln -sf "$DOTFILES/hammerspoon/init.lua" "$HOME/.hammerspoon/init.lua"
 
 # Oh-my-zsh
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
