@@ -1,32 +1,43 @@
 #!/bin/bash
+set -euo pipefail
 
 cd ~
 
-# Linking everything
-ln -sf $HOME/dotfiles/.zshrc $HOME
-ln -sf $HOME/dotfiles/.vimrc $HOME
-ln -sf $HOME/dotfiles/.tmux.conf $HOME
-ln -sf $HOME/dotfiles/.gitconfig $HOME
+DOTFILES="$HOME/dotfiles"
 
-# installing
-sudo apt-get install -y fzf bat 
-sudo apt-get install neovim thefuck
+# Core tools
+sudo apt-get update
+sudo apt-get install -y fzf bat neovim ripgrep fd-find zsh stow zoxide
 
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# Symlink configs using stow
+cd "$DOTFILES"
+stow -t "$HOME" zsh
+stow -t "$HOME" vim
+stow -t "$HOME" git
+stow -t "$HOME" tmux
 
-# Moving vimrc for nvim
-mkdir -p $HOME/.config/nvim
-ln -sf  $HOME/dotfiles/init.vim $HOME/.config/nvim/init.vim
+# Neovim config
+mkdir -p "$HOME/.config/nvim"
+ln -sf "$DOTFILES/vim/init.lua" "$HOME/.config/nvim/init.lua"
 
-# Install oh-my-zsh stuff
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# Oh-my-zsh
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
 
-git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/plugins/zsh-syntax-highlighting
+# Zsh plugins
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+[ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] || \
+  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] || \
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 
-# Install pure prompt
+# Pure prompt
 mkdir -p "$HOME/.zsh"
-git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
+[ -d "$HOME/.zsh/pure" ] || git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
 
-source $HOME/.zshrc
+# TPM for tmux
+[ -d "$HOME/.tmux/plugins/tpm" ] || \
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+
+echo "Done. Open a new shell or run: source ~/.zshrc"

@@ -41,7 +41,6 @@
   # flow commands #
   #################
 
-  feat = flow feature start
   hotfix = flow hotfix start
 
   ######################

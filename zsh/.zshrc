@@ -2,7 +2,7 @@ export DF_HOME="$HOME/dotfiles"
 export NVM_DIR="$HOME/.nvm"
 export ZSH=$HOME/.oh-my-zsh
 export ICLOUD_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/"
-export TERM=xterm-256color
+# Let the terminal emulator set TERM; hardcoding breaks tmux/zellij
 
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
@@ -25,14 +25,14 @@ alias mux="/usr/local/bin/tmuxinator"
 alias j="zellij"
 alias oc="opencode"
 
-# Setting up history backup
+# Setting up history
 HISTSIZE=500000
 SAVEHIST=500000
-setopt appendhistory
-setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
-setopt inc_append_history_time
 setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
 
 # Enable extended file globs
 setopt extendedglob
@@ -198,10 +198,10 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 
 # bun completions
-[ -s "/Users/iamkahvi/.bun/_bun" ] && source "/Users/iamkahvi/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # deno
-export PATH="/Users/iamkahvi/.local/bin:/Users/iamkahvi/.deno/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.deno/bin:$PATH"
 
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
@@ -215,6 +215,6 @@ eval "$(zoxide init zsh)"
 [[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; } }
 
 # Added by tec agent
-[[ -x /Users/kahvi/.local/state/tec/profiles/base/current/global/init ]] && eval "$(/Users/kahvi/.local/state/tec/profiles/base/current/global/init zsh)"
+[[ -x "$HOME/.local/state/tec/profiles/base/current/global/init" ]] && eval "$("$HOME/.local/state/tec/profiles/base/current/global/init" zsh)"
 
 eval "$(ruby ~/.local/try.rb init ~/src/tries)"

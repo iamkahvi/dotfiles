@@ -1,51 +1,69 @@
-#!bin/bash
+#!/bin/bash
+set -euo pipefail
 
-# starting from scratch on MacOS
+# Starting from scratch on macOS
 
 cd ~
-sudo xcode-select --install
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install curl wget git zsh vim tree fzf ack neovim bat
 
-brew install python python@2
+# Xcode CLI tools
+xcode-select --install 2>/dev/null || true
 
+# Homebrew
+if ! command -v brew &>/dev/null; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# Core tools
+brew install curl wget git zsh neovim bat fzf ripgrep fd tree stow zoxide
+
+# Languages
+brew install node nvm go python3 rustup-init
 brew install chruby ruby-build
-gem install bundler
 
-brew install rustup
+# Apps
+brew install --cask ghostty hammerspoon visual-studio-code
 
-pip install --upgrade setuptools pip
+# Clone dotfiles
+DOTFILES="$HOME/dotfiles"
+if [ ! -d "$DOTFILES" ]; then
+  git clone https://github.com/iamkahvi/dotfiles "$DOTFILES"
+fi
 
-brew install node nvm go gvm fd
+# Symlink configs using stow
+cd "$DOTFILES"
+stow -t "$HOME" zsh
+stow -t "$HOME" vim
+stow -t "$HOME" git
+stow -t "$HOME" tmux
 
-brew install --cask hammerspoon visual-studio-code iterm2
+# Neovim config
+mkdir -p "$HOME/.config/nvim"
+ln -sf "$DOTFILES/vim/init.lua" "$HOME/.config/nvim/init.lua"
 
-cd ~
-git clone https://github.com/iamkahvi/dotfiles $HOME
+# Oh-my-zsh
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
 
-# Linking everything
-ln -sf $HOME/dotfiles/.zshrc $HOME
-ln -sf $HOME/dotfiles/.vimrc $HOME
-ln -sf $HOME/dotfiles/.tmux.conf $HOME
-ln -sf $HOME/dotfiles/.gitconfig $HOME
-ln -sf $HOME/dotfiles/init.lua $HOME
+# Zsh plugins
+ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+[ -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] || \
+  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+[ -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] || \
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 
-# Moving vimrc for nvim
-mkdir -p $HOME/.config/nvim
-ln -sf  $HOME/dotfiles/init.vim $HOME/.config/nvim/
+# Pure prompt
+if [ "$(uname -p)" = "arm" ]; then
+  # Installed via homebrew on Apple Silicon
+  :
+else
+  mkdir -p "$HOME/.zsh"
+  [ -d "$HOME/.zsh/pure" ] || git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure"
+fi
 
-# Install oh-my-zsh stuff
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# TPM for tmux
+[ -d "$HOME/.tmux/plugins/tpm" ] || \
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 
-git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-
-# Install nvim plugin manager
-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \ 
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-
-# Install pure prompt
-mkdir -p ".zsh"
-git clone https://github.com/sindresorhus/pure.git ".zsh/pure"
-
-source $HOME/.zshrc
+echo "Done. Open a new shell or run: source ~/.zshrc"
