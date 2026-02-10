@@ -1,14 +1,15 @@
 # Adding dev
 [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
 
-if [ -e /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/kahvipatel/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
 [[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby() {
 	source /opt/dev/sh/chruby/chruby.sh
 	chruby "$@"
 }; }
 
-export OPENAI_API_KEY=""
+# OPENAI_API_KEY: set in ~/.secrets, not in dotfiles
+[ -f "$HOME/.secrets" ] && source "$HOME/.secrets"
 
 alias gwpm="dev cd web-pixels-manager"
 alias llmc="llm chat -m openai_proxy"
@@ -34,7 +35,7 @@ function feat() {
 }
 
 # Created by `pipx` on 2025-03-04 18:14:47
-export PATH="$PATH:/Users/kahvi/.local/bin"
+export PATH="$PATH:$HOME/.local/bin"
 
 yellwhenshipped() {
     if [ -z "$1" ]; then

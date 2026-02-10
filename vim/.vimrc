@@ -32,13 +32,11 @@ set foldmethod=indent
 set scrolloff=999
 
 " ==== Interface and Appearance ====
-set hls            " Highlight search results
-set ic             " Ignore case in searches
-set is             " Incremental search
-set nu             " Show line numbers
-set noswf          " Disable swap files
+set hlsearch       " Highlight search results
+set ignorecase     " Ignore case in searches
+set smartcase      " Override ignorecase when search has uppercase
 set incsearch      " Enable incremental search
-set hlsearch       " Enable search highlighting
+set noswapfile     " Disable swap files
 syntax enable      " Enable syntax highlighting
 
 " ==== Key Mappings ====

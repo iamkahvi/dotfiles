@@ -167,19 +167,14 @@
   "[astro]": {
     "editor.formatOnSave": true
   },
-  "rust-analyzer.linkedProjects": [
-    "/Users/iamkahvi/Developer/advent-of-code-2023/day3/part2/Cargo.toml",
-    "/Users/iamkahvi/Developer/advent-of-code-2023/day7/part1/Cargo.toml",
-    "/Users/iamkahvi/Developer/advent-of-code-2023/day7/part2/Cargo.toml",
-    "/Users/iamkahvi/rust-web-server-uploader/Cargo.toml"
-  ],
+
   "editor.inlayHints.enabled": "offUnlessPressed",
   "[c][cpp]": {
     "editor.wordBasedSuggestions": "off"
   },
   "cloudcode.duetAI.project": "wired-axis-246505",
   "vim.vimrc.enable": true,
-  "vim.vimrc.path": "/Users/iamkahvi/.vimrc",
+  "vim.vimrc.path": "~/.vimrc",
   "window.zoomLevel": 1,
   "breadcrumbs.symbolPath": "off",
   "cSpell.userWords": [
