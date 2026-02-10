@@ -1,6 +1,9 @@
 # Adding dev
 [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
 
+# Added by tec agent
+[[ -x "$HOME/.local/state/tec/profiles/base/current/global/init" ]] && eval "$("$HOME/.local/state/tec/profiles/base/current/global/init" zsh)"
+
 if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
 [[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby() {
@@ -16,6 +19,7 @@ alias llmc="llm chat -m openai_proxy"
 alias dus="dev up && dev s"
 alias gtco="gt checkout"
 alias c="devx claude"
+alias pi="devx pi"
 
 function feat() {
   if [ -z "$1" ]; then

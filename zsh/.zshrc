@@ -15,23 +15,38 @@ npm() { _lazy_load_nvm; npm "$@"; }
 npx() { _lazy_load_nvm; npx "$@"; }
 corepack() { _lazy_load_nvm; corepack "$@"; }
 
-if [ "$WORK" = "1" ]; then
-    source "$DF_HOME/zsh/work.zsh"
-fi
-
-alias showp='echo $PATH | tr -s ":" "\n"'
 alias mkdir="mkdir -p"
-alias configz="vim $HOME/.zshrc"
-alias configv="vim $HOME/.vimrc"
 alias vim='nvim'
 alias python='python3'
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 alias lg='lazygit'
 alias cn='code -n .'
-alias tx="$DF_HOME/tmux/tmux-sessions.sh"
-alias mux="/usr/local/bin/tmuxinator"
 alias j="zellij"
 alias oc="opencode"
+
+alias ,p='echo $PATH | tr -s ":" "\n"'
+alias ,z="vim $HOME/.zshrc"
+alias ,v="vim $HOME/.vimrc"
+alias ,tx="$DF_HOME/tmux/tmux-sessions.sh"
+alias ,mux="/usr/local/bin/tmuxinator"
+alias ,z='source ~/.zshrc'
+alias ,gh='gh browse .'
+
+# count unique lines
+alias -g ,c='|sort|uniq -c|sort -n|less -F'
+# count unique lines without sorting
+alias -g ,m='|less -F'
+# unique lines
+alias -g ,u='|sort|uniq|less -F'
+# change default seperator from space to newline for xargs
+alias xargs="xargs -d '\n'"
+
+# Load the function to edit the command line
+autoload -U edit-command-line
+# Create a custom widget from that function
+zle -N edit-command-line
+# Bind it to a shortcut (Ctrl+x, then Ctrl+e)
+bindkey '^x^e' edit-command-line
 
 # Setting up history
 HISTSIZE=500000
@@ -48,6 +63,9 @@ setopt auto_cd
 setopt no_beep
 setopt correct
 setopt globdots
+
+setopt interactivecomments
+unsetopt list_ambiguous
 
 if [[ -x /opt/homebrew/bin/brew ]]; then
   export HOMEBREW_PREFIX="/opt/homebrew"
@@ -82,33 +100,17 @@ autoload -U promptinit
 promptinit
 prompt pure
 
-## FUNCTIONS
-
 name() {
 	kitty @ set-tab-title $1
 }
 
-# fds - cd to selected directory
-fds() {
+fcd() {
   local dir
   dir=$(find ${1:-.} -path '*/\.*' -prune \
     -o -type d -print 2>/dev/null | fzf +m) &&
     cd "$dir"
 }
 
-# Fuzzy focus on a window
-fw() {
-    aerospace list-windows --all | fzf | cut -d'|' -f1 | xargs aerospace focus --window-id
-}
-
-# ff - find file with fzf and bat
-ff() {
-	local file
-	file=$(find "${1:-.}" -type f -not -path '*/.*' 2>/dev/null | \
-    fzf --preview 'bat --style=numbers --color=always --line-range=:100 {}' --preview-window=right:70%:wrap )  && print -z -- "vim $file"
-}
-
-# frg - fuzzy ripgrep: search file contents with ripgrep and preview with bat
 frg() {
   local selected
   selected=$(rg --color=always --line-number --no-heading --smart-case "${*:-}" |
@@ -117,7 +119,7 @@ frg() {
         --delimiter : \
         --preview 'bat --color=always {1} --highlight-line {2}' \
         --preview-window 'up,60%,border-bottom,+{2}+3/3,~3')
-  
+
   if [[ -n "$selected" ]]; then
     local file=$(echo "$selected" | cut -d':' -f1)
     local line=$(echo "$selected" | cut -d':' -f2)
@@ -125,15 +127,13 @@ frg() {
   fi
 }
 
-# frf - fuzzy ripgrep files: find files using ripgrep and preview with bat
-frf() {
+ff() {
   local file
   file=$(rg --files --hidden --follow --glob '!.git/*' "${1:-.}" 2>/dev/null | \
     fzf --preview 'bat --style=numbers --color=always --line-range=:100 {}' \
         --preview-window=right:70%:wrap) && print -z -- "vim $file"
 }
 
-# fh - search in your command history and print selected command
 fh() {
   local cmd=$(history | fzf --tac | sed 's/^[ ]*[0-9]*[ ]*//')
   if [[ -n "$cmd" ]]; then
@@ -144,7 +144,6 @@ fh() {
   fi
 }
 
-# fs - determine size of a file or total size of a directory.
 fs() {
   if du -b /dev/null >/dev/null 2>&1; then
     local arg=-sbh
@@ -159,10 +158,9 @@ fs() {
   fi
 }
 
-# Kill all processes running on specified port
-port_kill() {
+,pkill() {
   if [[ -z $1 ]]; then
-    echo "Usage: port_kill <port_number>"
+    echo "Usage: ,port-kill <port_number>"
     return 1
   fi
 
@@ -185,7 +183,6 @@ port_kill() {
     kill ${pids[@]} 2>/dev/null
     sleep 2
 
-    # Check if any processes are still running
     local remaining_pids=($(lsof -i :"$port" -t))
     if [[ ${#remaining_pids[@]} -gt 0 ]]; then
       echo "Some processes still running, forcing termination..."
@@ -221,7 +218,8 @@ fi
 # init zoxide
 eval "$(zoxide init zsh)"
 
-# Added by tec agent
-[[ -x "$HOME/.local/state/tec/profiles/base/current/global/init" ]] && eval "$("$HOME/.local/state/tec/profiles/base/current/global/init" zsh)"
+if [ "$WORK" = "1" ]; then
+    source "$DF_HOME/zsh/work.zsh"
+fi
 
 eval "$(ruby ~/.local/try.rb init ~/src/tries)"
