@@ -4,8 +4,16 @@ export ZSH=$HOME/.oh-my-zsh
 export ICLOUD_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/"
 # Let the terminal emulator set TERM; hardcoding breaks tmux/zellij
 
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+_lazy_load_nvm() {
+  unset -f nvm node npm npx corepack
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+nvm() { _lazy_load_nvm; nvm "$@"; }
+node() { _lazy_load_nvm; node "$@"; }
+npm() { _lazy_load_nvm; npm "$@"; }
+npx() { _lazy_load_nvm; npx "$@"; }
+corepack() { _lazy_load_nvm; corepack "$@"; }
 
 if [ "$WORK" = "1" ]; then
     source "$DF_HOME/zsh/work.zsh"
@@ -41,14 +49,20 @@ setopt no_beep
 setopt correct
 setopt globdots
 
-# configs for MacOS
-if [ "$(uname)" = "Darwin" ]; then
-  [[ -x /opt/homebrew/bin/brew ]] && eval $(/opt/homebrew/bin/brew shellenv)
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
+  fpath[1,0]="/opt/homebrew/share/zsh/site-functions"
+  path=("/opt/homebrew/bin" "/opt/homebrew/sbin" $path)
+  [ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}"
+  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 fi
 
 ZSH_THEME=""
+ZSH_DISABLE_COMPFIX=true
 
-plugins=(git colored-man-pages colorize pip python zsh-syntax-highlighting zsh-autosuggestions)
+plugins=(git colored-man-pages zsh-syntax-highlighting zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
@@ -63,12 +77,7 @@ export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Adding pure prompt
-if [ "$(uname)" = "Darwin" ] && [ "$(uname -p)" = "arm" ]; then
-  fpath+=/opt/homebrew/share/zsh/site-functions
-else
-  fpath+=$HOME/.zsh/pure
-fi
+[[ ! -x /opt/homebrew/bin/brew ]] && fpath+=$HOME/.zsh/pure
 autoload -U promptinit
 promptinit
 prompt pure
@@ -201,7 +210,7 @@ export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # deno
-export PATH="$HOME/.local/bin:$HOME/.deno/bin:$PATH"
+export PATH="$HOME/.deno/bin:$PATH"
 
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
@@ -211,8 +220,6 @@ fi
 
 # init zoxide
 eval "$(zoxide init zsh)"
-
-[[ -f /opt/dev/sh/chruby/chruby.sh ]] && { type chruby >/dev/null 2>&1 || chruby () { source /opt/dev/sh/chruby/chruby.sh; chruby "$@"; } }
 
 # Added by tec agent
 [[ -x "$HOME/.local/state/tec/profiles/base/current/global/init" ]] && eval "$("$HOME/.local/state/tec/profiles/base/current/global/init" zsh)"
