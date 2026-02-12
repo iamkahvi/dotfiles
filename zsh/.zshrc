@@ -23,6 +23,7 @@ alias lg='lazygit'
 alias cn='code -n .'
 alias j="zellij"
 alias oc="opencode"
+alias c="claude --dangerously-skip-permissions"
 
 alias ,p='echo $PATH | tr -s ":" "\n"'
 alias ,z="vim $HOME/.zshrc"
@@ -223,3 +224,9 @@ if [ "$WORK" = "1" ]; then
 fi
 
 eval "$(ruby ~/.local/try.rb init ~/src/tries)"
+
+# Added by Antigravity
+export PATH="/Users/iamkahvi/.antigravity/antigravity/bin:$PATH"
+
+. $(brew --prefix asdf)/libexec/asdf.sh
+export PATH="$HOME/.local/bin:$PATH"
