@@ -4,90 +4,190 @@
 #
 # Fuzzy-find a project directory (or git worktree) and create/switch to a tmux
 # session rooted there. Handles:
-#   - Regular git repos
-#   - Bare repos with worktrees (lists each worktree as a separate entry)
-#   - Plain directories
+#   - Regular git repos (with automatic worktree discovery)
+#   - Bare repos (via explicit config)
+#   - Worktree parent directories (via explicit config)
+#   - Pinned sessions
 #
 # Usage:
 #   tmux-sessionizer            # interactive fzf picker
 #   tmux-sessionizer <path>     # skip picker, go straight to path
 #
-# Config:
-#   Set SESSIONIZER_DIRS to a colon-separated list of search roots.
-#   Set SESSIONIZER_DEPTH to control find depth (default: 2).
-#
-#   Example in fish:
-#     set -Ux SESSIONIZER_DIRS "$HOME/Developer:$HOME/dotfiles:$HOME/projects"
-#
-#   Example in bash/zsh:
-#     export SESSIONIZER_DIRS="$HOME/Developer:$HOME/dotfiles:$HOME/projects"
+# Config: ~/.config/tmux-sessionizer/sessionizer.yaml
+#         (falls back to $DF_HOME/tmux/sessionizer.yaml)
 
 set -euo pipefail
 
-SEARCH_DIRS="${SESSIONIZER_DIRS:-$HOME/Developer:$HOME}"
-SEARCH_DEPTH="${SESSIONIZER_DEPTH:-2}"
-# Colon-separated list of directory basenames to skip
-EXCLUDE_DIRS="${SESSIONIZER_EXCLUDE:-.fzf:.nvm:.oh-my-zsh:.tmux:.cargo}"
+# --------------------------------------------------------------------------
+# Locate and parse config
+# --------------------------------------------------------------------------
+CONFIG_FILE="${SESSIONIZER_CONFIG:-}"
+if [[ -z "$CONFIG_FILE" ]]; then
+    for candidate in \
+        "$HOME/.config/tmux-sessionizer/sessionizer.yaml" \
+        "${DF_HOME:-$HOME/dotfiles}/tmux/sessionizer.yaml"; do
+        if [[ -f "$candidate" ]]; then
+            CONFIG_FILE="$candidate"
+            break
+        fi
+    done
+fi
+
+if [[ -z "$CONFIG_FILE" || ! -f "$CONFIG_FILE" ]]; then
+    echo "No config found. Create ~/.config/tmux-sessionizer/sessionizer.yaml" >&2
+    exit 1
+fi
+
+cfg() {
+    yq "$1" "$CONFIG_FILE"
+}
+
+cfg_expand() {
+    local val
+    val="$(yq "$1" "$CONFIG_FILE")"
+    echo "${val/#\~/$HOME}"
+}
+
+# Read config values
+SEARCH_DEPTH="$(cfg '.depth // 2')"
+
+read_cfg_array() {
+    local expr="$1"
+    while IFS= read -r line; do
+        [[ "$line" == "null" || -z "$line" ]] && continue
+        line="${line/#\~/$HOME}"
+        echo "$line"
+    done < <(yq -r "$expr // [] | .[]" "$CONFIG_FILE" 2>/dev/null)
+}
+
+declare -a SEARCH_DIRS_ARR=()
+while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    SEARCH_DIRS_ARR+=("$line")
+done < <(read_cfg_array '.search_dirs')
+
+declare -a EXCLUDE_ARR=()
+while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    EXCLUDE_ARR+=("$line")
+done < <(read_cfg_array '.exclude')
+
+declare -a BARE_REPOS_ARR=()
+while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    BARE_REPOS_ARR+=("$line")
+done < <(read_cfg_array '.bare_repos')
+
+declare -a WORKTREE_DIRS_ARR=()
+while IFS= read -r line; do
+    [[ -z "$line" ]] && continue
+    WORKTREE_DIRS_ARR+=("$line")
+done < <(read_cfg_array '.worktree_dirs')
+
+# Build exclude string for grep matching
+EXCLUDE_PATTERN=""
+for ex in ${EXCLUDE_ARR[@]+"${EXCLUDE_ARR[@]}"}; do
+    EXCLUDE_PATTERN="${EXCLUDE_PATTERN}${ex}"$'\n'
+done
+
+is_excluded() {
+    local name="$1"
+    [[ -n "$EXCLUDE_PATTERN" ]] && echo "$EXCLUDE_PATTERN" | grep -qxF "$name"
+}
+
+# --------------------------------------------------------------------------
+# List worktrees for a git dir (bare or regular)
+# --------------------------------------------------------------------------
+list_worktrees() {
+    local git_location="$1"
+    git -C "$git_location" worktree list 2>/dev/null | while IFS= read -r wt_line; do
+        local wt_path
+        wt_path="$(echo "$wt_line" | awk '{print $1}')"
+        [[ -d "$wt_path" ]] && echo "$wt_path"
+    done
+}
 
 # --------------------------------------------------------------------------
 # Gather candidate directories
 # --------------------------------------------------------------------------
 gather_candidates() {
-    local IFS=':'
-    local seen=()
+    # 1. Pinned sessions
+    local pin_count
+    pin_count="$(cfg '.pins | length // 0')"
+    if [[ "$pin_count" -gt 0 ]]; then
+        for ((i = 0; i < pin_count; i++)); do
+            local pin_path
+            pin_path="$(cfg_expand ".pins[$i].path")"
+            [[ -d "$pin_path" ]] && echo "$pin_path"
+        done
+    fi
 
-    for search_dir in $SEARCH_DIRS; do
+    # 2. Explicit bare repos — list their worktrees (skip the bare dir itself)
+    for bare_repo in ${BARE_REPOS_ARR[@]+"${BARE_REPOS_ARR[@]}"}; do
+        [[ ! -d "$bare_repo" ]] && continue
+        local resolved_bare
+        resolved_bare="$(cd "$bare_repo" && pwd -P)"
+        list_worktrees "$bare_repo" | while IFS= read -r wt_path; do
+            local resolved_wt
+            resolved_wt="$(cd "$wt_path" && pwd -P)"
+            [[ "$resolved_wt" != "$resolved_bare" ]] && echo "$wt_path"
+        done
+    done
+
+    # 3. Explicit worktree parent dirs — each child that is a git worktree
+    for wt_dir in ${WORKTREE_DIRS_ARR[@]+"${WORKTREE_DIRS_ARR[@]}"}; do
+        [[ ! -d "$wt_dir" ]] && continue
+        for child in "$wt_dir"/*/; do
+            [[ ! -d "$child" ]] && continue
+            # Check if it's a worktree checkout (.git is a file) or a regular repo
+            if [[ -e "$child/.git" ]]; then
+                echo "${child%/}"
+            fi
+        done
+    done
+
+    # 4. search_dirs — find .git entries (files and directories)
+    for search_dir in ${SEARCH_DIRS_ARR[@]+"${SEARCH_DIRS_ARR[@]}"}; do
         [[ ! -d "$search_dir" ]] && continue
 
-        # Find directories containing .git (file or dir) up to SEARCH_DEPTH
         while IFS= read -r gitpath; do
-            local project_dir
+            local project_dir base
             project_dir="$(dirname "$gitpath")"
+            base="$(basename "$project_dir")"
 
-            # Check if this is a bare repo (bare repos have .git/worktrees or
-            # the config says bare = true)
-            if [[ -d "$gitpath" ]] && git -C "$project_dir" rev-parse --is-bare-repository 2>/dev/null | grep -q true; then
-                # Bare repo: list all worktrees
-                while IFS= read -r wt_line; do
-                    local wt_path
-                    wt_path="$(echo "$wt_line" | head -1)"
-                    [[ -d "$wt_path" ]] && echo "$wt_path"
-                done < <(git -C "$project_dir" worktree list --porcelain | grep "^worktree " | sed 's/^worktree //')
-            elif [[ -f "$gitpath" ]]; then
-                # .git is a file -> this IS a worktree checkout, include it
+            is_excluded "$base" && continue
+
+            if [[ -f "$gitpath" ]]; then
+                # .git is a file — this is a worktree checkout.
+                # Include it directly. The bare/main repo will list its
+                # siblings if configured in bare_repos or worktree_dirs.
                 echo "$project_dir"
             else
-                # Regular repo. Also check if it has worktrees and list them.
+                # .git is a directory — regular repo.
                 echo "$project_dir"
 
+                # If this repo has additional worktrees, list them too.
+                # These may live anywhere on disk.
                 local wt_count
                 wt_count=$(git -C "$project_dir" worktree list 2>/dev/null | wc -l)
                 if [[ "$wt_count" -gt 1 ]]; then
-                    while IFS= read -r wt_line; do
-                        local wt_path
-                        wt_path="$(echo "$wt_line" | awk '{print $1}')"
-                        # Don't duplicate the main worktree
-                        [[ "$wt_path" != "$project_dir" && -d "$wt_path" ]] && echo "$wt_path"
-                    done < <(git -C "$project_dir" worktree list 2>/dev/null)
+                    list_worktrees "$project_dir" | while IFS= read -r wt_path; do
+                        [[ "$wt_path" != "$project_dir" ]] && echo "$wt_path"
+                    done
                 fi
             fi
         done < <(find "$search_dir" -maxdepth "$SEARCH_DEPTH" -name ".git" 2>/dev/null)
 
-        # Also include the search_dir itself if it's a git repo
+        # Include the search_dir itself if it's a git repo
         if [[ -e "$search_dir/.git" ]]; then
             echo "$search_dir"
         fi
-    done | sort -u | while IFS= read -r candidate; do
-        local base
-        base="$(basename "$candidate")"
-        # Check against exclude list
-        local excluded=false
-        local IFS=':'
-        for ex in $EXCLUDE_DIRS; do
-            [[ "$base" == "$ex" ]] && excluded=true && break
-        done
-        [[ "$excluded" == false ]] && echo "$candidate"
     done
+}
+
+# Wrapper that deduplicates
+gather_candidates_unique() {
+    gather_candidates | sort -u
 }
 
 # --------------------------------------------------------------------------
@@ -95,29 +195,52 @@ gather_candidates() {
 # --------------------------------------------------------------------------
 session_name_from_path() {
     local dir="$1"
+
+    # Check pinned sessions for explicit name
+    local pin_count
+    pin_count="$(cfg '.pins | length // 0')"
+    if [[ "$pin_count" -gt 0 ]]; then
+        for ((i = 0; i < pin_count; i++)); do
+            local pin_path pin_name
+            pin_path="$(cfg_expand ".pins[$i].path")"
+            pin_name="$(cfg ".pins[$i].name // \"null\"")"
+            if [[ "$pin_path" == "$dir" && "$pin_name" != "null" ]]; then
+                echo "$pin_name" | tr '.:\n' '_-_'
+                return
+            fi
+        done
+    fi
+
     local name
 
-    # If inside a git repo, use repo-name (and worktree branch if applicable)
     if git -C "$dir" rev-parse --git-dir &>/dev/null; then
-        local toplevel repo_name
-        toplevel="$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null || echo "$dir")"
-        repo_name="$(basename "$toplevel")"
-
-        # If this is a worktree (not the main checkout), append the branch
         local git_dir
         git_dir="$(git -C "$dir" rev-parse --git-dir 2>/dev/null)"
+
         if [[ "$git_dir" == *"/worktrees/"* ]]; then
+            # This is a worktree checkout. Derive repo name from the bare/main
+            # repo path, not --show-toplevel (which fails for bare repos).
+            # git_dir looks like: /path/to/repo.git/worktrees/branch-name
+            # or: /path/to/repo/.git/worktrees/branch-name
+            local repo_git_dir
+            repo_git_dir="$(echo "$git_dir" | sed 's|/worktrees/.*||')"
+            local repo_name
+            # Strip .git suffix if present (bare repos often end in .git)
+            repo_name="$(basename "$repo_git_dir" .git)"
             local branch
             branch="$(git -C "$dir" branch --show-current 2>/dev/null || basename "$dir")"
             name="${repo_name}/${branch}"
         else
-            name="$repo_name"
+            # Regular repo (not a worktree)
+            local toplevel
+            toplevel="$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null || echo "$dir")"
+            name="$(basename "$toplevel")"
         fi
     else
         name="$(basename "$dir")"
     fi
 
-    # tmux doesn't allow dots or colons in session names
+    # tmux disallows dots, colons in session names
     echo "$name" | tr '.:\n' '_-_'
 }
 
@@ -129,12 +252,10 @@ switch_to_session() {
     local name
     name="$(session_name_from_path "$dir")"
 
-    # Create session if it doesn't exist
     if ! tmux has-session -t="$name" 2>/dev/null; then
         tmux new-session -ds "$name" -c "$dir"
     fi
 
-    # Switch or attach
     if [[ -n "${TMUX:-}" ]]; then
         tmux switch-client -t "$name"
     else
@@ -151,7 +272,7 @@ main() {
     if [[ $# -ge 1 ]]; then
         selected="$1"
     else
-        selected=$(gather_candidates | fzf \
+        selected=$(gather_candidates_unique | fzf \
             --prompt="session> " \
             --header="tmux-sessionizer" \
             --preview='
@@ -179,7 +300,6 @@ main() {
 
     [[ -z "$selected" ]] && exit 0
 
-    # Resolve to absolute path
     selected="$(cd "$selected" && pwd)"
 
     switch_to_session "$selected"

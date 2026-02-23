@@ -1,0 +1,43 @@
+# tmux-sessionizer config
+
+# Directories to scan for git repos / projects
+search_dirs:
+  - ~/Developer
+  - ~
+
+# How many levels deep to search within each search dir
+depth: 2
+
+# Directory basenames to skip
+exclude:
+  - .fzf
+  - .nvm
+  - .oh-my-zsh
+  - .tmux
+  - .cargo
+
+# Bare repos: paths to bare git repositories.
+# All worktrees for each bare repo appear as separate candidates.
+# Example:
+#   bare_repos:
+#     - ~/projects/myrepo.git
+bare_repos: []
+
+# Worktree parent directories: directories whose immediate children are
+# worktree checkouts. Useful for the flat worktree layout:
+#   ~/worktrees/myrepo/
+#     main/
+#     feature-branch/
+#     bugfix/
+# Example:
+#   worktree_dirs:
+#     - ~/worktrees
+worktree_dirs: []
+
+# Pinned sessions: always appear in the picker, even if outside search_dirs.
+# Supports explicit session name and optional working directory.
+pins:
+  # - name: dotfiles
+  #   path: ~/dotfiles
+  # - name: notes
+  #   path: ~/syncthing_notes
