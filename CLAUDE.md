@@ -39,6 +39,10 @@
 
 If I ask for adjustments to code I have provided you, do not repeat all of my code unnecessarily. Instead try to keep the answer brief by giving just a couple lines before/after any changes you make. Multiple code blocks are ok.
 
+## Git
+
+- **Do not `git push` unless explicitly told to.**
+
 ## Github
 
 **When viewing items from github:**

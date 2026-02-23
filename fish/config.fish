@@ -109,6 +109,11 @@ fish_add_path $HOME/.deno/bin
 
 zoxide init fish | source
 
+# tmux-sessionizer
+fish_add_path $DF_HOME/scripts
+set -Ux SESSIONIZER_DIRS "$HOME/Developer:$HOME/dotfiles:$HOME"
+set -Ux SESSIONIZER_DEPTH 2
+
 if test (uname) = "Darwin"
     # Commands for macOS
     echo "Running on macOS"
