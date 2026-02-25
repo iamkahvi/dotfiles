@@ -24,6 +24,11 @@ alias cn='code -n .'
 alias j="zellij"
 alias oc="opencode"
 alias c="claude --dangerously-skip-permissions"
+spi() {
+  local cmd
+  cmd="$($DF_HOME/pi/search_sessions.sh -p $HOME/.pi/agent-shopify/sessions -u "$@")" || return
+  [[ -n "$cmd" ]] && print -z -- "$cmd"
+}
 
 alias ,p='echo $PATH | tr -s ":" "\n"'
 alias ,z="vim $HOME/.zshrc"
