@@ -190,6 +190,24 @@ gather_candidates_unique() {
     gather_candidates | sort -u
 }
 
+# zoxide outputs lines like:
+#   "123.45 /path/to/dir"
+# Convert to plain paths, keep only existing dirs.
+zoxide_candidates() {
+    command -v zoxide >/dev/null 2>&1 || return 0
+    zoxide query -ls 2>/dev/null | sed -E 's/^[0-9.]+[[:space:]]+//' | while IFS= read -r dir; do
+        [[ -d "$dir" ]] && echo "$dir"
+    done
+}
+
+# zoxide first (ranked), then static scan. De-dupe while preserving order.
+all_candidates() {
+    {
+        zoxide_candidates
+        gather_candidates_unique
+    } | awk 'NF && !seen[$0]++'
+}
+
 # --------------------------------------------------------------------------
 # Derive a tmux-safe session name from a path
 # --------------------------------------------------------------------------
@@ -272,7 +290,7 @@ main() {
     if [[ $# -ge 1 ]]; then
         selected="$1"
     else
-        selected=$(gather_candidates_unique | fzf \
+        selected=$(all_candidates | fzf \
             --prompt="session> " \
             --header="tmux-sessionizer" \
             --preview='

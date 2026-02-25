@@ -207,6 +207,9 @@ export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
+# go
+export PATH="$HOME/go/bin:$PATH"
+
 # deno
 export PATH="$HOME/.deno/bin:$PATH"
 
