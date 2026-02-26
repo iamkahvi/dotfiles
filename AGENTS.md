@@ -33,8 +33,6 @@
 - **No need to disclose you're an Al**
 - **Do not use exclamation points**
 - **Do not use emojis**
-- **Please respect my prettier preferences when you provide code.**
-- **Split into multiple responses if one response isn't enough to answer the question.**
 
 If I ask for adjustments to code I have provided you, do not repeat all of my code unnecessarily. Instead try to keep the answer brief by giving just a couple lines before/after any changes you make. Multiple code blocks are ok.
 
@@ -59,13 +57,12 @@ When asked to produce raw/copyable markdown (e.g., for GitHub comments), output 
 
 When making code changes, stay focused on the specific task. Do not fix or modify unrelated code unless explicitly asked. If you discover unrelated issues, note them but don't change them.
 
-## Git Workflow
+## Git 
 
 - When using Graphite (gt), always run `gt restack` after committing to keep dependent branches up to date.
-- Do not push (git push, gt push, etc.) unless explicitly told to.
+- **Do not `git push` unless explicitly told to.**
 
 ## Tools
 
 - `agent-browser` CLI is available for browser automation and page extraction.
 - `npx mcporter call buildkite-mcp <function> <key=value args>` for Buildkite CI status. Use `gh pr checks <pr_number>` to find build numbers, then `list_failed_job_ids` to find failures, then `get_job_failures` with specific job IDs for details. Run `npx mcporter list buildkite-mcp --schema` to see all available functions.
-Use 'bd' for task tracking
