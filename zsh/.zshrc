@@ -1,7 +1,14 @@
 export DF_HOME="$HOME/dotfiles"
 export NVM_DIR="$HOME/.nvm"
 export ZSH=$HOME/.oh-my-zsh
-export ICLOUD_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/"
+
+add_path_if_dir() {
+  [[ -d "$1" ]] && path=("$1" $path)
+}
+
+if [[ "$OSTYPE" == darwin* && -d "$HOME/Library/Mobile Documents/com~apple~CloudDocs" ]]; then
+  export ICLOUD_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/"
+fi
 # Let the terminal emulator set TERM; hardcoding breaks tmux/zellij
 
 _lazy_load_nvm() {
@@ -18,7 +25,9 @@ corepack() { _lazy_load_nvm; corepack "$@"; }
 alias mkdir="mkdir -p"
 alias vim='nvim'
 alias python='python3'
-alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+if [[ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]]; then
+  alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+fi
 alias lg='lazygit'
 alias cn='code -n .'
 alias j="zellij"
@@ -34,7 +43,7 @@ alias ,p='echo $PATH | tr -s ":" "\n"'
 alias ,z="vim $HOME/.zshrc"
 alias ,v="vim $HOME/.vimrc"
 alias ,tx="$DF_HOME/tmux/tmux-sessions.sh"
-alias ,mux="/usr/local/bin/tmuxinator"
+alias ,mux="tmuxinator"
 alias ,z='source ~/.zshrc'
 alias ,gh='gh browse .'
 
@@ -73,14 +82,33 @@ setopt globdots
 setopt interactivecomments
 unsetopt list_ambiguous
 
-if [[ -x /opt/homebrew/bin/brew ]]; then
-  export HOMEBREW_PREFIX="/opt/homebrew"
-  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
-  export HOMEBREW_REPOSITORY="/opt/homebrew"
-  fpath[1,0]="/opt/homebrew/share/zsh/site-functions"
-  path=("/opt/homebrew/bin" "/opt/homebrew/sbin" $path)
-  [ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}"
-  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+for brew_prefix in /opt/homebrew /home/linuxbrew/.linuxbrew /usr/local; do
+  if [[ -x "$brew_prefix/bin/brew" ]]; then
+    export HOMEBREW_PREFIX="$brew_prefix"
+    export HOMEBREW_CELLAR="$brew_prefix/Cellar"
+    export HOMEBREW_REPOSITORY="$brew_prefix"
+    [[ -d "$brew_prefix/share/zsh/site-functions" ]] && fpath[1,0]="$brew_prefix/share/zsh/site-functions"
+    add_path_if_dir "$brew_prefix/bin"
+    add_path_if_dir "$brew_prefix/sbin"
+    [ -z "${MANPATH-}" ] || export MANPATH=":${MANPATH#:}"
+    [[ -d "$brew_prefix/share/info" ]] && export INFOPATH="$brew_prefix/share/info:${INFOPATH:-}"
+    break
+  fi
+done
+
+# asdf (cross-platform, no warnings if missing)
+if [[ -d "${ASDF_DATA_DIR:-$HOME/.asdf}" ]]; then
+  export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+fi
+
+if ! command -v asdf >/dev/null 2>&1; then
+  for asdf_sh in \
+    "${ASDF_DATA_DIR:-$HOME/.asdf}/asdf.sh" \
+    /opt/homebrew/opt/asdf/libexec/asdf.sh \
+    /usr/local/opt/asdf/libexec/asdf.sh \
+    /opt/asdf-vm/asdf.sh; do
+    [[ -r "$asdf_sh" ]] && source "$asdf_sh" && break
+  done
 fi
 
 ZSH_THEME=""
@@ -101,10 +129,12 @@ export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-[[ ! -x /opt/homebrew/bin/brew ]] && fpath+=$HOME/.zsh/pure
+[[ -z "$HOMEBREW_PREFIX" ]] && fpath+=$HOME/.zsh/pure
 autoload -U promptinit
 promptinit
-prompt pure
+if prompt -l | grep -qx "pure"; then
+  prompt pure
+fi
 
 name() {
 	kitty @ set-tab-title $1
@@ -207,7 +237,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # subl
-export PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
+[[ -d "/Applications/Sublime Text.app/Contents/SharedSupport/bin" ]] && add_path_if_dir "/Applications/Sublime Text.app/Contents/SharedSupport/bin"
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
@@ -218,7 +248,11 @@ export PATH="$HOME/go/bin:$PATH"
 # deno
 export PATH="$HOME/.deno/bin:$PATH"
 
-export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+for pg_bin in \
+  "${HOMEBREW_PREFIX:-}/opt/postgresql@15/bin" \
+  /usr/lib/postgresql/15/bin; do
+  [[ -d "$pg_bin" ]] && add_path_if_dir "$pg_bin"
+done
 
 if [[ -f ~/.oh-my-zsh/completions/_deno ]]; then
   source ~/.oh-my-zsh/completions/_deno
@@ -231,10 +265,8 @@ if [ "$WORK" = "1" ]; then
     source "$DF_HOME/zsh/work.zsh"
 fi
 
-eval "$(ruby ~/.local/try.rb init ~/src/tries)"
+if command -v ruby >/dev/null 2>&1 && [[ -f "$HOME/.local/try.rb" ]]; then
+  eval "$(ruby ~/.local/try.rb init ~/src/tries)"
+fi
 
-# Added by Antigravity
-export PATH="/Users/iamkahvi/.antigravity/antigravity/bin:$PATH"
-
-. $(brew --prefix asdf)/libexec/asdf.sh
 export PATH="$HOME/.local/bin:$PATH"
