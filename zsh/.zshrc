@@ -129,10 +129,10 @@ export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-[[ -z "$HOMEBREW_PREFIX" ]] && fpath+=$HOME/.zsh/pure
+[[ -d "$HOME/.zsh/pure" ]] && fpath=("$HOME/.zsh/pure" $fpath)
 autoload -U promptinit
 promptinit
-if prompt -l | grep -qx "pure"; then
+if prompt -l | grep -qw "pure"; then
   prompt pure
 fi
 
