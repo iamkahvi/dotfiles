@@ -1,14 +1,20 @@
 vim.cmd("source ~/.vimrc")
 
-vim.api.nvim_create_autocmd("CmdlineLeave", {
-  pattern = ":",
-  callback = function()
-    local cmd = vim.fn.getcmdline()
-    if cmd:match("^%d+$") then
-      vim.cmd("normal! zz")
-    end
-  end,
-})
+if vim.api.nvim_create_autocmd then
+  vim.api.nvim_create_autocmd("CmdlineLeave", {
+    pattern = ":",
+    callback = function()
+      local cmd = vim.fn.getcmdline()
+      if cmd:match("^%d+$") then
+        vim.cmd("normal! zz")
+      end
+    end,
+  })
+end
+
+if vim.fn.has("nvim-0.8") == 0 then
+  return
+end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -23,7 +29,12 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require("lazy").setup({
+local ok, lazy = pcall(require, "lazy")
+if not ok then
+  return
+end
+
+lazy.setup({
   { "junegunn/goyo.vim" },
   { "scrooloose/nerdcommenter" },
   { "preservim/nerdtree" },  -- Updated repo for NERDTree
