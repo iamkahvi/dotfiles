@@ -1,4 +1,4 @@
-shell-integration = zsh
+shell-integration = none
 clipboard-read = allow
 clipboard-write = allow
 copy-on-select = true
@@ -11,4 +11,4 @@ window-height = 52
 window-width = 141
 working-directory = home
 window-inherit-working-directory = false
-theme = catppuccin-frappe
+theme = Catppuccin Frappe 
