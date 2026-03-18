@@ -40,7 +40,7 @@ spi() {
 }
 
 alias ,p='echo $PATH | tr -s ":" "\n"'
-alias ,z="vim $HOME/.zshrc"
+alias ,cz="vim $HOME/.zshrc"
 alias ,v="vim $HOME/.vimrc"
 alias ,tx="$DF_HOME/tmux/tmux-sessions.sh"
 alias ,mux="tmuxinator"
@@ -136,9 +136,12 @@ if prompt -l | grep -qw "pure"; then
   prompt pure
 fi
 
-name() {
+kname() {
 	kitty @ set-tab-title $1
 }
+
+# Ghostty tab title
+gname() { osascript -e 'tell application "System Events" to tell process "Ghostty" to tell menu bar 1 to tell menu "View" of menu bar item "View" to click menu item "Change Tab Title..."' -e 'delay 0.3' -e "tell application \"System Events\" to keystroke \"$1\"" -e 'tell application "System Events" to keystroke return'; }
 
 fcd() {
   local dir
@@ -271,5 +274,5 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 
-# Ghostty tab title
-tabtitle() { osascript -e 'tell application "System Events" to tell process "Ghostty" to tell menu bar 1 to tell menu "View" of menu bar item "View" to click menu item "Change Tab Title..."' -e 'delay 0.3' -e "tell application \"System Events\" to keystroke \"$1\"" -e 'tell application "System Events" to keystroke return'; }
+# Added by tec agent
+[[ -x /Users/kahvi/.local/state/tec/profiles/base/current/global/init ]] && eval "$(/Users/kahvi/.local/state/tec/profiles/base/current/global/init zsh)"
