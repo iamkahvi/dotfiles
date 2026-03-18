@@ -270,3 +270,6 @@ if command -v ruby >/dev/null 2>&1 && [[ -f "$HOME/.local/try.rb" ]]; then
 fi
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# Ghostty tab title
+tabtitle() { osascript -e 'tell application "System Events" to tell process "Ghostty" to tell menu bar 1 to tell menu "View" of menu bar item "View" to click menu item "Change Tab Title..."' -e 'delay 0.3' -e "tell application \"System Events\" to keystroke \"$1\"" -e 'tell application "System Events" to keystroke return'; }
