@@ -1,0 +1,9 @@
+editor:
+  dir: ~/dotfiles
+  command: gname editor && vim .
+build:
+  dir: ~/
+  command: gname htop && htop
+git:
+  dir: ~/
+  command: gname git && l

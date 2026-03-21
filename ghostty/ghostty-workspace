@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+# Opens a Ghostty window with tabs defined in a YAML file.
+#
+# Usage: ghostty-workspace <workspace.yaml>
+#
+# YAML format:
+#   editor:
+#     dir: ~/src/ghostty
+#     command: nvim .
+#   build:
+#     dir: ~/src/ghostty
+#     command: zig build
+#   logs:
+#     command: tail -f /tmp/dev.log
+
+require 'yaml'
+require 'erb'
+
+file = ARGV[0]
+unless file
+  $stderr.puts "Usage: ghostty-workspace <workspace.yaml>"
+  exit 1
+end
+
+unless File.exist?(file)
+  $stderr.puts "File not found: #{file}"
+  exit 1
+end
+
+tabs = YAML.safe_load(File.read(file))
+
+unless tabs.is_a?(Hash) && !tabs.empty?
+  $stderr.puts "YAML must be a mapping of tab names to config"
+  exit 1
+end
+
+def expand_dir(dir)
+  dir&.sub('~', ENV['HOME'])
+end
+
+entries = tabs.map { |name, config| { name: name, dir: expand_dir(config&.dig('dir')), command: config&.dig('command') } }
+
+template = ERB.new(<<~'APPLESCRIPT', trim_mode: '-')
+  tell application "Ghostty"
+      activate
+  <% entries.each_with_index do |entry, i| -%>
+
+  <%   if entry[:dir] -%>
+      set cfg<%= i %> to new surface configuration
+      set initial working directory of cfg<%= i %> to "<%= entry[:dir] %>"
+  <%   end -%>
+  <%   if i == 0 -%>
+      set win to new window<%= " with configuration cfg0" if entry[:dir] %>
+      set term0 to terminal 1 of selected tab of win
+  <%   else -%>
+      set tab<%= i %> to new tab in win<%= " with configuration cfg#{i}" if entry[:dir] %>
+      set term<%= i %> to terminal 1 of tab<%= i %>
+  <%   end -%>
+  <%   if entry[:command] -%>
+      input text "<%= entry[:command] %>" to term<%= i %>
+      send key "enter" to term<%= i %>
+  <%   end -%>
+  <% end -%>
+
+      focus term0
+  end tell
+APPLESCRIPT
+
+script = template.result(binding)
+
+exec('osascript', '-e', script)
