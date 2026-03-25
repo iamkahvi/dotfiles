@@ -274,5 +274,16 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 
+# Rename Ghostty tab title
+DISABLE_AUTO_TITLE="true"
+tab() {
+  __custom_tab_title="$*"
+  printf '\033]2;%s\007' "$*" > "$(tty)"
+}
+_custom_tab_title_precmd() {
+  [[ -n "$__custom_tab_title" ]] && printf '\033]2;%s\007' "$__custom_tab_title" > "$(tty)"
+}
+add-zsh-hook precmd _custom_tab_title_precmd
+
 # Added by tec agent
 [[ -x /Users/kahvi/.local/state/tec/profiles/base/current/global/init ]] && eval "$(/Users/kahvi/.local/state/tec/profiles/base/current/global/init zsh)"

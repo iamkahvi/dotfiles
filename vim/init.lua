@@ -35,6 +35,7 @@ if not ok then
 end
 
 lazy.setup({
+  { "mityu/vim-applescript", ft = "applescript" },
   { "junegunn/goyo.vim" },
   { "scrooloose/nerdcommenter" },
   { "preservim/nerdtree" },  -- Updated repo for NERDTree

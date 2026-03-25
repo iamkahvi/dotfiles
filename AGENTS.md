@@ -40,6 +40,7 @@ If I ask for adjustments to code I have provided you, do not repeat all of my co
 
 **When viewing items from github:**
 - use `gh view-md <github_issue_or_pr_url> [options]`
+- **Never reply to PR comments, issues, or discussions without explicit permission.**
 
 ## Conventions
 
