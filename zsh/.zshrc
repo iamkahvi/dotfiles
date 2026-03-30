@@ -22,7 +22,7 @@ npm() { _lazy_load_nvm; npm "$@"; }
 npx() { _lazy_load_nvm; npx "$@"; }
 corepack() { _lazy_load_nvm; corepack "$@"; }
 
-alias mkdir="mkdir -p"
+mkcd() { command mkdir -p "$@" && cd "${@[-1]}"; }
 alias vim='nvim'
 alias python='python3'
 if [[ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]]; then
