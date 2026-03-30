@@ -1,0 +1,17 @@
+{
+  "lastChangelogVersion": "0.64.0",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-4-6",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "https://github.com/shopify-playground/pi-autoresearch",
+    "https://github.com/shopify-playground/shop-pi-fy"
+  ],
+  "hideThinkingBlock": false,
+  "extensions": [
+    "/Users/kahvi/dotfiles/pi/extensions"
+  ],
+  "skills": [
+    "/Users/kahvi/dotfiles/pi/skills"
+  ]
+}
