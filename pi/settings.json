@@ -1,17 +1,10 @@
 {
-  "lastChangelogVersion": "0.64.0",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-4-6",
+  "lastChangelogVersion": "0.72.1",
+  "defaultProvider": "tailscale-ai-anthropic",
+  "defaultModel": "claude-sonnet-4-6",
   "defaultThinkingLevel": "high",
-  "packages": [
-    "https://github.com/shopify-playground/pi-autoresearch",
-    "https://github.com/shopify-playground/shop-pi-fy"
-  ],
+  "packages": ["https://github.com/davebcn87/pi-autoresearch"],
   "hideThinkingBlock": false,
-  "extensions": [
-    "/Users/kahvi/dotfiles/pi/extensions"
-  ],
-  "skills": [
-    "/Users/kahvi/dotfiles/pi/skills"
-  ]
+  "extensions": ["/Users/iamkahvi/dotfiles/pi/extensions"],
+  "skills": ["/Users/iamkahvi/dotfiles/pi/skills"]
 }
