@@ -63,6 +63,10 @@ When making code changes, stay focused on the specific task. Do not fix or modif
 - When using Graphite (gt), always run `gt restack` after committing to keep dependent branches up to date.
 - **Do not `git push` unless explicitly told to.**
 
+## Verification
+
+- **Do not assume what a tool or service is configured for.** Always verify by inspecting config/state (e.g. `rclone config show <remote>`) before making claims about backends, destinations, or integrations.
+
 ## Tools
 
 - `agent-browser` CLI is available for browser automation and page extraction.

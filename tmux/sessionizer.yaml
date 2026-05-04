@@ -2,7 +2,6 @@
 
 # Directories to scan for git repos / projects
 search_dirs:
-  - ~/Developer
   - ~
 
 # How many levels deep to search within each search dir
