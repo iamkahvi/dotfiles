@@ -5,6 +5,8 @@ copy-on-select = true
 macos-option-as-alt = true
 window-save-state = always
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
+keybind = super+ctrl+[=goto_split:previous
+keybind = super+ctrl+]=goto_split:next
 quick-terminal-position = center
 quick-terminal-animation-duration = 0
 window-height = 52

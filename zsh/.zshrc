@@ -38,6 +38,7 @@ spi() {
   cmd="$($DF_HOME/pi/search_sessions.sh -p $HOME/.pi/agent/sessions -u "$@")" || return
   [[ -n "$cmd" ]] && print -z -- "$cmd"
 }
+alias y="yazi"
 
 alias ,p='echo $PATH | tr -s ":" "\n"'
 alias ,cz="vim $HOME/.zshrc"
@@ -143,6 +144,20 @@ kname() {
 # Ghostty tab title
 gname() { osascript -e 'tell application "System Events" to tell process "Ghostty" to tell menu bar 1 to tell menu "View" of menu bar item "View" to click menu item "Change Tab Title..."' -e 'delay 0.3' -e "tell application \"System Events\" to keystroke \"$1\"" -e 'tell application "System Events" to keystroke return'; }
 
+cmux-name() {
+  if [[ -z "${CMUX_SURFACE_ID:-}" ]]; then
+    print -u2 "cmux-name: CMUX_SURFACE_ID is not set"
+    return 1
+  fi
+
+  if [[ $# -eq 0 ]]; then
+    print -u2 'usage: cmux-name "tab name"'
+    return 2
+  fi
+
+  command cmux rename-tab --surface "$CMUX_SURFACE_ID" "$*"
+}
+
 fcd() {
   local dir
   dir=$(find ${1:-.} -path '*/\.*' -prune \
@@ -199,7 +214,7 @@ fs() {
 
 ,pkill() {
   if [[ -z $1 ]]; then
-    echo "Usage: ,port-kill <port_number>"
+    echo "Usage: ,pkill <port_number>"
     return 1
   fi
 

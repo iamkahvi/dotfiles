@@ -14,7 +14,7 @@ Config files for my macOS and Linux machines.
 
 **Multiplexers:** tmux, zellij
 
-**Other:** git, karabiner, nginx, scripts, pi-extensions
+**Other:** git, karabiner, nginx, scripts, pi-extensions, yazi
 
 ## Shell tricks
 

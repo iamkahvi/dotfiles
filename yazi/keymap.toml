@@ -1,0 +1,19 @@
+[[mgr.prepend_keymap]]
+on = "<C-y>"
+run = 'shell -- cat "$@" | pbcopy'
+desc = "Copy file contents"
+
+[[mgr.prepend_keymap]]
+on = [ "c", "y" ]
+run = 'shell -- cat "$@" | pbcopy'
+desc = "Copy file contents"
+
+[[mgr.prepend_keymap]]
+on = [ "e", "c" ]
+run = 'shell --block -- code --wait "$@"'
+desc = "Edit with VS Code"
+
+[[mgr.prepend_keymap]]
+on = [ "e", "p" ]
+run = 'shell --block -- pumice "$@"'
+desc = "Edit with Pumice"
