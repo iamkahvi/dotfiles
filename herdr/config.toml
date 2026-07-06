@@ -1,0 +1,5 @@
+# Herdr configuration
+# Keyboard docs: https://herdr.dev/docs/keyboard/
+
+[keys]
+prefix = "ctrl+a"
