@@ -3,6 +3,7 @@ clipboard-read = allow
 clipboard-write = allow
 copy-on-select = true
 macos-option-as-alt = true
+macos-titlebar-style = tabs
 window-save-state = always
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
 keybind = super+ctrl+[=goto_split:previous
