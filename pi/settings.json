@@ -1,21 +1,16 @@
 {
-  "lastChangelogVersion": "0.66.1",
-  "defaultProvider": "openai",
-  "defaultModel": "gpt-5.4",
-  "defaultThinkingLevel": "xhigh",
+  "lastChangelogVersion": "0.72.1",
+  "defaultProvider": "tailscale-ai-anthropic",
+  "defaultModel": "claude-sonnet-4-6",
+  "defaultThinkingLevel": "high",
   "packages": [
-    "https://github.com/shopify-playground/pi-autoresearch",
-    "https://github.com/shopify-playground/shop-pi-fy",
-    "https://github.com/shopify-playground/pitw",
+    "https://github.com/davebcn87/pi-autoresearch"
   ],
   "hideThinkingBlock": false,
   "extensions": [
-    "/Users/kahvi/dotfiles/pi/extensions"
+    "/Users/iamkahvi/dotfiles/pi/extensions"
   ],
   "skills": [
-    "/Users/kahvi/dotfiles/pi/skills"
-  ],
-  "npmCommand": [
-    "pnpm"
+    "/Users/iamkahvi/dotfiles/pi/skills"
   ]
 }
