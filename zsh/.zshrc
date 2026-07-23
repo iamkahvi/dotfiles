@@ -38,7 +38,6 @@ spi() {
   cmd="$($DF_HOME/pi/search_sessions.sh -p $HOME/.pi/agent/sessions -u "$@")" || return
   [[ -n "$cmd" ]] && print -z -- "$cmd"
 }
-alias y="yazi"
 
 alias ,p='echo $PATH | tr -s ":" "\n"'
 alias ,cz="vim $HOME/.zshrc"
