@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+# blockit — toggle /etc/hosts website blocking
+# Block list lives at ~/dotfiles/scripts/blockit.conf (one domain per line, # for comments).
+
+set -euo pipefail
+
+TOOL_NAME="blockit"
+# When invoked via sudo, $HOME is root's. Resolve to the invoking user's dotfiles.
+REAL_HOME="$(eval echo ~${SUDO_USER:-$USER})"
+CONF="$REAL_HOME/dotfiles/scripts/blockit.conf"
+HOSTS="/etc/hosts"
+START_MARKER="# BLOCKIT START — do not edit between markers"
+END_MARKER="# BLOCKIT END"
+REDIRECT="0.0.0.0"  # fails fast; 127.0.0.1 hangs waiting for a connection
+
+usage() {
+  cat <<EOF
+$TOOL_NAME — toggle website blocking via /etc/hosts
+
+Usage:
+  $TOOL_NAME on       Enable blocking (writes entries to $HOSTS)
+  $TOOL_NAME off      Disable blocking (removes entries from $HOSTS)
+  $TOOL_NAME reset    Strip all $TOOL_NAME entries from $HOSTS
+  $TOOL_NAME config   Edit the block list via GUI dialog
+  $TOOL_NAME status   Show current state and block list
+  $TOOL_NAME --help   Show this help
+
+Config file: $CONF
+EOF
+}
+
+need_sudo() {
+  # $1 = the subcommand to re-invoke (e.g. "on"). Extra args follow.
+  if [[ $EUID -ne 0 ]]; then
+    exec sudo -p "[$TOOL_NAME] sudo password: " "$0" "$@"
+  fi
+}
+
+ensure_conf() {
+  if [[ ! -f "$CONF" ]]; then
+    mkdir -p "$(dirname "$CONF")"
+    cat >"$CONF" <<'EOF'
+# blockit config — one domain per line. Lines starting with # are ignored.
+# www. variant is added automatically for each entry.
+# Examples:
+# youtube.com
+# reddit.com
+# twitter.com
+EOF
+  fi
+}
+
+read_domains() {
+  ensure_conf
+  # strip comments, blanks, whitespace
+  grep -vE '^[[:space:]]*(#|$)' "$CONF" | awk '{$1=$1; print}' | sort -u
+}
+
+strip_block() {
+  # Remove existing BLOCKIT section from /etc/hosts (idempotent).
+  local tmp
+  tmp="$(mktemp)"
+  awk -v s="$START_MARKER" -v e="$END_MARKER" '
+    $0 == s {inblock=1; next}
+    $0 == e {inblock=0; next}
+    !inblock {print}
+  ' "$HOSTS" >"$tmp"
+  cat "$tmp" >"$HOSTS"
+  rm -f "$tmp"
+  chmod 644 "$HOSTS"
+}
+
+flush_dns() {
+  dscacheutil -flushcache 2>/dev/null || true
+  killall -HUP mDNSResponder 2>/dev/null || true
+}
+
+cmd_on() {
+  need_sudo on "$@"
+  local domains
+  domains="$(read_domains)"
+  if [[ -z "$domains" ]]; then
+    echo "[$TOOL_NAME] block list is empty — run \`$TOOL_NAME config\` to add domains." >&2
+    exit 1
+  fi
+  strip_block
+  {
+    echo ""
+    echo "$START_MARKER"
+    echo "# Generated $(date '+%Y-%m-%d %H:%M:%S')"
+    while IFS= read -r d; do
+      [[ -z "$d" ]] && continue
+      printf "%s\t%s\n" "$REDIRECT" "$d"
+      # auto-add www. variant unless already prefixed
+      if [[ "$d" != www.* ]]; then
+        printf "%s\t%s\n" "$REDIRECT" "www.$d"
+      fi
+    done <<<"$domains"
+    echo "$END_MARKER"
+  } >>"$HOSTS"
+  flush_dns
+  local count
+  count="$(wc -l <<<"$domains" | tr -d ' ')"
+  echo "[$TOOL_NAME] ON — blocking $count domain(s)."
+}
+
+cmd_off() {
+  need_sudo off "$@"
+  strip_block
+  flush_dns
+  echo "[$TOOL_NAME] OFF — block entries removed from $HOSTS."
+}
+
+cmd_reset() {
+  need_sudo reset "$@"
+  strip_block
+  flush_dns
+  echo "[$TOOL_NAME] reset — $HOSTS cleaned of all $TOOL_NAME entries."
+}
+
+cmd_status() {
+  ensure_conf
+  if grep -qF "$START_MARKER" "$HOSTS" 2>/dev/null; then
+    echo "[$TOOL_NAME] state: ON"
+  else
+    echo "[$TOOL_NAME] state: OFF"
+  fi
+  echo "[$TOOL_NAME] config: $CONF"
+  echo "[$TOOL_NAME] domains:"
+  read_domains | sed 's/^/  /' || true
+}
+
+cmd_config() {
+  ensure_conf
+  if ! command -v osascript >/dev/null 2>&1; then
+    echo "[$TOOL_NAME] osascript not found — falling back to \$EDITOR." >&2
+    "${EDITOR:-vi}" "$CONF"
+    return
+  fi
+
+  local current new
+  current="$(cat "$CONF")"
+  local esc
+  esc="$(printf '%s' "$current" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g')"
+
+  new="$(osascript <<EOF
+set defaultText to "$esc"
+set dlg to display dialog "Edit ${TOOL_NAME} block list (one domain per line, # for comments):" ¬
+  default answer defaultText ¬
+  with title "${TOOL_NAME} config" ¬
+  buttons {"Cancel", "Save"} default button "Save"
+return text returned of dlg
+EOF
+)" || { echo "[$TOOL_NAME] cancelled."; return; }
+
+  printf '%s\n' "$new" >"$CONF"
+  echo "[$TOOL_NAME] saved $CONF"
+  if grep -qF "$START_MARKER" "$HOSTS" 2>/dev/null; then
+    echo "[$TOOL_NAME] blocking is currently ON — re-applying with new list..."
+    cmd_on
+  fi
+}
+
+
+case "${1:-}" in
+  on)         shift; cmd_on "$@" ;;
+  off)        shift; cmd_off "$@" ;;
+  reset)      shift; cmd_reset "$@" ;;
+  config)     shift; cmd_config "$@" ;;
+  status)     shift; cmd_status "$@" ;;
+  -h|--help|help|"") usage ;;
+  *) echo "[$TOOL_NAME] unknown command: $1" >&2; echo; usage; exit 1 ;;
+esac

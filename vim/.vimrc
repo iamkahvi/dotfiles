@@ -121,12 +121,20 @@ inoremap <C-k> <Esc>:m .-2<CR>==gi
 inoremap <A-j> <Esc>:m .+1<CR>==gi
 inoremap <A-k> <Esc>:m .-2<CR>==gi
 
+" Move lines up and down in visual mode
+vnoremap <A-j> :m '>+1<CR>gv
+vnoremap <A-k> :m '<-2<CR>gv
+
 " Keep cursor at the end after yanking in visual mode
 vnoremap y y`]
 
 " Select all
 nnoremap <leader>a ggVG
 vnoremap <leader>a ggVG
+
+" Select paragraph
+nnoremap <leader>v vip
+
 
 " Rust
 let g:rustfmt_autosave = 1
