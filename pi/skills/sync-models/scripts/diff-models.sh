@@ -20,7 +20,8 @@ if [[ ! -f "$MODELS_JSON" ]]; then
 fi
 
 # Collect distinct base URLs (strip trailing /v1 to hit /v1/models consistently)
-mapfile -t BASE_URLS < <(jq -r '.providers[].baseUrl' "$MODELS_JSON" | sed 's#/v1$##' | sort -u)
+BASE_URLS=()
+while IFS= read -r line; do BASE_URLS+=("$line"); done < <(jq -r '.providers[].baseUrl' "$MODELS_JSON" | sed 's#/v1$##' | sort -u)
 
 for base in "${BASE_URLS[@]}"; do
   echo "# Fetching $base/v1/models" >&2
@@ -31,10 +32,12 @@ for base in "${BASE_URLS[@]}"; do
   fi
 
   # All model ids + backing provider (anthropic/openai/gemini/etc) currently on the proxy
-  mapfile -t LIVE < <(echo "$resp" | jq -r '.data[] | "\(.id)\t\(.metadata.provider.id // "unknown")"')
+  LIVE=()
+  while IFS= read -r line; do LIVE+=("$line"); done < <(echo "$resp" | jq -r '.data[] | "\(.id)\t\(.metadata.provider.id // "unknown")"')
 
   # All model ids currently configured under providers whose baseUrl matches this base
-  mapfile -t CONFIGURED < <(jq -r --arg base "$base" \
+  CONFIGURED=()
+  while IFS= read -r line; do CONFIGURED+=("$line"); done < <(jq -r --arg base "$base" \
     '.providers | to_entries[] | select((.value.baseUrl | sub("/v1$";"")) == $base) | .value.models[]?.id' \
     "$MODELS_JSON")
 

@@ -20,10 +20,13 @@ if [[ ! -f "$MODELS_JSON" ]]; then
   exit 1
 fi
 
-mapfile -t TARGETS < <(jq -r '.providers | to_entries[] | .key as $p | .value.models[].id as $m | "\($p)/\($m)"' "$MODELS_JSON")
+TARGETS=()
+while IFS= read -r line; do TARGETS+=("$line"); done < <(jq -r '.providers | to_entries[] | .key as $p | .value.models[].id as $m | "\($p)/\($m)"' "$MODELS_JSON")
 
 if [[ -n "$FILTER" ]]; then
-  mapfile -t TARGETS < <(printf '%s\n' "${TARGETS[@]}" | grep -i "$FILTER")
+  FILTERED=()
+  while IFS= read -r line; do FILTERED+=("$line"); done < <(printf '%s\n' "${TARGETS[@]}" | grep -i "$FILTER")
+  TARGETS=("${FILTERED[@]}")
 fi
 
 if [[ ${#TARGETS[@]} -eq 0 ]]; then
