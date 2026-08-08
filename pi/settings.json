@@ -8,10 +8,10 @@
   ],
   "hideThinkingBlock": false,
   "extensions": [
-    "/home/iamkahvi/dotfiles/pi/extensions"
+    "~/dotfiles/pi/extensions"
   ],
   "skills": [
-    "/home/iamkahvi/dotfiles/pi/skills"
+    "~/dotfiles/pi/skills"
   ],
   "theme": "dark"
 }
