@@ -1,16 +1,17 @@
 {
-  "lastChangelogVersion": "0.72.1",
+  "lastChangelogVersion": "0.84.1",
   "defaultProvider": "tailscale-ai-anthropic",
-  "defaultModel": "claude-sonnet-4-6",
+  "defaultModel": "claude-sonnet-5",
   "defaultThinkingLevel": "high",
   "packages": [
-    "https://github.com/davebcn87/pi-autoresearch"
+    "git:github.com/badlogic/pi-telegram"
   ],
   "hideThinkingBlock": false,
   "extensions": [
-    "/Users/iamkahvi/dotfiles/pi/extensions"
+    "/home/iamkahvi/dotfiles/pi/extensions"
   ],
   "skills": [
-    "/Users/iamkahvi/dotfiles/pi/skills"
-  ]
+    "/home/iamkahvi/dotfiles/pi/skills"
+  ],
+  "theme": "dark"
 }
