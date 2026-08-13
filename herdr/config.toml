@@ -1,5 +1,15 @@
+onboarding = false
 # Herdr configuration
 # Keyboard docs: https://herdr.dev/docs/keyboard/
 
 [keys]
 prefix = "ctrl+a"
+previous_tab = "prefix+["
+next_tab = "prefix+]"
+copy_mode = "prefix+shift+["
+
+[ui]
+show_agent_labels_on_pane_borders = false
+
+[ui.toast]
+delivery = "system"
