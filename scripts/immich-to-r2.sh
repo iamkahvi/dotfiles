@@ -29,6 +29,12 @@ usage() { echo "Usage: $0 --album <album_id> | --assets <id1,id2,...>"; exit 1; 
 MODE="$1"; ARG="$2"
 API_HDR=(-H "x-api-key: ${IMMICH_API_KEY}")
 
+# Lowercase, non-alnum -> '-', collapse/trim dashes. e.g. "FUJIFILM X100V" -> "fujifilm-x100v"
+slug() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | tr -c '[:alnum:]' '-' \
+    | sed -e 's/-\{2,\}/-/g' -e 's/^-//' -e 's/-$//'
+}
+
 get_asset_ids() {
   case "$MODE" in
     --album)
@@ -66,7 +72,25 @@ get_asset_ids | while read -r id; do
   meta="$(curl -sf "${API_HDR[@]}" "${IMMICH_URL}/api/assets/${id}")"
   orig_name="$(jq -r '.originalFileName' <<< "$meta")"
   ext="$(tr '[:upper:]' '[:lower:]' <<< "${orig_name##*.}")"
-  key="${id}.${ext}"
+
+  # Build <make>-<model>-<location>-<date>-<shortid>.<ext>. Any missing field
+  # (no EXIF camera, no GPS/reverse-geocoded city) is just omitted, not left blank.
+  make="$(jq -r '.exifInfo.make // ""' <<< "$meta")"
+  model="$(jq -r '.exifInfo.model // ""' <<< "$meta")"
+  loc="$(jq -r '.exifInfo.city // .exifInfo.country // ""' <<< "$meta")"
+  dt="$(jq -r '.exifInfo.dateTimeOriginal // .fileCreatedAt // ""' <<< "$meta")"
+  date_part="$(cut -c1-10 <<< "$dt" | tr -d '-')"
+  short_id="${id:0:8}"
+
+  parts=()
+  [ -n "$make" ] && parts+=("$(slug "$make")")
+  [ -n "$model" ] && parts+=("$(slug "$model")")
+  [ -n "$loc" ] && parts+=("$(slug "$loc")")
+  [ -n "$date_part" ] && parts+=("$date_part")
+  parts+=("$short_id")
+
+  name="$(IFS=-; echo "${parts[*]}")"
+  key="${name}.${ext}"
 
   if grep -qxF "$key" "$existing_keys"; then
     echo "${PUBLIC_BASE_URL}/${key}"
