@@ -35,6 +35,15 @@ slug() {
     | sed -e 's/-\{2,\}/-/g' -e 's/^-//' -e 's/-$//'
 }
 
+# "YYYY-MM-DD" -> "tue-jul-11". Tries GNU date (-d) then BSD date (-j -f) so
+# this works both on macOS and a typical Linux box.
+weekday_month_day() {
+  local ymd="$1" out
+  out="$(date -d "$ymd" +'%a-%b-%d' 2>/dev/null)" \
+    || out="$(date -j -f '%Y-%m-%d' "$ymd" +'%a-%b-%d' 2>/dev/null)" || return 0
+  tr '[:upper:]' '[:lower:]' <<< "$out"
+}
+
 get_asset_ids() {
   case "$MODE" in
     --album)
@@ -73,20 +82,19 @@ get_asset_ids | while read -r id; do
   orig_name="$(jq -r '.originalFileName' <<< "$meta")"
   ext="$(tr '[:upper:]' '[:lower:]' <<< "${orig_name##*.}")"
 
-  # Build <make>-<model>-<location>-<date>-<shortid>.<ext>. Any missing field
-  # (no EXIF camera, no GPS/reverse-geocoded city) is just omitted, not left blank.
+  # Build <dow>-<mon>-<day>-<make>-<location>-<shortid>.<ext>, e.g.
+  # "sat-jul-11-fujifilm-vancouver-b6f3b186.jpg". Any missing field (no EXIF
+  # camera, no GPS/reverse-geocoded city) is just omitted, not left blank.
   make="$(jq -r '.exifInfo.make // ""' <<< "$meta")"
-  model="$(jq -r '.exifInfo.model // ""' <<< "$meta")"
   loc="$(jq -r '.exifInfo.city // .exifInfo.country // ""' <<< "$meta")"
   dt="$(jq -r '.exifInfo.dateTimeOriginal // .fileCreatedAt // ""' <<< "$meta")"
-  date_part="$(cut -c1-10 <<< "$dt" | tr -d '-')"
+  date_part="$(weekday_month_day "$(cut -c1-10 <<< "$dt")")"
   short_id="${id:0:8}"
 
   parts=()
-  [ -n "$make" ] && parts+=("$(slug "$make")")
-  [ -n "$model" ] && parts+=("$(slug "$model")")
-  [ -n "$loc" ] && parts+=("$(slug "$loc")")
   [ -n "$date_part" ] && parts+=("$date_part")
+  [ -n "$make" ] && parts+=("$(slug "$make")")
+  [ -n "$loc" ] && parts+=("$(slug "$loc")")
   parts+=("$short_id")
 
   name="$(IFS=-; echo "${parts[*]}")"
