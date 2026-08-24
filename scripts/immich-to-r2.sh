@@ -42,6 +42,8 @@
 
 set -euo pipefail
 
+[ -f "${HOME}/.config/immich-to-r2.env" ] && source "${HOME}/.config/immich-to-r2.env"
+
 : "${IMMICH_URL:?set IMMICH_URL}"
 : "${IMMICH_API_KEY:?set IMMICH_API_KEY}"
 R2_REMOTE="${R2_REMOTE:-r2}"

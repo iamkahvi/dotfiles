@@ -78,3 +78,12 @@
   unhide = update-index --no-assume-unchanged
   unhideall = "!git hidden | awk {'print $2'} | xargs git unhide"
   hideall = "!git status -s | awk {'print $2'} | xargs git hide"
+[lfs "customtransfer.xet"]
+	path = git-xet
+	args = transfer
+	concurrent = true
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
