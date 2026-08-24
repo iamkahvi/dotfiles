@@ -7,6 +7,10 @@ prefix = "ctrl+a"
 previous_tab = "prefix+["
 next_tab = "prefix+]"
 copy_mode = "prefix+shift+["
+new_tab = "prefix+t"
+new_workspace = "prefix+n"
+previous_workspace = "prefix+up"
+next_workspace = "prefix+down"
 
 [ui]
 show_agent_labels_on_pane_borders = false
