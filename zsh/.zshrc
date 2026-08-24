@@ -311,4 +311,4 @@ function y() {
 # Added by tec agent
 [[ -x /Users/kahvi/.local/state/tec/profiles/base/current/global/init ]] && eval "$(/Users/kahvi/.local/state/tec/profiles/base/current/global/init zsh)"
 # OpenClaw Completion
-source "/home/iamkahvi/.openclaw/completions/openclaw.zsh"
+[[ -f "$HOME/.openclaw/completions/openclaw.zsh" ]] && source "$HOME/.openclaw/completions/openclaw.zsh"
