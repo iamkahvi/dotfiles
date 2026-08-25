@@ -1,0 +1,10 @@
+id = "kahvi.mru-spaces"
+name = "MRU Spaces"
+version = "0.1.0"
+min_herdr_version = "0.8.0"
+description = "Keep Herdr Spaces ordered by most recent agent work"
+platforms = ["macos", "linux"]
+
+[[events]]
+on = "pane.agent_status_changed"
+command = ["python3", "mru_spaces.py"]
