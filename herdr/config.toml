@@ -9,11 +9,11 @@ next_tab = "prefix+]"
 copy_mode = "prefix+shift+["
 new_tab = "prefix+t"
 new_workspace = "prefix+n"
-previous_workspace = "prefix+up"
-next_workspace = "prefix+down"
+previous_workspace = "prefix+k"
+next_workspace = "prefix+j"
 
 [ui]
 show_agent_labels_on_pane_borders = false
 
 [ui.toast]
-delivery = "system"
+delivery = "terminal"

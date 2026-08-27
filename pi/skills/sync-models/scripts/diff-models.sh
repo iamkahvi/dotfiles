@@ -44,14 +44,27 @@ for base in "${BASE_URLS[@]}"; do
   for entry in "${LIVE[@]}"; do
     id="${entry%%$'\t'*}"
     backing="${entry##*$'\t'}"
-    if ! printf '%s\n' "${CONFIGURED[@]}" | grep -qx "$id"; then
+    # Some OpenAI-compatible gateways require a provider-qualified request
+    # model id (for example z-ai/glm-5.3) even though /v1/models reports the
+    # unqualified id (glm-5.3).
+    if ! printf '%s\n' "${CONFIGURED[@]}" | grep -qx "$id" &&
+      ! printf '%s\n' "${CONFIGURED[@]}" | grep -qx "$backing/$id"; then
       echo "NEW	$base	$id	$backing"
     fi
   done
 
-  for id in "${CONFIGURED[@]}"; do
-    if ! printf '%s\n' "${LIVE[@]}" | cut -f1 | grep -qx "$id"; then
-      echo "GONE	$base	$id"
+  for configured in "${CONFIGURED[@]}"; do
+    live=false
+    for entry in "${LIVE[@]}"; do
+      id="${entry%%$'\t'*}"
+      backing="${entry##*$'\t'}"
+      if [[ "$configured" == "$id" || "$configured" == "$backing/$id" ]]; then
+        live=true
+        break
+      fi
+    done
+    if [[ "$live" == false ]]; then
+      echo "GONE	$base	$configured"
     fi
   done
 done

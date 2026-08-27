@@ -1,11 +1,8 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "defaultProvider": "tailscale-ai-anthropic",
-  "defaultModel": "claude-sonnet-5",
+  "defaultProvider": "tailscale-ai",
+  "defaultModel": "z-ai/glm-5.3-flash",
   "defaultThinkingLevel": "high",
-  "packages": [
-    "git:github.com/badlogic/pi-telegram"
-  ],
   "hideThinkingBlock": false,
   "extensions": [
     "~/dotfiles/pi/extensions"
@@ -13,5 +10,8 @@
   "skills": [
     "~/dotfiles/pi/skills"
   ],
-  "theme": "dark"
+  "theme": "dark",
+  "packages": [
+    "npm:pi-ask-user"
+  ]
 }
