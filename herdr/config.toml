@@ -15,5 +15,12 @@ next_workspace = "prefix+j"
 [ui]
 show_agent_labels_on_pane_borders = false
 
+# Toggle a pi session side panel (kahvi.pi-panel plugin)
+[[keys.command]]
+key = "prefix+p"
+type = "plugin_action"
+command = "kahvi.pi-panel.toggle"
+description = "toggle pi side panel"
+
 [ui.toast]
 delivery = "terminal"

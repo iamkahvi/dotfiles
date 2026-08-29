@@ -1,0 +1,17 @@
+id = "kahvi.pi-panel"
+name = "Pi Panel"
+version = "0.1.0"
+min_herdr_version = "0.8.0"
+description = "Toggle a pi session side panel in the current tab"
+platforms = ["macos", "linux"]
+
+[[actions]]
+id = "toggle"
+title = "Toggle pi side panel"
+command = ["python3", "toggle.py"]
+
+[[panes]]
+id = "pi"
+title = "pi"
+placement = "split"
+command = ["/Users/iamkahvi/.bun/bin/pi"]
