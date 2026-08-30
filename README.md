@@ -10,7 +10,7 @@ Config files for my macOS and Linux machines.
 
 **Editors:** vim/neovim, vscode, webstorm
 
-**Window management:** aerospace, hammerspoon, i3
+**Window management:** aerospace, hammerspoon, i3, hyprland (Omarchy; caps lock -> ctrl, ctrl+j/k -> down/up via symlinks into ~/.config/hypr/)
 
 **Multiplexers:** tmux, zellij
 

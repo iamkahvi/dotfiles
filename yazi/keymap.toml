@@ -1,11 +1,11 @@
 [[mgr.prepend_keymap]]
 on = "<C-y>"
-run = 'shell -- cat "$@" | pbcopy'
+run = 'shell -- cat "$@" | wl-copy'
 desc = "Copy file contents"
 
 [[mgr.prepend_keymap]]
 on = [ "c", "y" ]
-run = 'shell -- cat "$@" | pbcopy'
+run = 'shell -- cat "$@" | wl-copy'
 desc = "Copy file contents"
 
 [[mgr.prepend_keymap]]

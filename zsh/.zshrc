@@ -128,6 +128,9 @@ fi
 export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# Arch: pacman's fzf ships these instead of generating ~/.fzf.zsh
+[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 
 [[ -d "$HOME/.zsh/pure" ]] && fpath=("$HOME/.zsh/pure" $fpath)
 autoload -U promptinit

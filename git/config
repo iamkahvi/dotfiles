@@ -1,0 +1,56 @@
+# See https://git-scm.com/docs/git-config
+
+[user]
+	name = Kahvi Patel
+	email = iamkahvi@gmail.com
+[github]
+	user = iamkahvi
+[core]
+	editor = nvim
+	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+[pull]
+	rebase = true 			 # Rebase (instead of merge) on pull
+[push]
+	default = simple         # Push current branch to its upstream
+	autoSetupRemote = true   # Automatically set upstream branch on push
+[init]
+	defaultBranch = master
+[diff]
+	algorithm = histogram    # Clearer diffs on moved/edited lines
+	colorMoved = plain       # Highlight moved blocks in diffs
+	mnemonicPrefix = true    # More intuitive refs in diff output
+[commit]
+	verbose = true           # Include diff comment in commit message template
+[column]
+	ui = auto 			     # Output in columns when possible
+[branch]
+	sort = -committerdate    # Sort branches by most recent commit first
+[tag]
+	sort = -version:refname  # Sort version numbers as you would expect
+[rerere]
+	enabled = true           # Record and reuse conflict resolutions
+	autoupdate = true        # Apply stored conflict resolutions automatically
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+
+  #####################
+  # Viewing shortcuts #
+  #####################
+
+  me = !echo $(git config user.name) $(git config user.email) $(git config user.signingkey)
+  s = status -sb
+  l = log --graph --abbrev-commit --decorate --all --date=short --format=format:'%C(yellow)%h%C(reset) %C(bold blue)%ad%C(reset)%C(auto)%d%C(reset) %C(bold white)%s%C(reset)%C(magenta) - %an%C(reset)'
+  ll = !git l --simplify-by-decoration
+  branch-name = rev-parse --abbrev-ref HEAD
+
+  ######################
+  # Dangerous commands #
+  ######################
+
+  undo = reset --soft HEAD^
+  bring = fetch origin # 'git bring remote-branch:local-branch' fetch a branch into a local branch.
+  ff = "!f() { git fetch origin $1:$1; }; f" # same as e.g. 'git bring develop:develop'
+  amend = commit --amend --no-edit

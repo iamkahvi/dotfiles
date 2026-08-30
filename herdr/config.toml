@@ -16,6 +16,7 @@ next_workspace = "prefix+j"
 show_agent_labels_on_pane_borders = false
 
 # Toggle a pi session side panel (kahvi.pi-panel plugin)
+agent_panel_sort = "priority"
 [[keys.command]]
 key = "prefix+p"
 type = "plugin_action"

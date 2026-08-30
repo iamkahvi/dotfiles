@@ -1,0 +1,10 @@
+# Espanso global config
+# Docs: https://espanso.org/docs/configuration/options/
+#
+# Installed via: omarchy pkg aur add espanso-wayland
+# Requires /dev/uinput access (see setups/setup_linux.md or udev rule) and:
+#   espanso service register && espanso start
+#
+# Auto-detection fails on Hyprland, so set it explicitly (log warned about it)
+keyboard_layout:
+  layout: "us"

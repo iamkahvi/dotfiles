@@ -1,0 +1,4 @@
+matches:
+  # Email
+  - trigger: "!@"
+    replace: "iamkahvi@gmail.com"
