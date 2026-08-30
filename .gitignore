@@ -1,3 +1,4 @@
 .DS_Store
 .secrets
 __pycache__/
+yazi/plugins/

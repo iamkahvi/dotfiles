@@ -1,11 +1,13 @@
+# copy-file-contents plugin uses ya.clipboard(): pbcopy on macOS, wl-copy/xclip on Linux,
+# so one binding works on both machines. Plugin pinned in package.toml; run `ya pkg install` on a new machine.
 [[mgr.prepend_keymap]]
 on = "<C-y>"
-run = 'shell -- cat "$@" | wl-copy'
+run = "plugin copy-file-contents"
 desc = "Copy file contents"
 
 [[mgr.prepend_keymap]]
 on = [ "c", "y" ]
-run = 'shell -- cat "$@" | wl-copy'
+run = "plugin copy-file-contents"
 desc = "Copy file contents"
 
 [[mgr.prepend_keymap]]
