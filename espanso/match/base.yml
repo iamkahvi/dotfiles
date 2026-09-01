@@ -2,3 +2,6 @@ matches:
   # Email
   - trigger: "!@"
     replace: "iamkahvi@gmail.com"
+
+  - trigger: "!2"
+    replace: "reply with less than 200 words"
