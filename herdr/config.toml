@@ -4,6 +4,7 @@ onboarding = false
 
 [keys]
 prefix = "ctrl+a"
+toggle_sidebar = "prefix+backslash"
 previous_tab = "prefix+["
 next_tab = "prefix+]"
 copy_mode = "prefix+shift+["
