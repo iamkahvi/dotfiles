@@ -19,6 +19,34 @@
 hl.unbind("SUPER + T")
 o.bind("SUPER + T", "New tab", hl.dsp.send_shortcut({ mods = "CTRL", key = "T" }))
 
+-- Close a browser tab with Ctrl+W; preserve the normal window-close binding elsewhere.
+local function active_window_is_browser()
+  local window = hl.get_active_window()
+  if not window then
+    return false
+  end
+
+  for _, tag in ipairs(window.tags or {}) do
+    local clean_tag = tag:gsub("%*$", "")
+    if clean_tag == "chromium-based-browser" or clean_tag == "firefox-based-browser" then
+      return true
+    end
+  end
+
+  return false
+end
+
+local function close_browser_tab_or_window()
+  if active_window_is_browser() then
+    hl.dispatch(hl.dsp.send_shortcut({ mods = "CTRL", key = "W" }))
+  else
+    hl.dispatch(hl.dsp.window.close())
+  end
+end
+
+hl.unbind("SUPER + W")
+o.bind("SUPER + W", "Close browser tab/window", close_browser_tab_or_window)
+
 -- Change an existing binding by unbinding it first, then binding the key again.
 -- This example changes SUPER+SPACE from the launcher to the Omarchy root menu.
 -- hl.unbind("SUPER + SPACE")
@@ -78,3 +106,11 @@ o.bind("F12", "Volume up", "omarchy-audio-output-volume raise", { locked = true,
 -- o.bind("SUPER + SHIFT + S", nil, "omarchy-capture-screenshot")
 -- o.bind("SUPER + H", nil, "voxtype record toggle")
 -- o.bind("SUPER + PERIOD", nil, "omarchy-shell shell toggle omarchy.emojis")
+
+-- Toggle the focused window into a 75%-wide centered master layout.
+-- SUPER+C remains Omarchy's universal copy binding, so use SUPER+ALT+C.
+o.bind(
+  "SUPER + ALT + C",
+  "Toggle centered master layout",
+  os.getenv("HOME") .. "/dotfiles/scripts/toggle-centered-master"
+)

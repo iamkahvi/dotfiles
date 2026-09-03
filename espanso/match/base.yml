@@ -4,4 +4,4 @@ matches:
     replace: "iamkahvi@gmail.com"
 
   - trigger: "!2"
-    replace: "reply with less than 200 words"
+    replace: "less than 200 words"

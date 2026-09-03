@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+state_home="${XDG_STATE_HOME:-$HOME/.local/state}"
+state_dir="$state_home/omarchy/centered-master"
+workspace_rules_dir="$state_home/omarchy/workspace-layouts"
+mkdir -p "$state_dir" "$workspace_rules_dir"
+
+workspace=$(hyprctl activeworkspace -j | jq -er '.id | tostring')
+current_layout=$(hyprctl activeworkspace -j | jq -er '.tiledLayout')
+
+if [[ ! $workspace =~ ^-?[0-9]+$ ]]; then
+  exit 1
+fi
+
+marker="$state_dir/$workspace"
+previous_rule="$state_dir/$workspace.rule"
+workspace_rule="$workspace_rules_dir/$workspace.lua"
+
+eval_lua() {
+  hyprctl eval "$1" >/dev/null
+}
+
+write_centered_rule() {
+  local tmp
+  tmp=$(mktemp "$workspace_rule.tmp.XXXXXX")
+  printf 'hl.workspace_rule({ workspace = "%s", layout = "master", layout_opts = { orientation = "center" } })\n' "$workspace" >"$tmp"
+  mv -f "$tmp" "$workspace_rule"
+}
+
+notify() {
+  omarchy-notification-send -u low "$1" >/dev/null 2>&1 || true
+}
+
+if [[ -e "$marker" ]]; then
+  # Restore the rule that existed before centered-master was enabled.
+  if [[ -f "$previous_rule" ]]; then
+    cp -f "$previous_rule" "$workspace_rule"
+    eval_lua "$(cat "$workspace_rule")"
+  else
+    rm -f "$workspace_rule"
+    eval_lua "hl.workspace_rule({ workspace = \"$workspace\", layout = \"$(cat "$marker")\" })"
+  fi
+
+  rm -f "$marker" "$previous_rule"
+  notify "Centered master disabled"
+else
+  # Preserve any Omarchy per-workspace rule so Super+ALT+C is reversible.
+  if [[ -f "$workspace_rule" ]]; then
+    cp -f "$workspace_rule" "$previous_rule"
+  fi
+  printf '%s\n' "$current_layout" >"$marker"
+
+  write_centered_rule
+  eval_lua "$(cat "$workspace_rule")"
+
+  # Make the currently focused tiled window the centered master.
+  eval_lua 'hl.dispatch(hl.dsp.layout("swapwithmaster master"))'
+  notify "Centered master enabled"
+fi

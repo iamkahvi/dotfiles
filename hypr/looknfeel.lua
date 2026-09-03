@@ -57,3 +57,14 @@ hl.config({
 --     column_width = 0.97,
 --   },
 -- })
+
+-- Settings for the centered-master layout toggle in scripts/toggle-centered-master.
+hl.config({
+  master = {
+    -- The centered master occupies 66% of the workspace width.
+    mfact = 0.66,
+
+    -- Keep the master centered even when it is the only tiled window.
+    slave_count_for_center_master = 0,
+  },
+})
