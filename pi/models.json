@@ -248,26 +248,83 @@
           }
         },
         {
-          "id": "z-ai/glm-5.3",
-          "name": "GLM 5.3",
-          "baseUrl": "https://ai.tail37572.ts.net",
-          "reasoning": true,
-          "input": ["text"],
+          "id": "gemini-2.5-flash",
+          "name": "Gemini 2.5 Flash",
+          "input": ["text", "image"],
           "contextWindow": 1048576,
-          "maxTokens": 131072,
+          "maxTokens": 65535,
           "cost": {
-            "input": 1.4,
-            "output": 4.4,
-            "cacheRead": 0.26,
-            "cacheWrite": 0
+            "input": 0.3,
+            "output": 2.5,
+            "cacheRead": 0.03,
+            "cacheWrite": 0.08
           },
           "compat": {
-            "supportsStore": false,
-            "supportsDeveloperRole": false,
-            "supportsReasoningEffort": false,
-            "maxTokensField": "max_tokens",
-            "thinkingFormat": "zai",
-            "zaiToolStream": true
+            "supportsStore": false
+          }
+        },
+        {
+          "id": "gemini-2.5-flash-lite",
+          "name": "Gemini 2.5 Flash Lite",
+          "input": ["text", "image"],
+          "contextWindow": 1048576,
+          "maxTokens": 65535,
+          "cost": {
+            "input": 0.1,
+            "output": 0.4,
+            "cacheRead": 0.01,
+            "cacheWrite": 0.08
+          },
+          "compat": {
+            "supportsStore": false
+          }
+        },
+        {
+          "id": "gemini-3.1-flash-lite-preview",
+          "name": "Gemini 3.1 Flash Lite Preview",
+          "input": ["text", "image"],
+          "contextWindow": 1048576,
+          "maxTokens": 65536,
+          "cost": {
+            "input": 0.25,
+            "output": 1.5,
+            "cacheRead": 0.02,
+            "cacheWrite": 0.08
+          },
+          "compat": {
+            "supportsStore": false
+          }
+        },
+        {
+          "id": "gemini-3.5-flash",
+          "name": "Gemini 3.5 Flash",
+          "input": ["text", "image"],
+          "contextWindow": 1048576,
+          "maxTokens": 65536,
+          "cost": {
+            "input": 1.5,
+            "output": 9,
+            "cacheRead": 0.15,
+            "cacheWrite": 0.08
+          },
+          "compat": {
+            "supportsStore": false
+          }
+        },
+        {
+          "id": "gemini-3.8-flash",
+          "name": "Gemini 3.8 Flash",
+          "input": ["text", "image"],
+          "contextWindow": 1048576,
+          "maxTokens": 65536,
+          "cost": {
+            "input": 0.75,
+            "output": 3.75,
+            "cacheRead": 0.07,
+            "cacheWrite": 0.04
+          },
+          "compat": {
+            "supportsStore": false
           }
         },
         {

@@ -28,17 +28,38 @@ Scripts (paths relative to this file's directory):
   New Claude models added here typically just work with the same shape as existing
   entries. Copy an existing entry's structure.
 - **OpenAI models** (`tailscale-ai`, `api: openai-completions` by default): frequently
-  need per-model overrides. See "OpenAI model checklist" below.
-- **Google/Gemini models**: currently **excluded from models.json**. The proxy returns
-  Gemini's native `extra_content.google.thought_signature` field on tool calls, but
-  pi-ai's `openai-completions` provider only recognizes OpenRouter-style
-  `reasoning_details[].type: "reasoning.encrypted"`. Multi-turn tool calls fail with
-  `400 Function call is missing a thought_signature`. This is a pi-ai bug, not fixable
-  from config. Do not re-add Gemini models until this is confirmed fixed upstream (check
-  `npm view @mariozechner/pi-ai version` vs currently installed, and grep
-  `dist/providers/openai-completions.js` for `extra_content` handling). If asked to add
-  Gemini models anyway, warn the user this is expected to fail multi-turn tool use before
-  proceeding.
+  need per-model overrides — see the probe-interpretation notes in Procedure step 4b.
+- **Google/Gemini models** (`tailscale-ai`, `api: openai-completions`): work as of
+  2026-09-06, but every entry needs `"compat": { "supportsStore": false }` and
+  `gemini-3.*` models additionally depend on the `gemini-thought-signatures` extension.
+  Details:
+  - **`supportsStore: false` is mandatory for all Gemini models.** pi-ai sends
+    `store: false` by default and Gemini's OpenAI-compat endpoint rejects it with
+    `400 Unknown name "store": Cannot find field`. Symptom: pi exits 0 with **empty
+    output** (the 400 is swallowed in the streaming path), not an error — so empty
+    output from a Gemini model means check this first.
+  - **`gemini-3.*` thought signatures.** Gemini 3.x models emit
+    `extra_content.google.thought_signature` on tool calls and require it echoed back
+    on the assistant `tool_calls` of subsequent requests (`400 Function call is
+    missing a thought_signature in functionCall parts` otherwise). pi-ai's
+    `openai-completions` provider drops the field. Fixed by the global extension
+    `~/dotfiles/pi/extensions/gemini-thought-signatures.ts` (loaded via the
+    `extensions` entry in settings.json): it patches `globalThis.fetch` to capture
+    signatures from streamed responses, inject them into replayed assistant
+    tool_calls, and persist them in
+    `~/.pi/agent/cache/gemini-thought-signatures.json` (so resumed sessions work
+    across processes). If the extension is missing or removed, `gemini-3.*` models
+    fail multi-turn tool use; `gemini-2.5.*` models don't emit signatures and work
+    without it.
+  - The extension is a workaround, not a fix. Once pi-ai handles the round-trip
+    natively (check `grep -r extra_content
+    ~/.bun/install/global/node_modules/@mariozechner/pi-ai/dist/providers/openai-completions.js`),
+    it becomes a no-op and can be deleted.
+  - Only the flash models are in models.json so far (user choice). The proxy also
+    serves `gemini-2.5-pro`, `gemini-3.1-pro-preview`, and `gemini-3.5` — untested in
+    pi; probe before adding. The proxy doesn't expose context windows for Gemini, so
+    entries assume `contextWindow: 1048576`; `maxTokens` comes from the proxy's
+    `max_output_tokens`.
 
 ## Procedure
 
@@ -54,9 +75,9 @@ Scripts (paths relative to this file's directory):
 
 3. **For each `GONE` model**: remove its entry from `models.json`. It's no longer served.
 
-4. **For each `NEW` model**, skip anything with backing provider `gemini` (see Known
-   state above) unless explicitly told to add it anyway. For everything else (openai,
-   anthropic backing providers):
+4. **For each `NEW` model**, confirm with the user which ones to add unless the request
+   makes it obvious. Gemini-backed models have extra requirements — see Known state
+   above and step 4e. For everything else (openai, anthropic backing providers):
 
    a. Determine which provider block it belongs to based on backing provider id and
       baseUrl (`tailscale-ai-anthropic` for anthropic, `tailscale-ai` for openai).
@@ -95,6 +116,12 @@ Scripts (paths relative to this file's directory):
       from the proxy's `/v1/models` response for that model id, converting per-token USD
       strings to per-million-token numbers, e.g. `"0.00000020"` → `0.2`), plus `api` /
       `reasoning` / `compat` overrides as determined above.
+
+   e. **Gemini-backed models** (`gemini-*` ids): every entry needs
+      `"compat": { "supportsStore": false }`, and `gemini-3.*` entries additionally
+      require the `gemini-thought-signatures` extension (verify it exists before
+      adding them — see Known state above). Cost comes from the proxy's pricing
+      fields as in 4d; `maxTokens` from the proxy's `max_output_tokens`.
 
 5. **Validate JSON**: `python3 -m json.tool ~/.pi/agent/models.json > /dev/null` (or
    `jq . ~/.pi/agent/models.json > /dev/null`) before testing.
