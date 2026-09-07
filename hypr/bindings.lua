@@ -15,6 +15,12 @@
 -- Add a new binding.
 -- o.bind("SUPER + SHIFT + R", "SSH", "alacritty -e ssh your-server")
 
+o.bind(
+  "ALT + SPACE",
+  "Handy transcription",
+  "/home/iamkahvi/.local/bin/handy --toggle-transcription"
+)
+
 -- Send Ctrl+T to whichever application is focused.
 hl.unbind("SUPER + T")
 o.bind("SUPER + T", "New tab", hl.dsp.send_shortcut({ mods = "CTRL", key = "T" }))
