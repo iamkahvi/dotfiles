@@ -13,7 +13,12 @@ hl.config({
 -- Flip scroll direction for mouse wheel (natural/inverse scrolling).
 -- Name must match `hyprctl devices` exactly (lowercase slug, case-sensitive).
 hl.device({
-  name = "logitech-m510",
+  name = "mosart-semi.-2.4g-wireless-mouse",
+  natural_scroll = true,
+})
+
+hl.device({
+  name = "logitech-wireless-mouse-mx-master-3-1",
   natural_scroll = true,
 })
 

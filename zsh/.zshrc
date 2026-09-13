@@ -1,6 +1,7 @@
 export DF_HOME="$HOME/dotfiles"
 export NVM_DIR="$HOME/.nvm"
-export ZSH=$HOME/.oh-my-zsh
+export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
+[[ -r "/usr/share/oh-my-zsh/oh-my-zsh.sh" && ! -r "$ZSH/oh-my-zsh.sh" ]] && ZSH="/usr/share/oh-my-zsh"
 
 add_path_if_dir() {
   [[ -d "$1" ]] && path=("$1" $path)
@@ -30,7 +31,7 @@ if [[ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]]; then
 fi
 alias lg='lazygit'
 alias cn='code -n .'
-alias j="zellij"
+alias h='herdr'
 alias oc="opencode"
 alias c="claude --dangerously-skip-permissions"
 spi() {
@@ -114,8 +115,9 @@ fi
 ZSH_THEME=""
 ZSH_DISABLE_COMPFIX=true
 
-plugins=(git colored-man-pages zsh-syntax-highlighting zsh-autosuggestions)
-source $ZSH/oh-my-zsh.sh
+plugins=(git colored-man-pages)
+source "$ZSH/oh-my-zsh.sh"
+[[ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
@@ -132,10 +134,13 @@ export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
 [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 
-[[ -d "$HOME/.zsh/pure" ]] && fpath=("$HOME/.zsh/pure" $fpath)
-autoload -U promptinit
-promptinit
-if prompt -l | grep -qw "pure"; then
+if [[ -r /usr/share/zsh/functions/Prompts/prompt_pure_setup ]]; then
+  autoload -Uz prompt_pure_setup
+  prompt_pure_setup
+elif [[ -d "$HOME/.zsh/pure" ]]; then
+  fpath=("$HOME/.zsh/pure" $fpath)
+  autoload -U promptinit
+  promptinit
   prompt pure
 fi
 
@@ -316,4 +321,5 @@ function y() {
 # OpenClaw Completion
 [[ -f "$HOME/.openclaw/completions/openclaw.zsh" ]] && source "$HOME/.openclaw/completions/openclaw.zsh"
 
- eval "$(try init ~/src/tries)"
+# Load syntax highlighting last so it can install its ZLE hooks.
+[[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
