@@ -127,7 +127,12 @@ ZSH_DISABLE_COMPFIX=true
 
 plugins=(git colored-man-pages)
 source "$ZSH/oh-my-zsh.sh"
-[[ -r /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+for plugin in \
+  /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  "${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh" \
+  "$ZSH/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"; do
+  [[ -r "$plugin" ]] && source "$plugin" && break
+done
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
@@ -147,11 +152,13 @@ export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 if [[ -r /usr/share/zsh/functions/Prompts/prompt_pure_setup ]]; then
   autoload -Uz prompt_pure_setup
   prompt_pure_setup
-elif [[ -d "$HOME/.zsh/pure" ]]; then
-  fpath=("$HOME/.zsh/pure" $fpath)
+else
+  [[ -d "$HOME/.zsh/pure" ]] && fpath=("$HOME/.zsh/pure" $fpath)
   autoload -U promptinit
   promptinit
-  prompt pure
+  if prompt -l | grep -qw "pure"; then
+    prompt pure
+  fi
 fi
 
 kname() {
@@ -339,4 +346,9 @@ export TS_SITE_API_TOKEN=ae64208b904ff4812f1a75e178b886e88a8b23f51012e9034259deb
 
 
 # Load syntax highlighting last so it can install its ZLE hooks.
-[[ -r /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+for plugin in \
+  /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  "${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh" \
+  "$ZSH/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"; do
+  [[ -r "$plugin" ]] && source "$plugin" && break
+done
