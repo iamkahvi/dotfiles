@@ -2,3 +2,20 @@
 .secrets
 __pycache__/
 yazi/plugins/
+.claude/
+
+# pi state. Never track these names, even if a copy lands under pi/.
+pi/auth.json
+pi/trust.json
+pi/models-store.json
+pi/sessions/
+pi/npm/
+pi/git/
+pi/llm-catalog/
+pi/bin/
+pi/config/
+pi/chrome-devtools.json
+pi/*.lock
+pi/settings.json.bak.*
+pi/extensions/view-md/
+pi/extensions/herdr-agent-state.ts
