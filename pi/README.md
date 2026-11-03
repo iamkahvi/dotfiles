@@ -5,7 +5,7 @@ Three local pi packages. Each has `extensions/` and `skills/`.
 | Folder | Profile | Content |
 |---|---|---|
 | `common/` | all | Extensions and skills for every machine. |
-| `personal/` | personal | Tailnet proxy items (gemini-thought-signatures, web-search, sync-models, browser-mcp). |
+| `personal/` | personal | Tailnet proxy items (gemini-thought-signatures, web-search, sync-models, browser-mcp) and pi-worktree-subagent. |
 | `work/` | work | Shopify items (textarea-decode, tldr). |
 
 `settings.personal.json` and `settings.work.json` list `common` and the profile folder in `packages`.

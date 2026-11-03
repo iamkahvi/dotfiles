@@ -11,6 +11,7 @@ Deviations from the plan:
 - `~/.zshenv` had `. "$HOME/.cargo/env"`. The tracked `zsh/.zshenv` has the same line with a guard.
 - `install.sh` sources `zsh/.zshenv` for the detection, so bash and zsh share one implementation.
 - Legacy pi skills `gccli` and `gmcli` moved to `legacy/pi-skills/`.
+- `pi-worktree-subagent` is `personal`, not `common`. On the work Mac its `subagent` tool conflicts with the shop-pi-fy `subagent` extension.
 
 ## Goal
 
