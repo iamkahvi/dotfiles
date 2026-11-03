@@ -15,11 +15,12 @@
 -- Add a new binding.
 -- o.bind("SUPER + SHIFT + R", "SSH", "alacritty -e ssh your-server")
 
-o.bind(
-  "ALT + SPACE",
-  "Handy transcription",
-  "/home/iamkahvi/.local/bin/handy --toggle-transcription"
-)
+-- Disabled until ~/.local/bin/handy is installed.
+-- o.bind(
+--   "ALT + SPACE",
+--   "Handy transcription",
+--   "/home/iamkahvi/.local/bin/handy --toggle-transcription"
+-- )
 
 -- Send Ctrl+T to whichever application is focused.
 hl.unbind("SUPER + T")

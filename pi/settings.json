@@ -5,7 +5,13 @@
   "defaultThinkingLevel": "high",
   "hideThinkingBlock": false,
   "extensions": [
-    "~/dotfiles/pi/extensions"
+    "~/dotfiles/pi/extensions/defuddle",
+    "~/dotfiles/pi/extensions/gemini-thought-signatures.ts",
+    "~/dotfiles/pi/extensions/git-push-guard.ts",
+    "~/dotfiles/pi/extensions/pi-worktree-subagent",
+    "~/dotfiles/pi/extensions/quick-notes.ts",
+    "~/dotfiles/pi/extensions/review.ts",
+    "~/dotfiles/pi/extensions/session-export.ts"
   ],
   "skills": [
     "~/dotfiles/pi/skills"
@@ -13,6 +19,7 @@
   "theme": "dark",
   "packages": [
     "npm:pi-ask-tool-extension",
-    "npm:pi-browser-tools"
+    "npm:pi-browser-tools",
+    "npm:pi-web-search"
   ]
 }
