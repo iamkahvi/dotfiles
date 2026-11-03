@@ -1,0 +1,19 @@
+{
+  "defaultProvider": "anthropic-250k-prefer-using-this-one",
+  "defaultModel": "claude-opus-5-5",
+  "defaultThinkingLevel": "high",
+  "theme": "system",
+  "showCacheMissNotices": true,
+  "npmCommand": [
+    "pnpm",
+    "--config.node-version=22.23.4"
+  ],
+  "packages": [
+    "~/dotfiles/pi/common",
+    "~/dotfiles/pi/work"
+  ],
+  "skills": [
+    "-skills/graphite",
+    "-~/.agents/skills/stack"
+  ]
+}

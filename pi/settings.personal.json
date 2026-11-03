@@ -1,0 +1,14 @@
+{
+  "defaultProvider": "tailscale-ai",
+  "defaultModel": "gpt-5.6-terra",
+  "defaultThinkingLevel": "high",
+  "theme": "system",
+  "packages": [
+    "npm:pi-ask-user",
+    "~/dotfiles/pi/common",
+    "~/dotfiles/pi/personal"
+  ],
+  "extensions": [
+    "-extensions/omarchy-system-theme.ts"
+  ]
+}
