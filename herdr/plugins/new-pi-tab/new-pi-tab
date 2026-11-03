@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+# Herdr popup: pick a directory, pick a model, then open pi in a new tab.
+#
+# Bound in ~/dotfiles/herdr/config.toml as a `type = "popup"` command.
+# Directory order: current pane cwd, dirs picked here (MRU), then zoxide.
+# Model order: models picked here (MRU), settings default, then all models.
+# In both pickers, alt-enter uses the typed text instead of the selection.
+#
+# Speed:
+#   - The model list comes from a cache. A background job refreshes the cache
+#     while the directory picker is open (`pi --list-models` takes ~0.8s).
+#   - pi runs as the pane process of the kahvi.new-pi-tab plugin pane
+#     (run-pi.sh), so it does not wait for an interactive shell to start.
+#
+# Env:
+#   NEW_PI_TAB_FOCUS=0  create the tab without focusing it (for tests)
+#   NEW_PI_ARGS         extra pi arguments passed to run-pi.sh (for tests)
+
+set -u
+
+HERDR=${HERDR_BIN_PATH:-herdr}
+STATE_DIR=${XDG_STATE_HOME:-$HOME/.local/state}/herdr-new-pi-tab
+DIR_HISTORY=$STATE_DIR/dirs
+MODEL_HISTORY=$STATE_DIR/models
+MODEL_CACHE=$STATE_DIR/models-all
+PLUGIN_ID=kahvi.new-pi-tab
+HISTORY_MAX=50
+TAB=$'\t'
+
+mkdir -p "$STATE_DIR"
+touch "$DIR_HISTORY" "$MODEL_HISTORY"
+
+fail() {
+	printf 'new-pi-tab: %s\n\npress any key to close\n' "$*" >&2
+	read -r -n 1 -s _ </dev/tty || true
+	exit 1
+}
+
+# Move a value to the top of a history file.
+remember() {
+	local file=$1 value=$2 tmp
+	tmp=$(mktemp "$file.XXXXXX") || return 0
+	{ printf '%s\n' "$value"; grep -vxF -- "$value" "$file"; } | head -n "$HISTORY_MAX" >"$tmp"
+	mv "$tmp" "$file"
+}
+
+pretty_path() {
+	case $1 in
+	"$HOME") printf '~' ;;
+	"$HOME"/*) printf '~%s' "${1#"$HOME"}" ;;
+	*) printf '%s' "$1" ;;
+	esac
+}
+
+expand_path() {
+	case $1 in
+	"~") printf '%s' "$HOME" ;;
+	"~/"*) printf '%s/%s' "$HOME" "${1#"~/"}" ;;
+	*) printf '%s' "$1" ;;
+	esac
+}
+
+# Lines of "<path>\t<display>".
+dir_candidates() {
+	{
+		[ -n "${HERDR_ACTIVE_PANE_CWD:-}" ] && printf '%s\n' "$HERDR_ACTIVE_PANE_CWD"
+		cat "$DIR_HISTORY"
+		command -v zoxide >/dev/null 2>&1 && zoxide query -l 2>/dev/null
+	} | awk 'NF && !seen[$0]++' | while IFS= read -r dir; do
+		[ -d "$dir" ] && printf '%s\t%s\n' "$dir" "$(pretty_path "$dir")"
+	done
+}
+
+# Write "provider/model" lines to MODEL_CACHE. Keeps the old cache on failure.
+refresh_model_cache() {
+	local tmp
+	tmp=$(mktemp "$MODEL_CACHE.XXXXXX") || return 0
+	if [ -x /opt/dev/bin/devx ]; then
+		SHOPIFY_AI_RTK=false /opt/dev/bin/devx pi --list-models
+	else
+		pi --list-models
+	fi 2>/dev/null | awk 'NR > 1 && NF >= 2 { print $1 "/" $2 }' >"$tmp"
+	if [ -s "$tmp" ]; then mv "$tmp" "$MODEL_CACHE"; else rm -f "$tmp"; fi
+}
+
+settings_default_model() {
+	python3 - "$HOME/.pi/agent/settings.json" <<'PY' 2>/dev/null
+import json, sys
+s = json.load(open(sys.argv[1]))
+model = s.get("defaultModel")
+if model:
+    provider = s.get("defaultProvider")
+    thinking = s.get("defaultThinkingLevel")
+    print((provider + "/" if provider else "") + model + (":" + thinking if thinking else ""))
+PY
+}
+
+# Lines of "<model arg>\t<display>". "default" means no --model flag.
+model_candidates() {
+	local default
+	default=$(settings_default_model)
+	{
+		sed -n '/./p' "$MODEL_HISTORY"
+		echo default
+		cat "$MODEL_CACHE" 2>/dev/null
+	} | awk 'NF && !seen[$0]++' | while IFS= read -r model; do
+		if [ "$model" = default ]; then
+			printf 'default\tdefault%s\n' "${default:+ ($default)}"
+		else
+			printf '%s\t%s\n' "$model" "$model"
+		fi
+	done
+}
+
+# Run fzf over "<value>\t<display>" lines. Prints the chosen value, or the
+# typed query for alt-enter or no match. Exits the script on escape.
+pick() {
+	local prompt=$1 out status query key selection
+	shift
+	out=$(fzf --delimiter="$TAB" --with-nth=2 --no-sort --layout=reverse \
+		--prompt="$prompt> " --print-query --expect=alt-enter \
+		--header='enter: select   alt-enter: use typed text   esc: cancel' "$@")
+	status=$?
+	[ "$status" -eq 130 ] && exit 0
+	query=$(sed -n 1p <<<"$out")
+	key=$(sed -n 2p <<<"$out")
+	selection=$(sed -n 3p <<<"$out" | cut -f1)
+	if [ "$key" = alt-enter ] || [ -z "$selection" ]; then
+		[ -n "$query" ] || exit 0
+		printf '%s' "$query"
+	else
+		printf '%s' "$selection"
+	fi
+}
+
+command -v fzf >/dev/null 2>&1 || fail "fzf is not on PATH"
+command -v python3 >/dev/null 2>&1 || fail "python3 is not on PATH"
+
+# Refresh the model list while the directory picker is open. Ignore SIGHUP so
+# the job can finish if the popup closes first.
+(trap '' HUP; refresh_model_cache) </dev/null >/dev/null 2>&1 &
+refresh_pid=$!
+
+dir=$(dir_candidates | pick dir \
+	--preview='git -C {1} branch --show-current 2>/dev/null; ls -A {1} | head -50' \
+	--preview-window=right,45%) || exit 0
+[ -n "$dir" ] || exit 0
+dir=$(expand_path "$dir")
+[ -d "$dir" ] || fail "not a directory: $dir"
+dir=$(cd "$dir" && pwd -P)
+
+# First run only: no cache yet, so wait for the refresh.
+[ -s "$MODEL_CACHE" ] || wait "$refresh_pid"
+model=$(model_candidates | pick "model ($(pretty_path "$dir"))") || exit 0
+[ -n "$model" ] || exit 0
+
+[ "$model" = default ] && model=
+
+# The plugin pane creates the tab and runs run-pi.sh as its process.
+# The tab label stays numeric, so session-banner can rename the tab.
+args=(plugin pane open --plugin "$PLUGIN_ID" --entrypoint pi --placement tab
+	--cwd "$dir" --env "NEW_PI_MODEL=$model")
+[ -n "${HERDR_ACTIVE_WORKSPACE_ID:-}" ] && args+=(--workspace "$HERDR_ACTIVE_WORKSPACE_ID")
+if [ "${NEW_PI_TAB_FOCUS:-1}" = 0 ]; then args+=(--no-focus); else args+=(--focus); fi
+[ -n "${NEW_PI_ARGS:-}" ] && args+=(--env "NEW_PI_ARGS=$NEW_PI_ARGS")
+json=$("$HERDR" "${args[@]}") || fail "herdr plugin pane open failed (is $PLUGIN_ID linked?)"
+tab=$(python3 -c 'import json, sys; print(json.load(sys.stdin)["result"]["plugin_pane"]["pane"]["tab_id"])' <<<"$json" 2>/dev/null)
+# `--focus` marks the tab focused on the server, but the attached client keeps
+# its view when the request comes from a popup (Herdr 0.9.5). An explicit
+# tab.focus moves the client view to the new tab.
+[ "${NEW_PI_TAB_FOCUS:-1}" = 0 ] || [ -z "$tab" ] || "$HERDR" tab focus "$tab" >/dev/null
+
+remember "$DIR_HISTORY" "$dir"
+remember "$MODEL_HISTORY" "${model:-default}"
+command -v zoxide >/dev/null 2>&1 && zoxide add "$dir"

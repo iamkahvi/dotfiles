@@ -14,4 +14,4 @@ command = ["python3", "toggle.py"]
 id = "pi"
 title = "pi"
 placement = "split"
-command = ["/Users/iamkahvi/.bun/bin/pi"]
+command = ["sh", "-c", "exec \"$HERDR_PLUGIN_ROOT/run-pi.sh\""]

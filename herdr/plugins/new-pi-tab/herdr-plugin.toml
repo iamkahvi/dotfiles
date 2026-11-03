@@ -1,0 +1,14 @@
+id = "kahvi.new-pi-tab"
+name = "New pi tab"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Pick a directory and a model, then open pi in a new tab"
+platforms = ["macos", "linux"]
+
+# Opened by the new-pi-tab picker. pi runs as the pane process, so the tab
+# does not wait for an interactive shell to start first.
+[[panes]]
+id = "pi"
+title = "pi"
+placement = "tab"
+command = ["sh", "-c", "exec \"$HERDR_PLUGIN_ROOT/run-pi.sh\""]

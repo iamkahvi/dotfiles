@@ -8,7 +8,7 @@ toggle_sidebar = "prefix+backslash"
 previous_tab = "prefix+["
 next_tab = "prefix+]"
 copy_mode = "prefix+shift+["
-new_tab = "prefix+t"
+new_tab = "prefix+shift+t"  # built-in flow; prefix+t opens the pi picker
 new_workspace = "prefix+n"
 previous_workspace = "prefix+k"
 next_workspace = "prefix+j"
@@ -23,6 +23,22 @@ key = "prefix+p"
 type = "plugin_action"
 command = "kahvi.pi-panel.toggle"
 description = "toggle pi side panel"
+
+# New tab: pick a directory and a model, then start pi (kahvi.new-pi-tab plugin)
+[[keys.command]]
+key = "prefix+t"
+type = "popup"
+command = "exec \"$HOME/dotfiles/herdr/plugins/new-pi-tab/new-pi-tab\""
+description = "new pi tab (dir + model picker)"
+width = "80%"
+height = "70%"
+
+# Open project notes in a TODO tab (kahvi.todo plugin)
+[[keys.command]]
+key = "prefix+d"
+type = "plugin_action"
+command = "kahvi.todo.open"
+description = "open TODO tab"
 
 [ui.toast]
 delivery = "terminal"

@@ -1,0 +1,22 @@
+id = "kahvi.mru-tabs"
+name = "MRU Tabs"
+version = "0.2.0"
+min_herdr_version = "0.9.0"
+description = "Keep TODO tabs pinned ahead of tabs ordered by most recent agent work"
+platforms = ["macos", "linux"]
+
+[[events]]
+on = "pane.agent_status_changed"
+command = ["python3", "mru_tabs.py"]
+
+[[events]]
+on = "tab.created"
+command = ["python3", "mru_tabs.py"]
+
+[[events]]
+on = "tab.renamed"
+command = ["python3", "mru_tabs.py"]
+
+[[events]]
+on = "tab.moved"
+command = ["python3", "mru_tabs.py"]
