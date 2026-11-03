@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dotfiles machine branching tree</title>
+<style>
+  :root {
+    --bg: #14161a; --panel: #1c1f25; --line: #2a2e36; --fg: #d8dce3; --dim: #8a919e;
+    --common: #4ade80; --platform: #60a5fa; --work: #f59e0b; --both: #c084fc;
+    --legacy: #6b7280; --verify: #f87171; --changed: #2b2a1c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 13px/1.4 ui-monospace, "JetBrains Mono", Menlo, monospace; }
+  header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line); padding: 10px 16px; }
+  h1 { font-size: 15px; margin: 0 0 6px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button, select { background: #252932; color: var(--fg); border: 1px solid var(--line); border-radius: 4px; font: inherit; padding: 3px 8px; }
+  button { cursor: pointer; }
+  button:hover { border-color: var(--dim); }
+  .summary { display: flex; gap: 16px; margin-top: 8px; color: var(--dim); flex-wrap: wrap; }
+  .summary b { color: var(--fg); }
+  .help { color: var(--dim); max-width: 1100px; margin: 6px 0 0; }
+  table { border-collapse: collapse; width: 100%; }
+  th { position: sticky; top: var(--hdr, 96px); background: var(--panel); z-index: 4; text-align: left; font-weight: 600; color: var(--dim); border-bottom: 1px solid var(--line); padding: 6px; white-space: nowrap; }
+  td { border-bottom: 1px solid #1f232a; padding: 4px 6px; vertical-align: middle; white-space: nowrap; }
+  tr.changed td { background: var(--changed); }
+  tr.folder td.name { font-weight: 600; }
+  .caret { display: inline-block; width: 14px; cursor: pointer; color: var(--dim); user-select: none; }
+  td.m { text-align: center; width: 78px; font-size: 12px; }
+  .on { color: var(--fg); }
+  .off { color: #3a3f4a; }
+  .verify { color: var(--verify); margin-left: 4px; }
+  select.label { min-width: 210px; border-width: 1px; }
+  .dim { color: var(--dim); }
+  .note { color: var(--dim); white-space: normal; }
+  dialog { background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 6px; width: min(1000px, 92vw); }
+  dialog textarea { width: 100%; height: 60vh; background: #0f1114; color: var(--fg); border: 1px solid var(--line); font: 12px/1.4 ui-monospace, Menlo, monospace; }
+</style>
+</head>
+<body>
+<header id="hdr">
+  <h1>Dotfiles machine branching tree</h1>
+  <div class="bar">
+    <label>Show
+      <select id="filter">
+        <option value="all">all items</option>
+        <option value="changed">changed from the plan</option>
+        <option value="branched">branched only</option>
+        <option value="verify">verify only</option>
+        <option value="nolegacy">hide legacy</option>
+      </select>
+    </label>
+    <button id="expand">Expand all</button>
+    <button id="collapse">Collapse all</button>
+    <button id="exportMd">Export tree</button>
+    <button id="exportJson">Export JSON</button>
+    <button id="reset">Reset to plan</button>
+  </div>
+  <div class="summary" id="summary"></div>
+  <p class="help">Select one label for each file. The machine columns show what each machine gets: "same" is one shared file, and other text is the variant that the machine gets.
+  A folder row sets all items in the folder. Yellow rows differ from the plan document. A red "?" means "verify". Changes save in this browser.</p>
+</header>
+
+<table>
+  <thead><tr>
+    <th>Path</th><th>Label</th>
+    <th class="m" title="macos, work">Work Mac</th><th class="m" title="macos, personal">Personal Mac</th>
+    <th class="m" title="omarchy, personal">Omarchy</th><th class="m" title="ubuntu, personal">Ubuntu</th>
+    <th>Mech</th><th>Note</th>
+  </tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<dialog id="dlg">
+  <div class="bar" style="justify-content: space-between; margin-bottom: 6px;">
+    <b id="dlgTitle"></b>
+    <span><button id="copy">Copy</button> <button id="close">Close</button></span>
+  </div>
+  <textarea id="out" readonly></textarea>
+</dialog>
+
+<script>
+const MACHINES = [
+  { id: "wm", platform: "macos",   profile: "work" },
+  { id: "pm", platform: "macos",   profile: "personal" },
+  { id: "om", platform: "omarchy", profile: "personal" },
+  { id: "ub", platform: "ubuntu",  profile: "personal" },
+];
+
+// Label -> which machines get the file, and what decides the variant.
+const LABELS = {
+  "common":                  { on: ["wm", "pm", "om", "ub"], variant: null },
+  "branched: platform":      { on: ["wm", "pm", "om", "ub"], variant: m => m.platform },
+  "branched: work":          { on: ["wm", "pm", "om", "ub"], variant: m => m.profile },
+  "branched: platform+work": { on: ["wm", "pm", "om", "ub"], variant: m => m.platform + "+" + m.profile },
+  "macos":                   { on: ["wm", "pm"], variant: null },
+  "omarchy":                 { on: ["om"], variant: null },
+  "ubuntu":                  { on: ["ub"], variant: null },
+  "personal":                { on: ["pm", "om", "ub"], variant: null },
+  "work":                    { on: ["wm"], variant: null },
+  "legacy":                  { on: [], variant: null },
+};
+const COLORS = {
+  "common": "var(--common)", "branched: platform": "var(--platform)", "branched: work": "var(--work)",
+  "branched: platform+work": "var(--both)", "macos": "var(--platform)", "omarchy": "var(--platform)",
+  "ubuntu": "var(--platform)", "personal": "var(--platform)", "work": "var(--work)", "legacy": "var(--legacy)",
+};
+
+// Items from docs/machine-branching-plan.md. Format: [path, label, mech, note]. A "?" suffix means verify.
+const PLAN = [
+  [".gitignore", "common", "", "add: .claude/, generated outputs"],
+  ["agents/AGENTS.md", "common", "", "moved from the repo root. Linked to ~/.pi/agent/AGENTS.md. Work guidance: untracked ~/.config/agents/work-tools.md."],
+  ["CLAUDE.md", "legacy", "", "delete. Claude Code 2.1.277+ reads AGENTS.md. Global rules: @-import in ~/.claude/CLAUDE.md."],
+  ["README.md", "common", "", ""],
+  ["aerospace/.aerospace.toml", "macos", "", ""],
+  ["espanso/", "legacy", "", "not installed on work Mac"],
+  ["fish/", "legacy", "", "has /Users/iamkahvi paths"],
+  ["ghostty/config", "branched: platform", "M2", "shared base. Includes ~/.config/ghostty/platform.conf. Ubuntu skips Ghostty."],
+  ["ghostty/config-macos", "macos", "M2", "platform file"],
+  ["ghostty/config-omarchy", "omarchy", "M2", "new. Platform file. Current config content."],
+  ["ghostty/ghostty-workspace", "macos", "", "uses osascript"],
+  ["ghostty/workspaces/", "macos", "", ""],
+  ["git/config", "branched: work", "M2", "dev manages ~/.gitconfig on the work Mac"],
+  ["hammerspoon/init.lua", "macos", "", "not linked on work Mac (copy exists)"],
+  ["herdr/config.toml", "common", "", ""],
+  ["herdr/orchestrator/", "common", "", ""],
+  ["herdr/plugins/mru-spaces/", "common", "", ""],
+  ["herdr/plugins/mru-tabs/", "common", "", "(kp/work)"],
+  ["herdr/plugins/new-pi-tab/", "common", "", "devx path has an -x guard (kp/work)"],
+  ["herdr/plugins/pi-panel/", "common", "", "take run-pi.sh from kp/work"],
+  ["herdr/plugins/todo/", "common", "", "(kp/work)"],
+  ["hyper/", "legacy", "", ""],
+  ["hypr/", "omarchy", "", ""],
+  ["i3/", "legacy", "", ""],
+  ["iterm2/", "legacy", "", ""],
+  ["karabiner/karabiner.json", "macos", "", "not linked on work Mac (copy exists)"],
+  ["kitty/", "legacy", "", "linked on work Mac, verify use"],
+  ["nginx/", "legacy", "", "kahvipatel.com sites. Not in use."],
+  ["pi/extensions/clear-prompt/", "common", "", "(kp/work)"],
+  ["pi/extensions/copy-code/", "common", "", "(kp/work)"],
+  ["pi/extensions/copy-prompt/", "common", "", "(kp/work)"],
+  ["pi/extensions/session-id-copy/", "common", "", "(kp/work)"],
+  ["pi/extensions/defuddle/", "common", "", ""],
+  ["pi/extensions/git-push-guard.ts", "common", "", ""],
+  ["pi/extensions/pi-worktree-subagent/", "common", "", ""],
+  ["pi/extensions/quick-notes.ts", "common", "", ""],
+  ["pi/extensions/review.ts", "common", "", ""],
+  ["pi/extensions/session-export.ts", "common", "", ""],
+  ["pi/extensions/gemini-thought-signatures.ts", "personal", "", "tailnet proxy"],
+  ["pi/extensions/web-search/", "personal", "", "tailnet SearXNG. Rename index.ts.disabled to index.ts. Replaces npm:pi-web-search."],
+  ["pi/models.json", "personal", "", "tailnet provider. Work Mac has its own copy."],
+  ["pi/search_sessions.sh", "common", "", ""],
+  ["pi/settings.personal.json", "branched: work", "M3", "full file. Linked to ~/.pi/agent/settings.json on personal."],
+  ["pi/settings.work.json", "branched: work", "M3", "full file. Linked to ~/.pi/agent/settings.json on work."],
+  ["pi/skills/browser-mcp/", "personal", "", ""],
+  ["pi/skills/gccli/", "legacy", "", ""],
+  ["pi/skills/gmcli/", "legacy", "", ""],
+  ["pi/skills/loop/", "common", "", ""],
+  ["pi/skills/review/", "common", "", ""],
+  ["pi/skills/simplify/", "common", "", ""],
+  ["pi/skills/sync-models/", "personal", "", "tailnet proxy"],
+  ["pi/skills/textarea-decode/", "work", "", "quick.shopify.io"],
+  ["pi/skills/stack", "work", "", "absolute symlink. Remove from git."],
+  ["pi/skills/tldr/", "common", "", "copy into the repo. Uses Shopify-only MCP servers."],
+  ["scripts/blockit", "personal", "", "osascript with an $EDITOR fallback"],
+  ["scripts/immich-to-r2.sh", "personal", "", "verify if it runs on the server"],
+  ["scripts/open-kitty-term.rb", "legacy", "", ""],
+  ["scripts/tmux-sessionizer", "common", "", ""],
+  ["scripts/toggle-centered-master", "omarchy", "", "uses hyprctl"],
+  ["setups/install.sh", "ubuntu", "", "apt CLI tools only. Becomes the ubuntu step."],
+  ["setups/mac_install.sh", "macos", "", "becomes the macos step"],
+  ["setups/omarchy.md", "omarchy", "", ""],
+  ["setups/setup_linux.md", "legacy", "", "Ubuntu laptop dual-boot guide (i3, X11)"],
+  ["setups/2023_setup.md", "legacy", "", ""],
+  ["tmux/.tmux.conf", "common", "", ""],
+  ["tmux/sessionizer.yaml", "branched: work", "M4", "search_dirs and pins differ"],
+  ["tmux/tmux-sessions.sh", "common", "", ""],
+  ["tmux/session-toggle-shortcut.md", "common", "", ""],
+  ["vim/.vimrc", "common", "", ""],
+  ["vim/init.lua", "common", "", ""],
+  ["vscode/", "common", "", "not linked on work Mac"],
+  ["webstorm/webstorm", "macos", "", "uses open -na"],
+  ["yazi/", "common", "", ""],
+  ["zellij/", "legacy", "", "linked on work Mac. Omarchy guide says use herdr."],
+  ["zsh/.zshenv", "common", "", "new. Sets the profile and the platform."],
+  ["zsh/.zshrc", "branched: platform+work", "M1", ""],
+  ["zsh/macos.zsh", "macos", "", "new. Split from .zshrc."],
+  ["zsh/ubuntu.zsh", "ubuntu", "", "new. Split from .zshrc."],
+  ["zsh/work.zsh", "work", "", ""],
+];
+
+// Decisions made after the plan was written. These start as the selected value.
+const DECISIONS = {};
+
+const INFO = {};   // static data for each path
+const plan = {};   // label from the plan doc
+for (const [p, l, mech, note] of PLAN) {
+  INFO[p] = { verify: l.endsWith("?"), mech, note };
+  plan[p] = l.replace(/\?$/, "");
+}
+
+const KEY = "dotfiles-branching-v2";
+let state = load();
+function load() {
+  const s = { ...plan, ...DECISIONS };
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY));
+    if (saved) for (const p in saved) if (p in s && saved[p] in LABELS) s[p] = saved[p];
+  } catch (e) {}
+  return s;
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+
+// Tree
+function buildTree() {
+  const root = { name: "dotfiles/", path: "", children: [] };
+  for (const [p] of PLAN) {
+    const parts = p.split("/").filter(Boolean);
+    const dirLeaf = p.endsWith("/");
+    let node = root;
+    parts.forEach((part, i) => {
+      const last = i === parts.length - 1;
+      if (last) { node.children.push({ name: part + (dirLeaf ? "/" : ""), path: p, leaf: true }); return; }
+      let child = node.children.find(c => !c.leaf && c.name === part + "/");
+      if (!child) { child = { name: part + "/", path: parts.slice(0, i + 1).join("/") + "/", children: [] }; node.children.push(child); }
+      node = child;
+    });
+  }
+  const tidy = n => {
+    if (!n.children) return;
+    n.children.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+    n.children = n.children.map(c => {
+      tidy(c);
+      // A folder that holds only one file becomes one row, for example aerospace/.aerospace.toml.
+      return !c.leaf && c.children.length === 1 && c.children[0].leaf ? { ...c.children[0], name: c.name + c.children[0].name } : c;
+    });
+  };
+  tidy(root);
+  return root;
+}
+const tree = buildTree();
+const leaves = n => n.leaf ? [n.path] : n.children.flatMap(leaves);
+
+const collapsed = new Set(JSON.parse(localStorage.getItem(KEY + "-collapsed") || "[]"));
+const saveCollapsed = () => localStorage.setItem(KEY + "-collapsed", JSON.stringify([...collapsed]));
+
+function visible(p) {
+  const f = document.getElementById("filter").value;
+  if (f === "changed") return state[p] !== plan[p];
+  if (f === "branched") return state[p].startsWith("branched");
+  if (f === "verify") return INFO[p].verify;
+  if (f === "nolegacy") return state[p] !== "legacy";
+  return true;
+}
+
+function el(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v;
+    else if (k === "style") e.style.cssText = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else e[k] = v;
+  }
+  e.append(...kids);
+  return e;
+}
+
+function machineCell(label, m) {
+  if (label === "mixed") return el("td", { class: "m dim", textContent: "·" });
+  const def = LABELS[label];
+  if (!def.on.includes(m.id)) return el("td", { class: "m off", textContent: "—" });
+  return el("td", { class: "m on", textContent: def.variant ? def.variant(m) : "same", style: def.variant ? `color:${COLORS[label]}` : "" });
+}
+
+function row(node, depth) {
+  const paths = leaves(node);
+  if (!paths.some(visible)) return [];
+  const folder = !node.leaf;
+  const labels = [...new Set(paths.map(p => state[p]))];
+  const value = labels.length === 1 ? labels[0] : "mixed";
+  const changed = !folder && state[node.path] !== plan[node.path];
+
+  const sel = el("select", { class: "label", onchange: e => { for (const p of paths) state[p] = e.target.value; save(); render(); } });
+  if (value === "mixed") sel.append(el("option", { value: "mixed", textContent: "mixed", disabled: true }));
+  for (const l of Object.keys(LABELS)) sel.append(el("option", { value: l, textContent: l + (!folder && l === plan[node.path] && changed ? "  (plan)" : "") }));
+  sel.value = value;
+  if (value !== "mixed") sel.style.color = sel.style.borderColor = COLORS[value];
+
+  const caret = el("span", {
+    class: "caret",
+    textContent: folder ? (collapsed.has(node.path) ? "▸" : "▾") : "",
+    onclick: () => { if (!folder) return; collapsed.has(node.path) ? collapsed.delete(node.path) : collapsed.add(node.path); saveCollapsed(); render(); },
+  });
+  const name = el("td", { class: "name", style: `padding-left:${6 + depth * 18}px`, title: node.path }, caret, node.name);
+  if (!folder && INFO[node.path].verify) name.append(el("span", { class: "verify", textContent: "?", title: "verify" }));
+
+  const tr = el("tr", { class: (folder ? "folder " : "") + (changed ? "changed" : "") },
+    name,
+    el("td", {}, sel),
+    ...MACHINES.map(m => machineCell(value, m)),
+    el("td", { class: "dim", textContent: folder ? "" : INFO[node.path].mech, title: changed ? "from the plan" : "" }),
+    el("td", { class: "note", textContent: folder || !INFO[node.path].note ? "" : (changed ? "plan: " : "") + INFO[node.path].note }),
+  );
+
+  const out = [tr];
+  if (folder && !collapsed.has(node.path)) for (const c of node.children) out.push(...row(c, depth + 1));
+  return out;
+}
+
+function render() {
+  document.getElementById("rows").replaceChildren(...tree.children.flatMap(c => row(c, 0)));
+  summary();
+  document.documentElement.style.setProperty("--hdr", document.getElementById("hdr").offsetHeight + "px");
+}
+
+function summary() {
+  const all = Object.keys(state);
+  const names = { wm: "Work Mac", pm: "Personal Mac", om: "Omarchy", ub: "Ubuntu" };
+  const perMachine = MACHINES.map(m => `${names[m.id]}: <b>${all.filter(p => LABELS[state[p]].on.includes(m.id)).length}</b>`);
+  const counts = {};
+  for (const p of all) counts[state[p]] = (counts[state[p]] || 0) + 1;
+  const changed = all.filter(p => state[p] !== plan[p]).length;
+  document.getElementById("summary").innerHTML =
+    perMachine.join(" &nbsp; ") + ` &nbsp;|&nbsp; changed from plan: <b>${changed}</b> &nbsp;|&nbsp; ` +
+    Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([l, n]) => `<span style="color:${COLORS[l]}">${l}</span> ${n}`).join(" &nbsp; ");
+}
+
+function exportTree() {
+  const lines = ["dotfiles/"];
+  const walk = (n, prefix) => n.children.forEach((c, i) => {
+    const last = i === n.children.length - 1;
+    const head = prefix + (last ? "└── " : "├── ") + c.name;
+    if (!c.leaf) { lines.push(head); walk(c, prefix + (last ? "    " : "│   ")); return; }
+    const i2 = INFO[c.path];
+    lines.push((head.padEnd(48) + " " + (state[c.path] + (i2.verify ? "?" : "")).padEnd(26) + " " + [i2.mech, i2.note].filter(Boolean).join("  ")).trimEnd());
+  });
+  walk(tree, "");
+  return lines.join("\n");
+}
+
+function exportJson() {
+  const out = {};
+  for (const p of Object.keys(state)) if (state[p] !== plan[p]) out[p] = { plan: plan[p], now: state[p] };
+  return JSON.stringify({ changed: out, all: state }, null, 2);
+}
+
+function show(title, text) {
+  document.getElementById("dlgTitle").textContent = title;
+  document.getElementById("out").value = text;
+  document.getElementById("dlg").showModal();
+}
+
+document.getElementById("filter").onchange = render;
+document.getElementById("expand").onclick = () => { collapsed.clear(); saveCollapsed(); render(); };
+document.getElementById("collapse").onclick = () => {
+  const add = n => { if (!n.leaf) { if (n !== tree) collapsed.add(n.path); n.children.forEach(add); } };
+  add(tree); saveCollapsed(); render();
+};
+document.getElementById("exportMd").onclick = () => show("Tree (paste into the plan doc)", exportTree());
+document.getElementById("exportJson").onclick = () => show("JSON (paste into the chat)", exportJson());
+document.getElementById("reset").onclick = () => {
+  if (!confirm("Reset all items to the plan document? Your choices will be lost.")) return;
+  localStorage.removeItem(KEY); state = load(); render();
+};
+document.getElementById("copy").onclick = async () => {
+  await navigator.clipboard.writeText(document.getElementById("out").value);
+  const b = document.getElementById("copy"); b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1200);
+};
+document.getElementById("close").onclick = () => document.getElementById("dlg").close();
+window.addEventListener("resize", render);
+
+render();
+</script>
+</body>
+</html>
