@@ -24,7 +24,7 @@ Thus a hardcoded home path works on some machines and breaks on others.
 Rule: tracked files use `$HOME` or `~`. They do not use `/Users/<name>` or `/home/<name>`.
 Known violations: `herdr/plugins/pi-panel/herdr-plugin.toml`, the `tec` line in `.zshrc`, `tmux/sessionizer.yaml` (kp/work), `pi/settings.json` (kp/work), and the `pi/skills/stack` and `pi/skills/tldr` symlinks.
 
-The repo is public. Shopify-internal text in a `common` file is published. This applies to `pi/skills/tldr`. See its section. The work guidance from `AGENTS.md` moves to an untracked file. See the `agents/AGENTS.md` section.
+The repo is public. Shopify-internal names in tracked files are published. Decision: this is acceptable, because they are not secrets. This includes these plan docs, `pi/work/skills/tldr`, and `finicky/.finicky.js`. The work guidance from `AGENTS.md` moves to an untracked file. See the `agents/AGENTS.md` section.
 
 ## Branch Axes
 
@@ -99,7 +99,7 @@ Examples:
 - `branched: platform` with M3: Ghostty has one config on each platform. The install script links `config-macos` on `macos` and `config-omarchy` on `omarchy`. `ubuntu` gets none.
 - Not branched: `hypr/` is `omarchy`. Only one platform installs it, and its content does not change.
 | `local`                        | Not in git. Each machine has its own copy.                               |
-| `legacy`                       | No current setup installs it. Delete it or keep it as an archive.        |
+| `legacy`                       | No current setup installs it. Move it to `legacy/`. No install step reads that folder. |
 
 ## Mechanisms
 
@@ -111,8 +111,7 @@ Examples:
 | M4 | Install-time generation | The format has no include (JSON, YAML, Markdown), or the app writes to the file. The install script merges a base file and an overlay into a real file. |
 | M5 | Untracked local file | Secrets and machine identity. |
 
-Rule for M4: do not symlink generated files.
-Exception: `pi/settings.json` uses M3 (a symlink) by decision, although pi writes to it. See its section.
+No file uses M4 now. `pi/settings.json` and `tmux/sessionizer.yaml` use M3 by decision. Keep M4 only for a future file that must be generated. Do not symlink a generated file.
 
 ## File Tree
 
@@ -123,6 +122,7 @@ dotfiles/
 ├── aerospace/.aerospace.toml          macos
 ├── agents/AGENTS.md                   common    moved from the repo root. Linked to ~/.pi/agent/AGENTS.md.
 ├── espanso/                           legacy    not installed on work Mac
+├── finicky/.finicky.js                work      new (master 4961153). Routes Shopify Slack URLs. macOS only.
 ├── fish/                              legacy    has /Users/iamkahvi paths
 ├── ghostty/
 │   ├── config                         branched: platform   M2   shared base. Includes the platform file.
@@ -176,10 +176,10 @@ dotfiles/
 │       ├── sync-models/               personal  tailnet proxy
 │       ├── textarea-decode/           work      quick.shopify.io
 │       ├── stack -> /Users/kahvi/...  work      absolute symlink. Remove from git.
-│       └── tldr/                      common    copy into the repo. Now a symlink to /Users/kahvi/.claude. Uses Shopify-only MCP servers.
+│       └── tldr/                      work      copy into the repo. Now a symlink to /Users/kahvi/.claude. Uses Shopify-only MCP servers.
 ├── scripts/
 │   ├── blockit                        personal  osascript with an $EDITOR fallback
-│   ├── immich-to-r2.sh                personal  verify if it runs on the server
+│   ├── immich-to-r2.sh                personal  runs on the Ubuntu server
 │   ├── open-kitty-term.rb             legacy
 │   ├── tmux-sessionizer               common
 │   └── toggle-centered-master         omarchy   uses hyprctl
@@ -191,7 +191,8 @@ dotfiles/
 │   └── 2023_setup.md                  legacy
 ├── tmux/
 │   ├── .tmux.conf                     common
-│   ├── sessionizer.yaml               branched: work   M4
+│   ├── sessionizer.personal.yaml      branched: work   M3  linked to ~/.config/tmux-sessionizer/sessionizer.yaml
+│   ├── sessionizer.work.yaml          branched: work   M3  linked to ~/.config/tmux-sessionizer/sessionizer.yaml
 │   ├── tmux-sessions.sh               common
 │   └── session-toggle-shortcut.md     common
 ├── vim/{.vimrc,init.lua}              common
@@ -236,8 +237,8 @@ Local files (not in git, M5):
 | Plugin and prompt loader (path list, next table)                | `.zshrc` (common)                                          |
 | `batcat` and `fdfind` aliases, if the short name is absent      | `ubuntu.zsh`                                               |
 | `/opt/dev`, chruby, `devx` aliases, `tec` init                  | `work.zsh`                                                 |
-| `pnpm` (`~/Library/pnpm`), `mise activate`                      | `work.zsh`, or `common` with a `command -v` guard. Decide. |
-| `eval "$(try init ~/src/tries)"`                                | Decide: `work.zsh` or common with a guard.                 |
+| `pnpm` (`~/Library/pnpm`), `mise activate`                      | `work.zsh`                                                 |
+| `eval "$(try init ~/src/tries)"`                                | Common. Add a `command -v` guard.                          |
 | `SHOPIFY_TALENT_TOKEN`                                          | `~/.zshenv.local` (M5)                                     |
 | `zoxide init`                                                   | Common. Add a `command -v` guard.                          |
 
@@ -273,11 +274,13 @@ config-file = ?"~/.config/ghostty/platform.conf"
 - The install script links `config-$DOTFILES_PLATFORM` to `~/.config/ghostty/platform.conf`.
 - The `ubuntu` platform skips Ghostty. The label `branched: platform` does not mean that Ubuntu gets a variant.
 
-An absolute path avoids one question: does Ghostty resolve a relative path against the symlink or against its target? Verify that `~` expands in `config-file`.
+An absolute path avoids one question: does Ghostty resolve a relative path against the symlink or against its target? Checked (Ghostty 1.4.0, `+show-config`): `~` expands in `config-file`, and a missing `?` file causes no error.
 
 Candidates for the shared base (both files have them now, or only Omarchy has them):
 
-- `keybind = shift+enter=csi:13;2u` and `keybind = alt+shift+enter=csi:13;4u`. Only Omarchy has them. TUIs (pi, herdr) need them to tell Shift+Enter from Enter. Verify on macOS.
+- `keybind = shift+enter=csi:13;2u` and `keybind = alt+shift+enter=csi:13;4u`. Only Omarchy has them. TUIs (pi, herdr) need them to tell Shift+Enter from Enter. The macOS defaults bind only `super+enter` and `super+shift+enter`, so these binds do not replace a default. Verify the behavior in pi on both Macs.
+
+The work Mac also has `~/Library/Application Support/com.mitchellh.ghostty/config`. It is the empty template that Ghostty made in Feb 2025. Delete it, so that only the XDG config applies.
 - `resize_split` keybinds, `cursor-style`, `mouse-scroll-multiplier`, `confirm-close-surface`.
 
 Remove the `command = env WORK=1 ...` line. `.zshenv` sets the profile.
@@ -363,11 +366,14 @@ Known costs:
 - pi writes through the symlink into the repo. `/model`, a thinking-level change, and each pi update (`lastChangelogVersion`) make `git status` dirty. Commit the change, or discard it with `git checkout`.
 - pi writes only the changed keys, but it writes the whole file again. Format the files as pi writes them, so that the first write does not change the format.
 
-Verify:
+Checked on the work Mac (pi 1.4.0, temporary `PI_CODING_AGENT_DIR`, RPC `get_commands`, with a control run):
 
-- `-~/.agents/skills/stack` works as an exact exclusion. If not, keep it in a form with no `/Users/kahvi` path.
 - A local package with no `package.json` loads its `extensions/` and `skills/` folders.
-- The provider ID `anthropic-250k-prefer-using-this-one` is safe to publish. It is not a secret, but it shows the name of an internal proxy provider.
+- A package path through a symlink loads.
+- `-extensions/omarchy-system-theme.ts` removes an extension that pi found in `<agent-dir>/extensions`.
+- `-~/.agents/skills/stack` removes the skill. Do not add a trailing slash: `-~/.agents/skills/stack/` does not match.
+- Not reproduced: a pi write through the settings symlink. An RPC `set_thinking_level` with no model did not write the file. The source (`writeFileSync` on the link path) shows that a write goes to the target.
+- Decision: the provider ID `anthropic-250k-prefer-using-this-one` can be public.
 
 Work Mac migration:
 
@@ -406,8 +412,7 @@ pi/work/{extensions,skills}/
 Each profile settings file lists `pi/common` and its own folder in `packages`. To add an item, put it in a folder. Do not edit the settings files.
 `stack` points to `~/.claude/skills`, which is outside the repo. Remove it from git. On the work Mac, the install script makes the link.
 
-Decision: `tldr` is `common`. It now points to `/Users/kahvi/.claude/skills/tldr`, which does not exist on personal machines. Copy `SKILL.md` into `pi/common/skills/tldr/`.
-The skill calls `slack-mcp` and `incident-dashboard-mcp`. Those are Shopify servers, so the skill cannot run on personal machines. Decide: keep it `common` anyway, or set it to `work`.
+Decision: `tldr` is `work`. It calls `slack-mcp` and `incident-dashboard-mcp`, which are Shopify servers. It now points to `/Users/kahvi/.claude/skills/tldr`. Copy `SKILL.md` into `pi/work/skills/tldr/`.
 
 ### agents/AGENTS.md (common)
 
@@ -432,7 +437,7 @@ Claude Code rules that affect this plan:
 
 - Claude Code reads `AGENTS.md` only from the working directory and its parents. It has no user-level `AGENTS.md`. Thus it does not find `~/.pi/agent/AGENTS.md`. The import in step 5 is necessary.
 - If a `CLAUDE.md`, `.claude/CLAUDE.md`, or `CLAUDE.local.md` is on the path, Claude Code reads no `AGENTS.md`. `~/.claude/CLAUDE.md` does not count.
-- Now `~/CLAUDE.md` is on the path for each repo below `~`. Thus Claude Code ignores project `AGENTS.md` files in those repos. Step 4 fixes this.
+- Checked on the work Mac: Claude Code reads project `AGENTS.md` files below `~`, although `~/CLAUDE.md` exists. The reason: the local `~/.claude/settings.json` sets `cc-plugin-agents-md@builtin` `instructionFiles` to `claude-md-and-agents-md`. Without that setting, `~/CLAUDE.md` would turn off project `AGENTS.md` files. Delete `~/CLAUDE.md` anyway (step 4).
 - Imports in `~/.claude/CLAUDE.md` load with no approval dialog. `@~/...` paths are supported.
 
 Optional: add a short root `AGENTS.md` with rules for work on this repo only. For example: "Read `docs/machine-branching-plan.md` first."
@@ -457,13 +462,19 @@ Move these parts of the `kp/work` `AGENTS.md` to `work-tools.md`:
 
 `agents/AGENTS.md` keeps a generic Git rule: "Use plain `git` and `gh`." It also keeps `rg -l` and `git grep -l`.
 
-Also decide: the `kp/work` text removes some `master` sections (for example, "Conventions" and "Code Review"). Decide if those sections stay.
+Decision: remove the `master` sections "Conventions" and "Code Review", as `kp/work` does.
 
-### tmux/sessionizer.yaml (branched: work, M4)
+### tmux/sessionizer.yaml (branched: work, M3)
 
-Only `search_dirs` and `pins` differ.
-Option A: generate the file from a base file and a profile overlay with `yq`.
-Option B: make `scripts/tmux-sessionizer` read a second optional file, `sessionizer.local.yaml`. This option removes the generation step.
+Decision: keep one full file for each profile, as for pi settings. Only `search_dirs` and `pins` differ.
+
+- `tmux/sessionizer.personal.yaml`
+- `tmux/sessionizer.work.yaml`
+
+The install script links `sessionizer.$DOTFILES_PROFILE.yaml` to `~/.config/tmux-sessionizer/sessionizer.yaml`. `scripts/tmux-sessionizer` reads that path first. The script only reads the file, so the link causes no git changes.
+
+Change the fallback in `scripts/tmux-sessionizer` (`$DF_HOME/tmux/sessionizer.yaml`). That file will not exist. Use `sessionizer.personal.yaml`, or remove the fallback.
+Remove the `/Users/kahvi` paths from the work file. Use `~`.
 
 ### setups (branched: platform+work)
 
@@ -477,29 +488,31 @@ setups/
 └── packages/ubuntu.sh  from the current install.sh (apt, git clones)
 ```
 
-Use the `backup_and_link` function from `omarchy.md`.
+Decision: use a link script, not GNU stow. Use the `backup_and_link` function from `omarchy.md`. Keep one explicit link list for each label. Add a `--dry-run` flag.
 After the package step, `install.sh` does these steps:
 
 1. Link `common` files.
 2. Link `$DOTFILES_PLATFORM` files.
 3. Link `$DOTFILES_PROFILE` files.
-4. Generate M4 files.
 
 Keep `omarchy.md` as prose for manual checks only.
 
 ### Ubuntu server items
 
-- `pi`: verify if pi runs on the server. If yes, the personal `settings` overlay works there. The tailnet proxy must be reachable.
-- `herdr`: verify if herdr runs on the server. If no, use tmux only.
+Confirmed tools: zsh, tmux, nvim, pi, herdr, yazi, git config, fzf, and zoxide.
+
+- `pi` runs on the server. It uses `settings.personal.json`. The tailnet proxy must be reachable from the server.
+- `herdr` runs on the server. `packages/ubuntu.sh` must install it.
+- `scripts/immich-to-r2.sh` runs on the server. It stays `personal`, because it is generic.
 
 ## Cleanup Before the Move
 
 1. Remove `SHOPIFY_TALENT_TOKEN` from `kp/work` commit `bf20143`. Put it in `~/.zshenv.local`.
-2. Delete the orphan commit `9dc23ba` with `git reflog expire --expire=now --all` and `git gc --prune=now`.
+2. Run `git stash clear` first. Decision: drop all 10 stashes. `stash@{1}` contains the token, and `stash@{0}` is based on `9dc23ba`. Then delete the orphan commit `9dc23ba` with `git reflog expire --expire=now --all` and `git gc --prune=now`.
 3. Remove `.claude/settings.local.json` from git. Add `.claude/` and the pi state names to `.gitignore`.
 4. Remove the absolute symlinks in `pi/skills/` from git.
 5. Move the work guidance out of `AGENTS.md` to `~/.config/agents/work-tools.md`. Do this before a `kp/work` commit with `AGENTS.md` goes to `master`.
-6. Decide which `legacy` items to delete.
+6. Move the `legacy` items to `legacy/` with `git mv`. Keep their folder names.
 
 Known public data on `master` that is not secret: the tailnet name `tail37572.ts.net` and `100.88.174.104`. Optional: read them from environment variables.
 
@@ -508,16 +521,11 @@ Known public data on `master` that is not secret: the tailnet name `tail37572.ts
 1. Cleanup (previous section).
 2. Add `zsh/.zshenv` and `~/.zshenv.local`. Split `.zshrc`.
 3. Move the common `kp/work` commits to `master` with cherry-pick.
-4. Make the split files (pi settings, sessionizer, ghostty). Move `AGENTS.md` to `agents/AGENTS.md` and fix the links.
+4. Make the split files (pi settings, sessionizer, ghostty). Move `legacy` items to `legacy/`. Move `AGENTS.md` to `agents/AGENTS.md` and fix the links.
 5. Write the new `setups/install.sh`. Test it on each machine with a dry-run flag. Test the Ubuntu server last, because its paths are the least known.
 6. Move `~/dotfiles` on the work Mac to `master`. Delete `kp/work`, `work`, `dotfiles-work`, `dotfiles-main`, and `dotfiles-master`.
+   Before you delete the `~/dotfiles-master` worktree, link `~/.finicky.js` again. It now points into `~/dotfiles-master`.
 
 ## Open Questions
 
 - Ubuntu server: which version?
-- Ubuntu server: which tools run there (pi, herdr, nvim, yazi, tmux)?
-- Ubuntu server: does `scripts/immich-to-r2.sh` run there?
-- `pi/skills/tldr`: keep it `common`, or set it to `work`? It needs Shopify-only MCP servers.
-- Legacy items: delete them from `master`, or keep them? Git history keeps them after a delete.
-- Do `pnpm`, `mise`, and `try` go in `work.zsh` or in common with a guard?
-- Is GNU stow (`kp/using-stow`) better than a link script for M3?
