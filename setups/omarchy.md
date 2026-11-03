@@ -2,7 +2,7 @@
 
 This guide configures an Omarchy workstation from this repository.
 
-It does not run `setups/install.sh`.
+`setups/install.sh` installs the packages and the links. This guide has the manual checks.
 It does not replace whole configuration directories.
 It does not delete an existing configuration file.
 
@@ -107,8 +107,17 @@ getent passwd "$USER" | cut -d: -f1,7
 Link the configuration:
 
 ```sh
+backup_and_link "$HOME/dotfiles/zsh/.zshenv" "$HOME/.zshenv"
 backup_and_link "$HOME/dotfiles/zsh/.zshrc" "$HOME/.zshrc"
 ```
+
+`.zshenv` sets `DOTFILES_PLATFORM=omarchy` from `/etc/os-release`. Check it:
+
+```sh
+zsh -c 'echo $DOTFILES_PLATFORM $DOTFILES_PROFILE'
+```
+
+Expected: `omarchy personal`. If the platform is `unknown`, add `export DOTFILES_PLATFORM=omarchy` to `~/.zshenv.local`.
 
 The configuration loads Oh My Zsh from `/usr/share/oh-my-zsh` when a user copy does not exist.
 It loads Arch package copies of zsh-autosuggestions and zsh-syntax-highlighting.
@@ -130,7 +139,10 @@ Link the configuration:
 
 ```sh
 backup_and_link "$HOME/dotfiles/ghostty/config" "$HOME/.config/ghostty/config"
+backup_and_link "$HOME/dotfiles/ghostty/config-omarchy" "$HOME/.config/ghostty/platform.conf"
 ```
+
+`config` is the shared base. It includes `platform.conf` for the Omarchy font, theme, and keybinds.
 
 Check the configuration:
 
@@ -206,7 +218,7 @@ Pi uses `~/.pi/agent`. It does not use `~/.config/pi`.
 Link these files:
 
 ```sh
-backup_and_link "$HOME/dotfiles/pi/settings.json" "$HOME/.pi/agent/settings.json"
+backup_and_link "$HOME/dotfiles/pi/settings.personal.json" "$HOME/.pi/agent/settings.json"
 backup_and_link "$HOME/dotfiles/pi/models.json" "$HOME/.pi/agent/models.json"
 ```
 
@@ -218,7 +230,9 @@ Preserve these files and directories:
 - `~/.pi/agent/themes/`
 - Omarchy skills in `~/.pi/agent/skills/`
 
-The settings file loads local extensions and skills from `~/dotfiles/pi`.
+The settings file loads the local packages `~/dotfiles/pi/common` and `~/dotfiles/pi/personal`.
+It sets `theme` to `system` and excludes `omarchy-system-theme.ts`, so a theme change does not write to the repo.
+Check that `system` follows the Ghostty colors after an Omarchy theme change.
 Restart Pi after you change its global settings.
 
 ## Neovim

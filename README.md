@@ -1,20 +1,31 @@
 # dotfiles
 
-Config files for my macOS and Linux machines.
+Config files for my macOS and Linux machines. One branch (`master`) for all machines.
+
+Each file is the same on all machines, or it branches on one of two axes:
+
+- Platform: `macos`, `omarchy`, or `ubuntu`. `zsh/.zshenv` detects it.
+- Profile: `personal` or `work`. `~/.zshenv.local` sets `DOTFILES_PROFILE=work` on the work Mac.
+
+`docs/machine-branching-plan.md` has the labels, the mechanisms, and the file tree.
 
 ## What's here
 
-**Shells:** fish, zsh
+**Shell:** zsh (`zsh/.zshrc` common, `zsh/<platform>.zsh`, `zsh/work.zsh`)
 
-**Terminals:** ghostty, kitty, hyper, iterm2
+**Terminal:** ghostty (`config` shared, `config-macos`, `config-omarchy`)
 
 **Editors:** vim/neovim, vscode, webstorm
 
-**Window management:** aerospace, hammerspoon, i3, hyprland (Omarchy; caps lock -> ctrl, ctrl+j/k -> down/up via symlinks into ~/.config/hypr/)
+**Window management:** aerospace, hammerspoon, hyprland (Omarchy)
 
-**Multiplexers:** tmux, zellij
+**Multiplexers:** tmux, herdr
 
-**Other:** git, karabiner, nginx, scripts, pi-extensions, yazi
+**Agents:** `agents/AGENTS.md`, `pi/{common,personal,work}` packages, `pi/settings.{personal,work}.json`
+
+**Other:** git, karabiner, finicky, scripts, yazi
+
+**Legacy:** `legacy/` holds configs that no setup installs (fish, kitty, hyper, iterm2, i3, nginx, zellij, espanso).
 
 ## Shell tricks
 
@@ -68,10 +79,16 @@ reset     # fixes garbled terminal after accidentally catting a binary
 
 ## Setup
 
-```
-# macOS
-setups/mac_install.sh
+```sh
+git clone https://github.com/iamkahvi/dotfiles ~/dotfiles
 
-# Linux
-setups/install.sh
+# work Mac only
+echo 'export DOTFILES_PROFILE=work' >> ~/.zshenv.local
+
+~/dotfiles/setups/install.sh --dry-run
+~/dotfiles/setups/install.sh
 ```
+
+`install.sh` detects the platform, runs `setups/packages/<platform>.sh`, then links common, platform, and profile files.
+It backs up each file that it replaces as `<file>.pre-dotfiles-<timestamp>`.
+`setups/omarchy.md` has the manual checks for Omarchy.

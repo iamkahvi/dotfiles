@@ -12,7 +12,7 @@ export DF_HOME="${DF_HOME:-$HOME/dotfiles}"
 
 export DOTFILES_PROFILE="${DOTFILES_PROFILE:-personal}"
 
-if [[ -z "$DOTFILES_PLATFORM" ]]; then
+if [[ -z "${DOTFILES_PLATFORM:-}" ]]; then
   case "$OSTYPE" in
     darwin*) DOTFILES_PLATFORM=macos ;;
     *)
