@@ -1,4 +1,8 @@
-export DF_HOME="$HOME/dotfiles"
+# Common zsh config for all machines.
+# Platform and profile parts live in zsh/$DOTFILES_PLATFORM.zsh and zsh/work.zsh.
+# zsh/.zshenv sets DOTFILES_PLATFORM and DOTFILES_PROFILE.
+
+export DF_HOME="${DF_HOME:-$HOME/dotfiles}"
 export NVM_DIR="$HOME/.nvm"
 export ZSH="${ZSH:-$HOME/.oh-my-zsh}"
 [[ -r "/usr/share/oh-my-zsh/oh-my-zsh.sh" && ! -r "$ZSH/oh-my-zsh.sh" ]] && ZSH="/usr/share/oh-my-zsh"
@@ -7,9 +11,6 @@ add_path_if_dir() {
   [[ -d "$1" ]] && path=("$1" $path)
 }
 
-if [[ "$OSTYPE" == darwin* && -d "$HOME/Library/Mobile Documents/com~apple~CloudDocs" ]]; then
-  export ICLOUD_DIR="$HOME/Library/Mobile Documents/com~apple~CloudDocs/"
-fi
 # Let the terminal emulator set TERM; hardcoding breaks tmux/zellij
 
 _lazy_load_nvm() {
@@ -26,19 +27,6 @@ corepack() { _lazy_load_nvm; corepack "$@"; }
 mkcd() { command mkdir -p "$@" && cd "${@[-1]}"; }
 alias vim='nvim'
 alias python='python3'
-if [[ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]]; then
-  alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
-fi
-if [[ "$OSTYPE" == darwin* ]]; then
-  obs() {
-    if (( $# == 0 )); then
-      print -u2 'Usage: obs <file> [file ...]'
-      return 2
-    fi
-    local -a files=("${(@)argv:a}")
-    open -a Obsidian "${files[@]}"
-  }
-fi
 alias lg='lazygit'
 alias cn='code -n .'
 alias h='herdr'
@@ -144,10 +132,21 @@ fi
 # ssh
 export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-# Arch: pacman's fzf ships these instead of generating ~/.fzf.zsh
-[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
-[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+# fzf key bindings. First match wins:
+#   macOS (brew install script): ~/.fzf.zsh
+#   Arch package:                /usr/share/fzf/key-bindings.zsh
+#   Ubuntu apt package:          /usr/share/doc/fzf/examples/key-bindings.zsh
+if [[ -r ~/.fzf.zsh ]]; then
+  source ~/.fzf.zsh
+else
+  for fzf_dir in /usr/share/fzf /usr/share/doc/fzf/examples; do
+    if [[ -r "$fzf_dir/key-bindings.zsh" ]]; then
+      source "$fzf_dir/key-bindings.zsh"
+      [[ -r "$fzf_dir/completion.zsh" ]] && source "$fzf_dir/completion.zsh"
+      break
+    fi
+  done
+fi
 
 if [[ -r /usr/share/zsh/functions/Prompts/prompt_pure_setup ]]; then
   autoload -Uz prompt_pure_setup
@@ -160,13 +159,6 @@ else
     prompt pure
   fi
 fi
-
-kname() {
-	kitty @ set-tab-title $1
-}
-
-# Ghostty tab title
-gname() { osascript -e 'tell application "System Events" to tell process "Ghostty" to tell menu bar 1 to tell menu "View" of menu bar item "View" to click menu item "Change Tab Title..."' -e 'delay 0.3' -e "tell application \"System Events\" to keystroke \"$1\"" -e 'tell application "System Events" to keystroke return'; }
 
 cmux-name() {
   if [[ -z "${CMUX_SURFACE_ID:-}" ]]; then
@@ -278,9 +270,6 @@ fs() {
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# subl
-[[ -d "/Applications/Sublime Text.app/Contents/SharedSupport/bin" ]] && add_path_if_dir "/Applications/Sublime Text.app/Contents/SharedSupport/bin"
-
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
@@ -301,13 +290,12 @@ if [[ -f ~/.oh-my-zsh/completions/_deno ]]; then
 fi
 
 # init zoxide
-eval "$(zoxide init zsh)"
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 
-if [ "$WORK" = "1" ]; then
-    source "$DF_HOME/zsh/work.zsh"
-fi
-
-if command -v ruby >/dev/null 2>&1 && [[ -f "$HOME/.local/try.rb" ]]; then
+# try (https://github.com/tobi/try)
+if command -v try >/dev/null 2>&1; then
+  eval "$(try init ~/src/tries)"
+elif command -v ruby >/dev/null 2>&1 && [[ -f "$HOME/.local/try.rb" ]]; then
   eval "$(ruby ~/.local/try.rb init ~/src/tries)"
 fi
 
@@ -333,17 +321,17 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-# Added by tec agent
-[[ -x /Users/kahvi/.local/state/tec/profiles/base/current/global/init ]] && eval "$(/Users/kahvi/.local/state/tec/profiles/base/current/global/init zsh)"
 # OpenClaw Completion
 [[ -f "$HOME/.openclaw/completions/openclaw.zsh" ]] && source "$HOME/.openclaw/completions/openclaw.zsh"
 
- eval "$(try init ~/src/tries)"
-export TS_SITE_HOST_URL=http://m900:8091
-# Must match TS_SITE_API_TOKEN on the host.
-export TS_SITE_API_TOKEN=ae64208b904ff4812f1a75e178b886e88a8b23f51012e9034259deb7f461af83
+# Machine-specific values live outside git:
+#   ~/.zshenv.local  secrets and the profile (TS_SITE_HOST_URL, TS_SITE_API_TOKEN, SHOPIFY_TALENT_TOKEN)
+#   ~/.zshrc.local   interactive-only extras
 
-
+# Platform file, then profile file. Both are optional.
+[[ -r "$DF_HOME/zsh/$DOTFILES_PLATFORM.zsh" ]] && source "$DF_HOME/zsh/$DOTFILES_PLATFORM.zsh"
+[[ "$DOTFILES_PROFILE" == work ]] && source "$DF_HOME/zsh/work.zsh"
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
 # Load syntax highlighting last so it can install its ZLE hooks.
 for plugin in \

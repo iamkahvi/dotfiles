@@ -1,3 +1,5 @@
+# Work-only zsh config. Sourced by .zshrc when DOTFILES_PROFILE=work.
+
 # Adding dev
 [ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
 
@@ -18,8 +20,9 @@ alias gwpm="dev cd web-pixels-manager"
 alias llmc="llm chat -m openai_proxy"
 alias dus="dev up && dev s"
 alias gtco="gt checkout"
-alias c="devx claude"
-alias pi="devx pi"
+alias c="SHOPIFY_AI_RTK=false devx claude"
+alias pi="SHOPIFY_AI_RTK=false devx pi"
+alias codex="SHOPIFY_AI_RTK=false devx codex --dangerously-bypass-approvals-and-sandbox"
 
 function feat() {
   if [ -z "$1" ]; then
@@ -84,3 +87,14 @@ yellwhenshipped() {
     echo "Starting background monitoring for PR $1 (24h timeout)"
     _yellwhenshipped "$PR_NUMBER" &
 }
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# mise (observe2 dev toolchain + .env injection)
+command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"
