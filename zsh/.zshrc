@@ -28,6 +28,16 @@ alias python='python3'
 if [[ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]]; then
   alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 fi
+if [[ "$OSTYPE" == darwin* ]]; then
+  obs() {
+    if (( $# == 0 )); then
+      print -u2 'Usage: obs <file> [file ...]'
+      return 2
+    fi
+    local -a files=("${(@)argv:a}")
+    open -a Obsidian "${files[@]}"
+  }
+fi
 alias lg='lazygit'
 alias cn='code -n .'
 alias j="zellij"
@@ -317,3 +327,9 @@ function y() {
 [[ -f "$HOME/.openclaw/completions/openclaw.zsh" ]] && source "$HOME/.openclaw/completions/openclaw.zsh"
 
  eval "$(try init ~/src/tries)"
+export TS_SITE_HOST_URL=http://m900:8091
+# Must match TS_SITE_API_TOKEN on the host.
+export TS_SITE_API_TOKEN=ae64208b904ff4812f1a75e178b886e88a8b23f51012e9034259deb7f461af83
+
+
+

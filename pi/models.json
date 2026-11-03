@@ -248,6 +248,51 @@
           }
         },
         {
+          "id": "gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "api": "openai-responses",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 922000,
+          "maxTokens": 128000,
+          "cost": {
+            "input": 0.1,
+            "output": 0.5,
+            "cacheRead": 0.01,
+            "cacheWrite": 0.125
+          }
+        },
+        {
+          "id": "gpt-6.1-sol",
+          "name": "GPT-6.1 Sol",
+          "api": "openai-responses",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 922000,
+          "maxTokens": 128000,
+          "cost": {
+            "input": 2,
+            "output": 10,
+            "cacheRead": 0.1,
+            "cacheWrite": 2.5
+          }
+        },
+        {
+          "id": "gpt-6.1-terra",
+          "name": "GPT-6.1 Terra",
+          "api": "openai-responses",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 922000,
+          "maxTokens": 128000,
+          "cost": {
+            "input": 1,
+            "output": 5,
+            "cacheRead": 0.05,
+            "cacheWrite": 1.25
+          }
+        },
+        {
           "id": "gemini-2.5-flash",
           "name": "Gemini 2.5 Flash",
           "input": ["text", "image"],
@@ -328,6 +373,29 @@
           }
         },
         {
+          "id": "z-ai/glm-5.3",
+          "name": "GLM 5.3",
+          "baseUrl": "https://ai.tail37572.ts.net",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 1048576,
+          "maxTokens": 131072,
+          "cost": {
+            "input": 0.079,
+            "output": 4.8,
+            "cacheRead": 0.059,
+            "cacheWrite": 0
+          },
+          "compat": {
+            "supportsStore": false,
+            "supportsDeveloperRole": false,
+            "supportsReasoningEffort": false,
+            "maxTokensField": "max_tokens",
+            "thinkingFormat": "zai",
+            "zaiToolStream": true
+          }
+        },
+        {
           "id": "z-ai/glm-5.3-flash",
           "name": "GLM 5.3 Flash",
           "baseUrl": "https://ai.tail37572.ts.net",
@@ -348,6 +416,38 @@
             "maxTokensField": "max_tokens",
             "thinkingFormat": "zai",
             "zaiToolStream": true
+          }
+        },
+				        {
+          "id": "muse-spark-1.3",
+          "name": "Muse Spark 1.3",
+          "api": "openai-responses",
+          "baseUrl": "https://ai.tail37572.ts.net",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 1048576,
+          "maxTokens": 128000,
+          "cost": {
+            "input": 1.25,
+            "output": 4.25,
+            "cacheRead": 0.15,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "id": "muse-wonder-1.0",
+          "name": "Muse Wonder",
+          "api": "openai-responses",
+          "baseUrl": "https://ai.tail37572.ts.net",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 1048576,
+          "maxTokens": 1048576,
+          "cost": {
+            "input": 4,
+            "output": 20,
+            "cacheRead": 0.2,
+            "cacheWrite": 0
           }
         }
       ]
