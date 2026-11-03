@@ -1,6 +1,16 @@
 # Machine Branching Plan
 
-Status: draft. No change is made yet.
+Status: implemented on `master` up to Migration Order step 5. Step 6 (move `~/dotfiles` to `master`, delete the old branches and worktrees) is pending.
+
+Deviations from the plan:
+
+- The common `kp/work` content came over with `git checkout kp/work -- <paths>`, not with cherry-pick. Each `kp/work` commit mixed work-only and common edits.
+- `TS_SITE_HOST_URL` and `TS_SITE_API_TOKEN` also moved to `~/.zshenv.local`. They were in the `master` `.zshrc`.
+- The `fh` function keeps its `uname` guard for `pbcopy` in the common `.zshrc` (M1).
+- `kname` (kitty) left `.zshrc`. Kitty is legacy.
+- `~/.zshenv` had `. "$HOME/.cargo/env"`. The tracked `zsh/.zshenv` has the same line with a guard.
+- `install.sh` sources `zsh/.zshenv` for the detection, so bash and zsh share one implementation.
+- Legacy pi skills `gccli` and `gmcli` moved to `legacy/pi-skills/`.
 
 ## Goal
 

@@ -19,7 +19,7 @@
 -- o.bind(
 --   "ALT + SPACE",
 --   "Handy transcription",
---   "/home/iamkahvi/.local/bin/handy --toggle-transcription"
+--   os.getenv("HOME") .. "/.local/bin/handy --toggle-transcription"
 -- )
 
 -- Send Ctrl+T to whichever application is focused.
