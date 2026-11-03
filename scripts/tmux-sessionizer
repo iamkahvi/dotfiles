@@ -14,7 +14,7 @@
 #   tmux-sessionizer <path>     # skip picker, go straight to path
 #
 # Config: ~/.config/tmux-sessionizer/sessionizer.yaml
-#         (falls back to $DF_HOME/tmux/sessionizer.yaml)
+#         (falls back to $DF_HOME/tmux/sessionizer.$DOTFILES_PROFILE.yaml)
 
 set -euo pipefail
 
@@ -25,7 +25,7 @@ CONFIG_FILE="${SESSIONIZER_CONFIG:-}"
 if [[ -z "$CONFIG_FILE" ]]; then
     for candidate in \
         "$HOME/.config/tmux-sessionizer/sessionizer.yaml" \
-        "${DF_HOME:-$HOME/dotfiles}/tmux/sessionizer.yaml"; do
+        "${DF_HOME:-$HOME/dotfiles}/tmux/sessionizer.${DOTFILES_PROFILE:-personal}.yaml"; do
         if [[ -f "$candidate" ]]; then
             CONFIG_FILE="$candidate"
             break
