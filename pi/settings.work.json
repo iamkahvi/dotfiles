@@ -15,5 +15,6 @@
   "skills": [
     "-skills/graphite",
     "-~/.agents/skills/stack"
-  ]
+  ],
+  "lastChangelogVersion": "1.4.0"
 }
