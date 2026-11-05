@@ -43,7 +43,14 @@ fi
 # Axes. zsh/.zshenv is bash-compatible, so bash and zsh share one detection.
 # --------------------------------------------------------------------------
 # shellcheck source=../zsh/.zshenv
-source "$DOTFILES/zsh/.zshenv"
+# The final optional cargo check returns 1 when cargo is absent.
+# Do not let set -e treat that case as a detection failure.
+source "$DOTFILES/zsh/.zshenv" || {
+  if [[ -r "$HOME/.cargo/env" ]]; then
+    echo "failed to source zsh/.zshenv" >&2
+    exit 1
+  fi
+}
 
 if [[ "$DOTFILES_PLATFORM" == unknown ]]; then
   echo "cannot detect the platform. Set DOTFILES_PLATFORM in ~/.zshenv.local." >&2
