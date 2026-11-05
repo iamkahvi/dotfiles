@@ -11,6 +11,19 @@ add_path_if_dir() {
   [[ -d "$1" ]] && path=("$1" $path)
 }
 
+# Sources the output of an init command. Runs the command again only when the key file is newer than the cache.
+# The output must not depend on the environment. Use for static init scripts only.
+# Usage: source_cached <name> <key-file> <command...>
+source_cached() {
+  local name=$1 key=$2; shift 2
+  local cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/$name.zsh"
+  if [[ ! -s $cache || $key -nt $cache ]]; then
+    mkdir -p "${cache:h}"
+    "$@" >| "$cache" || { rm -f "$cache"; return 1; }
+  fi
+  source "$cache"
+}
+
 # Let the terminal emulator set TERM; hardcoding breaks tmux/zellij
 
 _lazy_load_nvm() {
@@ -110,11 +123,44 @@ if ! command -v asdf >/dev/null 2>&1; then
   done
 fi
 
-ZSH_THEME=""
-ZSH_DISABLE_COMPFIX=true
+# oh-my-zsh libs and plugins without the oh-my-zsh framework (oh-my-zsh.sh).
+# The framework adds about 30 ms at startup: compaudit, `git rev-parse` for the compdump check, and update checks.
+ZSH_CUSTOM="${ZSH_CUSTOM:-$ZSH/custom}"
+ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+[[ -d $ZSH_CACHE_DIR ]] || mkdir -p "$ZSH_CACHE_DIR"
 
-plugins=(git colored-man-pages)
-source "$ZSH/oh-my-zsh.sh"
+# Use the completion dump without checks when it is less than 20 hours old.
+# Otherwise look for new completion files and update the dump.
+# To load new completions now: rm ~/.cache/zsh/zcompdump-*
+autoload -Uz compinit
+_zcompdump="$ZSH_CACHE_DIR/zcompdump-$ZSH_VERSION"
+if [[ -n $_zcompdump(#qN.mh-20) ]]; then
+  compinit -C -d "$_zcompdump"
+else
+  compinit -u -d "$_zcompdump"
+  touch "$_zcompdump"
+  zcompile "$_zcompdump"
+fi
+unset _zcompdump
+
+# Pure shows the git status. Do not register the oh-my-zsh async git prompt hook.
+zstyle ':omz:alpha:lib:git' async-prompt no
+for _omz_lib in functions git completion history key-bindings directories misc \
+  theme-and-appearance grep clipboard termsupport; do
+  [[ -r "$ZSH/lib/$_omz_lib.zsh" ]] && source "$ZSH/lib/$_omz_lib.zsh"
+done
+unset _omz_lib
+# Completion colors are the same as ls colors. oh-my-zsh.sh sets this after the theme.
+[[ -z "$LS_COLORS" ]] || zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# The git plugin runs `git version` only to select aliases for git 2.8, 2.13, and 2.30 or later.
+# Give it a fixed answer. On macOS, `git version` takes 8-15 ms.
+git() { [[ $1 == version ]] && print 'git version 2.30.0' || command git "$@" }
+[[ -r "$ZSH/plugins/git/git.plugin.zsh" ]] && source "$ZSH/plugins/git/git.plugin.zsh"
+unfunction git
+[[ -r "$ZSH/plugins/colored-man-pages/colored-man-pages.plugin.zsh" ]] && source "$ZSH/plugins/colored-man-pages/colored-man-pages.plugin.zsh"
+# Bind the autosuggest widgets one time at the first prompt, not before each prompt (6 ms each).
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 for plugin in \
   /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
   "${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh" \
@@ -294,9 +340,9 @@ command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 
 # try (https://github.com/tobi/try)
 if command -v try >/dev/null 2>&1; then
-  eval "$(try init ~/src/tries)"
+  source_cached try-init "$commands[try]" try init ~/src/tries
 elif command -v ruby >/dev/null 2>&1 && [[ -f "$HOME/.local/try.rb" ]]; then
-  eval "$(ruby ~/.local/try.rb init ~/src/tries)"
+  source_cached try-init "$HOME/.local/try.rb" ruby ~/.local/try.rb init ~/src/tries
 fi
 
 export PATH="$HOME/.local/bin:$PATH"

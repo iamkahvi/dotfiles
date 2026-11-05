@@ -1,0 +1,147 @@
+#!/usr/bin/env zsh
+# Measure zsh startup time. Label: common.
+#
+# Usage: zsh-startup-bench [-n RUNS] [--trace] [--zprof] [--inherit-env]
+#
+#   startup       `zsh -il -c exit`. Startup files only, no prompt.
+#   first prompt  New login shell in a pty until it runs a typed command.
+#                 This is what you feel when you open a Rex tab.
+#   command lag   Time to run one command at the prompt (precmd hooks + prompt).
+#
+#   --trace       Show the lines in the startup files that use the most time.
+#   --zprof       Show zprof function totals.
+#   --inherit-env Use the current environment. Default is a clean environment
+#                 that copies what the Rex server gives a new tab.
+
+emulate -L zsh
+setopt extendedglob
+zmodload zsh/datetime zsh/zpty zsh/mathfunc || exit 1
+
+runs=10 trace=0 zprof=0 inherit=0
+while (( $# )); do
+  case $1 in
+    -n) runs=$2; shift ;;
+    --trace) trace=1 ;;
+    --zprof) zprof=1 ;;
+    --inherit-env) inherit=1 ;;
+    -h|--help) sed -n '2,16p' $0; exit 0 ;;
+    *) print -u2 "unknown option: $1"; exit 2 ;;
+  esac
+  shift
+done
+
+if (( inherit )); then
+  envcmd=(env)
+else
+  # Rex starts `login -flp $USER ... exec -a -zsh /bin/zsh` with this environment.
+  envcmd=(env -i HOME=$HOME USER=$USER LOGNAME=$USER SHELL=/bin/zsh
+    TMPDIR=$TMPDIR SSH_AUTH_SOCK=$SSH_AUTH_SOCK
+    PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+    TERM=xterm-256color TERM_PROGRAM=${TERM_PROGRAM:-rex})
+fi
+
+# Prints "min median max" in ms. Input is in tenths of a ms.
+stats() {
+  local -a s=(${(on)@})
+  printf '%6.1f %6.1f %6.1f' $(( s[1] / 10.0 )) $(( s[(${#s} + 1) / 2] / 10.0 )) $(( s[-1] / 10.0 ))
+}
+
+# Starts an interactive login shell in a pty. Prints first-prompt and command-lag times.
+pty_run() {
+  local out t0 t1
+  t0=$EPOCHREALTIME
+  zpty zb $envcmd "$@" /bin/zsh -il
+  # The pty echoes the typed text. Only the output contains ZB42.
+  zpty -w zb 'print ZB$((6*7))'
+  zpty -r zb out '*ZB42*'
+  t1=$EPOCHREALTIME
+  zpty -w zb 'print ZB$((6*8))'
+  zpty -r zb out '*ZB48*'
+  print $(( int((t1 - t0) * 10000) )) $(( int((EPOCHREALTIME - t1) * 10000) ))
+  zpty -d zb
+}
+
+typeset -a base startup first lag
+for i in {1..$runs}; do
+  t0=$EPOCHREALTIME; $envcmd /bin/zsh -f -il -c exit
+  base+=$(( int((EPOCHREALTIME - t0) * 10000) ))
+  t0=$EPOCHREALTIME; $envcmd /bin/zsh -il -c exit >/dev/null 2>&1
+  startup+=$(( int((EPOCHREALTIME - t0) * 10000) ))
+  r=($(pty_run)); first+=$r[1]; lag+=$r[2]
+done
+
+print "zsh startup, $runs runs, env: $( (( inherit )) && print inherited || print clean/Rex)"
+printf '%-14s %6s %6s %6s  (ms)\n' '' min median max
+printf '%-14s %s\n' 'zsh -f' "$(stats $base)" startup "$(stats $startup)" \
+  'first prompt' "$(stats $first)" 'command lag' "$(stats $lag)"
+
+(( trace || zprof )) || exit 0
+
+# Wrapper ZDOTDIR. It loads the real startup files and adds instrumentation.
+# It unsets ZDOTDIR before ~/.zshrc so that oh-my-zsh uses the normal compdump file.
+wrap=$(mktemp -d)
+log=$wrap/trace.log
+trap "rm -rf $wrap" EXIT; [[ -n $ZB_KEEP ]] && trap - EXIT && print -u2 "log: $wrap"
+cat > $wrap/.zshenv <<'EOF'
+zmodload zsh/datetime
+(( _ZB_ZPROF )) && zmodload zsh/zprof
+if (( _ZB_TRACE )); then
+  exec {_zb_fd}>>$_ZB_LOG
+  TRAPDEBUG() { print -u $_zb_fd -r -- "$EPOCHREALTIME	${(pj:\x1f:)funcstack[2,-1]}	${(pj:\t:)funcfiletrace}" }
+fi
+[[ -r ~/.zshenv ]] && source ~/.zshenv
+EOF
+cat > $wrap/.zprofile <<'EOF'
+[[ -r ~/.zprofile ]] && source ~/.zprofile
+EOF
+cat > $wrap/.zshrc <<'EOF'
+unset ZDOTDIR
+[[ -r ~/.zshrc ]] && source ~/.zshrc
+_zb_done() {
+  trap - DEBUG; unfunction TRAPDEBUG 2>/dev/null
+  (( _ZB_ZPROF )) && zprof > $_ZB_LOG.zprof
+  print ZBDONE
+}
+precmd_functions+=(_zb_done)
+EOF
+
+# Run one time without instrumentation so that caches (compdump) are warm.
+$envcmd ZDOTDIR=$wrap _ZB_LOG=/dev/null /bin/zsh -il -c exit >/dev/null 2>&1
+zpty zb $envcmd ZDOTDIR=$wrap _ZB_LOG=$log _ZB_TRACE=$trace _ZB_ZPROF=$zprof /bin/zsh -il
+zpty -r zb out '*ZBDONE*'
+zpty -d zb
+
+if (( zprof )); then
+  print "\nzprof (functions only, to first prompt):"
+  head -n 22 $log.zprof
+fi
+
+if (( trace )); then
+  df=${DF_HOME:-$HOME/dotfiles}
+  print "\nSelf time for each startup-file line, to first prompt."
+  print "The trace adds overhead. Use the order, not the absolute values."
+  # Each command gets the time until the next command. The time goes to the
+  # innermost call site that is in a startup file.
+  # Fields: time, frames (funcstack[2,-1]), call sites (funcfiletrace).
+  # Call site i is inside frame i. Use only call sites at the top level of a
+  # startup file. Lines inside functions and evals go to the line that called them.
+  # Commands outside startup files (precmd hooks) go to the outermost function.
+  awk -F'\t' -v re="^(/etc/z|$HOME/\\.z(shenv|profile|shrc|login)|$df/zsh/)" '
+    { n = split($2, fs, "\x1f"); key = n ? fs[n] "()" : "(shell)"
+      for (i = 3; i <= NF; i++) {
+        f = fs[i-2]
+        if ($i ~ re && (f == "" || f ~ re)) { key = $i; break }
+      }
+      if (prev != "") { self[pk] += $1 - prev; if (t0 == "") t0 = prev }
+      prev = $1; pk = key }
+    END { for (k in self) printf "%.6f\t%s\n", self[k], k
+          printf "%.6f\tTOTAL\n", prev - t0 }' $log |
+    sort -rn | head -n 26 |
+    while IFS=$'\t' read -r secs loc; do
+      file=${loc%:*} line=${loc##*:} src=
+      if [[ -r $file && $line == <-> ]]; then
+        lines=("${(@f)$(<$file)}"); src=$lines[line]
+      fi
+      printf '%7.1f ms  %-38s %s\n' $(( secs * 1000 )) ${loc/#$HOME/~} "${${src##[[:space:]]#}[1,70]}"
+    done
+fi

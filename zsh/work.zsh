@@ -1,10 +1,24 @@
 # Work-only zsh config. Sourced by .zshrc when DOTFILES_PROFILE=work.
 
-# Adding dev
-[ -f /opt/dev/dev.sh ] && source /opt/dev/dev.sh
+# Adding dev. The tec init below also sources dev.sh (/opt/dev links to the tec profile).
+# Source it here only when tec is not installed.
+[[ ! -x "$HOME/.local/state/tec/profiles/base/current/global/init" && -f /opt/dev/dev.sh ]] && source /opt/dev/dev.sh
 
 # Added by tec agent
 [[ -x "$HOME/.local/state/tec/profiles/base/current/global/init" ]] && eval "$("$HOME/.local/state/tec/profiles/base/current/global/init" zsh 2>/dev/null)"
+
+# __dev_hook runs a Ruby script (20-40 ms) before each prompt. The script shows a `dev up` reminder
+# and records project access. Run it only when the directory changes or after 60 seconds.
+if (( $+functions[__dev_hook] )); then
+  zmodload zsh/datetime
+  functions -c __dev_hook __dev_hook_orig
+  __dev_hook() {
+    [[ $1 == preexec ]] && return 0
+    [[ $PWD == $__dev_hook_pwd ]] && (( EPOCHSECONDS - __dev_hook_time < 60 )) && return 0
+    __dev_hook_pwd=$PWD __dev_hook_time=$EPOCHSECONDS
+    __dev_hook_orig "$@"
+  }
+fi
 
 if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 

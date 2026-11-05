@@ -193,6 +193,7 @@ dotfiles/
 │   ├── immich-to-r2.sh                personal  runs on the Ubuntu server
 │   ├── open-kitty-term.rb             legacy
 │   ├── tmux-sessionizer               common
+│   ├── zsh-startup-bench              common    measures zsh startup, first prompt, and command lag
 │   └── toggle-centered-master         omarchy   uses hyprctl
 ├── setups/
 │   ├── install.sh                     ubuntu    apt CLI tools only. Becomes the ubuntu step.
