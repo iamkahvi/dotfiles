@@ -17,6 +17,10 @@ Length limits (I ask for cuts of 33-50 percent many times):
 - UI text and tooltips: 1 sentence.
 - Before you send, cut each sentence that does not change a decision.
 
+## Subagents
+
+Use `tailscale-ai/gpt-6-luna` for subagents. Set the `model` explicitly for every task, including parallel and chain steps and named agent presets.
+
 ## General Behaviour
 
 - **Speak plainly as possible**

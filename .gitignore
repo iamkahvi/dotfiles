@@ -19,3 +19,4 @@ pi/*.lock
 pi/settings.json.bak.*
 pi/extensions/view-md/
 pi/extensions/herdr-agent-state.ts
+pi/personal/extensions/browser-tools/node_modules/

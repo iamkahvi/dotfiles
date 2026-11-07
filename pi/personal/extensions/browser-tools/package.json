@@ -1,0 +1,12 @@
+{
+  "name": "personal-pi-browser-tools",
+  "private": true,
+  "type": "module",
+  "pi": {
+    "extensions": ["./index.ts"]
+  },
+  "dependencies": {
+    "pi-browser-tools": "0.1.0",
+    "playwright": "1.63.0"
+  }
+}

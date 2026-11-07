@@ -120,6 +120,21 @@ if [[ "$RUN_PACKAGES" -eq 1 ]]; then
     bash "$pkg_script"
   fi
   echo
+
+  if [[ "$DOTFILES_PROFILE" == personal ]]; then
+    browser_dir="$DOTFILES/pi/personal/extensions/browser-tools"
+    echo "== pi browser dependencies"
+    if [[ "$DRY_RUN" -eq 1 ]]; then
+      echo "  would: npm ci --omit=dev --legacy-peer-deps --ignore-scripts --prefix $browser_dir"
+      echo "  would: $browser_dir/node_modules/.bin/playwright install chromium"
+    elif command -v npm >/dev/null 2>&1; then
+      npm ci --omit=dev --legacy-peer-deps --ignore-scripts --prefix "$browser_dir"
+      "$browser_dir/node_modules/.bin/playwright" install chromium
+    else
+      echo "npm is not installed. Install it and rerun the package step for Pi browser tools." >&2
+    fi
+    echo
+  fi
 fi
 
 [[ "$RUN_LINKS" -eq 1 ]] || exit 0
