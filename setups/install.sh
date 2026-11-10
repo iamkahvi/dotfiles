@@ -154,7 +154,6 @@ link yazi/keymap.toml "$HOME/.config/yazi/keymap.toml"
 link yazi/package.toml "$HOME/.config/yazi/package.toml"
 link herdr/config.toml "$HOME/.config/herdr/config.toml"
 link agents/AGENTS.md "$HOME/.pi/agent/AGENTS.md"
-link pi/common/extensions/rex-session-label "$HOME/.pi/agent/extensions/rex-session-label"
 link scripts/tmux-sessionizer "$HOME/.local/bin/tmux-sessionizer"
 echo
 
