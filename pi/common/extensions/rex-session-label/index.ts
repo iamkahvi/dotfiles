@@ -16,6 +16,7 @@ interface Shared {
   registered: boolean;
   disabled: boolean;
   expected?: string;
+  pending?: { session: string; block: string; server: string; stateDir: string; record: RecordFile };
 }
 
 const sharedKey = Symbol.for("dotfiles.rex-session-label");
@@ -32,11 +33,12 @@ export function createController(options: {
   pid: number;
   run: (args: string[]) => Promise<string>;
   alive: (pid: number) => boolean;
+  pending?: RecordFile;
 }) {
   const { session, block, server, stateDir, pid, run, alive } = options;
   const key = createHash("sha256").update(JSON.stringify([server, session, block])).digest("hex");
   const path = join(stateDir, `${key}.json`);
-  let owned: RecordFile | undefined;
+  let owned: RecordFile | undefined = options.pending;
   let disabled = false;
 
   async function readRecord(): Promise<RecordFile | undefined> {
@@ -111,13 +113,17 @@ export function createController(options: {
         // Rex, its CLI, or the local state can be unavailable. Leave Pi usable.
       }
     },
-    async stop(): Promise<{ disabled: boolean; restored?: string }> {
+    async stop(): Promise<{ disabled: boolean; restored?: string; pending?: RecordFile }> {
       if (!owned) return { disabled };
       try {
         const record = owned;
         const current = await getLabel();
         if (current === record.label) {
-          if ((await readRecord())?.token !== record.token) return { disabled: true };
+          if ((await readRecord())?.token !== record.token) {
+            disabled = true;
+            owned = undefined;
+            return { disabled };
+          }
           await setLabel(record.previous);
         } else {
           disabled = true;
@@ -128,7 +134,7 @@ export function createController(options: {
       } catch {
         // Retain the record when the result is uncertain, for crash recovery.
       }
-      return { disabled };
+      return { disabled, pending: owned };
     },
   };
 }
@@ -138,16 +144,31 @@ export default function (pi: ExtensionAPI) {
   if (shared.registered) return;
   shared.registered = true;
   let controller: ReturnType<typeof createController> | undefined;
+  let scope: Omit<NonNullable<Shared["pending"]>, "record"> | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let inFlight: Promise<void> | undefined;
+  let shuttingDown = false;
+  let handoffDisabled = false;
+  let restored: string | undefined;
 
   pi.on("session_start", async (_event, ctx) => {
     const session = process.env.REX_SESSION;
     const block = process.env.REX_BLOCK;
     if (ctx.mode !== "tui" || shared.disabled || !session?.startsWith("session:") || !block?.startsWith("block:")) return;
-    controller = createController({
+    const server = process.env.REX_SERVER ?? "default";
+    const stateDir = join(process.env.XDG_CACHE_HOME || join(homedir(), ".cache"), "pi-rex-session-label");
+    scope = { session, block, server, stateDir };
+    // Only the runtime that owned this exact pane can hand off its record.
+    const pending = shared.pending;
+    shared.pending = undefined;
+    const handoff = pending && pending.session === session && pending.block === block &&
+      pending.server === server && pending.stateDir === stateDir ? pending.record : undefined;
+    const active = createController({
       session,
       block,
-      server: process.env.REX_SERVER ?? "default",
-      stateDir: join(process.env.XDG_CACHE_HOME || join(homedir(), ".cache"), "pi-rex-session-label"),
+      server,
+      stateDir,
+      pending: handoff,
       pid: process.pid,
       alive: (pid) => {
         try { process.kill(pid, 0); return true; }
@@ -159,15 +180,39 @@ export default function (pi: ExtensionAPI) {
         return result.stdout;
       },
     });
-    await controller.start(ctx.sessionManager.getSessionId(), shared.expected);
+    controller = active;
+    const expected = shared.expected;
     shared.expected = undefined;
+    const id = ctx.sessionManager.getSessionId();
+    const attempt = async () => {
+      if (handoff && restored === undefined) {
+        const result = await active.stop();
+        if (result.pending) {
+          // Retry after Rex returns, even if no further session switch occurs.
+          if (!shuttingDown) timer = setTimeout(() => { inFlight = attempt(); }, 1000);
+          return;
+        }
+        handoffDisabled = result.disabled;
+        restored = result.restored;
+        if (handoffDisabled || shuttingDown) return;
+      }
+      if (!shuttingDown) await active.start(id, restored ?? expected);
+    };
+    inFlight = attempt();
+    await inFlight;
   });
 
   pi.on("session_shutdown", async (event) => {
+    shuttingDown = true;
+    if (timer) clearTimeout(timer);
+    // Do not let an old runtime write a label after its replacement starts.
+    await inFlight;
     const result = await controller?.stop();
     // Preserve user changes across /new, /resume, /fork, and /reload.
-    shared.disabled = event.reason !== "quit" && !!result?.disabled;
-    shared.expected = event.reason === "quit" ? undefined : result?.restored;
+    shared.disabled = event.reason !== "quit" && (handoffDisabled || !!result?.disabled);
+    shared.expected = event.reason === "quit" ? undefined : result?.restored ?? restored;
+    shared.pending = event.reason !== "quit" && result?.pending && scope
+      ? { ...scope, record: result.pending } : undefined;
     shared.registered = false;
   });
 }

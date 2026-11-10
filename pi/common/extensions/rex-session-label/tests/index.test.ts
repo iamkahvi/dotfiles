@@ -159,6 +159,54 @@ describe("Rex label ownership", () => {
   });
 });
 
+async function eventFixture() {
+  const dir = await mkdtemp(join(tmpdir(), "pi-rex-events-"));
+  dirs.push(dir);
+  const keys = ["REX_SESSION", "REX_BLOCK", "REX_SERVER", "XDG_CACHE_HOME"] as const;
+  const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+  process.env.REX_SESSION = "session:test";
+  process.env.REX_BLOCK = "block:test";
+  process.env.REX_SERVER = "server";
+  process.env.XDG_CACHE_HOME = dir;
+  const state = {
+    label: "original", failRead: false, failWrite: false, writes: [] as string[], reads: 0,
+    onRead: undefined as undefined | (() => Promise<void>),
+  };
+  const context = (id: string) => ({ mode: "tui", sessionManager: { getSessionId: () => id } });
+  const runtime = () => {
+    const handlers: Record<string, any> = {};
+    extension({
+      on: (name: string, handler: any) => { handlers[name] = handler; },
+      exec: async (_name: string, args: string[]) => {
+        if (args.includes("session.list_blocks")) {
+          if (state.failRead) throw new Error("offline");
+          await state.onRead?.();
+          state.reads++;
+          return { code: 0, stdout: JSON.stringify({ blocks: [{ block_id: "block:test", label: state.label }] }) };
+        }
+        if (state.failWrite) throw new Error("offline");
+        state.label = JSON.parse(args[args.length - 1]).label;
+        state.writes.push(state.label);
+        return { code: 0, stdout: "{}" };
+      },
+    } as any);
+    return handlers;
+  };
+  const cleanup = () => {
+    for (const key of keys) {
+      if (saved[key] === undefined) delete process.env[key];
+      else process.env[key] = saved[key];
+    }
+  };
+  return { state, context, runtime, cleanup, stateDir: join(dir, "pi-rex-session-label") };
+}
+
+async function waitUntil(check: () => boolean | Promise<boolean>) {
+  const deadline = Date.now() + 4000;
+  while (!(await check()) && Date.now() < deadline) await new Promise((resolve) => setTimeout(resolve, 20));
+  expect(await check()).toBe(true);
+}
+
 describe("Pi extension", () => {
   test("does nothing outside a Rex TUI and avoids duplicate registration", async () => {
     const handlers: Record<string, any> = {};
@@ -182,6 +230,147 @@ describe("Pi extension", () => {
     await second.start("second", result.restored);
     expect(state.label).toBe("user label");
     expect((await second.stop()).disabled).toBe(true);
+  });
+
+  test.each(["failRead", "failWrite"] as const)("recovers after a failed restore and two resumes: %s", async (failure) => {
+    const { state, context, runtime, cleanup, stateDir } = await eventFixture();
+    let current = runtime();
+    try {
+      await current.session_start({ reason: "startup" }, context("first"));
+      state[failure] = true;
+      await current.session_shutdown({ reason: "resume" }, context("first"));
+      expect(state.label).toBe("pi:first");
+      expect(await readdir(stateDir)).toHaveLength(1);
+
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("second"));
+      await current.session_shutdown({ reason: "resume" }, context("second"));
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("third"));
+      expect(state.label).toBe("pi:first");
+
+      state[failure] = false;
+      await waitUntil(() => state.label === "pi:third");
+      const path = join(stateDir, (await readdir(stateDir))[0]);
+      const record = JSON.parse(await readFile(path, "utf8"));
+      expect(record.pid).toBe(process.pid);
+      expect(record.previous).toBe("original");
+      expect(record.label).toBe("pi:third");
+      await current.session_shutdown({ reason: "quit" }, context("third"));
+      expect(state.label).toBe("original");
+      expect(await readdir(stateDir)).toEqual([]);
+    } finally {
+      await current.session_shutdown({ reason: "quit" }, context("third"));
+      cleanup();
+    }
+  });
+
+  test("recovers at resume when Rex returns before the replacement starts", async () => {
+    const { state, context, runtime, cleanup, stateDir } = await eventFixture();
+    let current = runtime();
+    try {
+      await current.session_start({ reason: "startup" }, context("first"));
+      state.failRead = true;
+      await current.session_shutdown({ reason: "resume" }, context("first"));
+      state.failRead = false;
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("second"));
+      expect(state.label).toBe("pi:second");
+      await current.session_shutdown({ reason: "quit" }, context("second"));
+      expect(state.label).toBe("original");
+      expect(await readdir(stateDir)).toEqual([]);
+    } finally {
+      await current.session_shutdown({ reason: "quit" }, context("second"));
+      cleanup();
+    }
+  });
+
+  test("waits for a retry in progress before it replaces the runtime", async () => {
+    const { state, context, runtime, cleanup } = await eventFixture();
+    let current = runtime();
+    let release!: () => void;
+    let reached = false;
+    try {
+      await current.session_start({ reason: "startup" }, context("first"));
+      state.failRead = true;
+      await current.session_shutdown({ reason: "resume" }, context("first"));
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("second"));
+      state.onRead = () => {
+        state.onRead = undefined;
+        reached = true;
+        return new Promise<void>((resolve) => { release = resolve; });
+      };
+      state.failRead = false;
+      await waitUntil(() => reached);
+      const shutdown = current.session_shutdown({ reason: "resume" }, context("second"));
+      release();
+      await shutdown;
+      expect(state.writes).toEqual(["pi:first", "original"]);
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("third"));
+      expect(state.label).toBe("pi:third");
+      await current.session_shutdown({ reason: "quit" }, context("third"));
+      expect(state.label).toBe("original");
+    } finally {
+      release?.();
+      await current.session_shutdown({ reason: "quit" }, context("third"));
+      cleanup();
+    }
+  });
+
+  test("does not reclaim a record with a different token", async () => {
+    const { state, context, runtime, cleanup, stateDir } = await eventFixture();
+    let current = runtime();
+    try {
+      await current.session_start({ reason: "startup" }, context("first"));
+      state.failRead = true;
+      await current.session_shutdown({ reason: "resume" }, context("first"));
+      const path = join(stateDir, (await readdir(stateDir))[0]);
+      const record = JSON.parse(await readFile(path, "utf8"));
+      record.token = "another-owner";
+      await writeFile(path, JSON.stringify(record));
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("second"));
+      const reads = state.reads;
+      state.failRead = false;
+      await waitUntil(() => state.reads > reads);
+      await current.session_shutdown({ reason: "resume" }, context("second"));
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("third"));
+      await current.session_shutdown({ reason: "quit" }, context("third"));
+      expect(state.writes).toEqual(["pi:first"]);
+      expect(JSON.parse(await readFile(path, "utf8")).token).toBe("another-owner");
+    } finally {
+      await current.session_shutdown({ reason: "quit" }, context("third"));
+      cleanup();
+    }
+  });
+
+  test.each(["user label", "original"])("preserves a user edit after a failed restore: %s", async (label) => {
+    const { state, context, runtime, cleanup, stateDir } = await eventFixture();
+    let current = runtime();
+    try {
+      await current.session_start({ reason: "startup" }, context("first"));
+      state.failRead = true;
+      await current.session_shutdown({ reason: "resume" }, context("first"));
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("second"));
+      state.label = label;
+      state.failRead = false;
+      await waitUntil(async () => (await readdir(stateDir)).length === 0);
+      expect(state.label).toBe(label);
+      expect(state.writes).toEqual(["pi:first"]);
+      await current.session_shutdown({ reason: "resume" }, context("second"));
+      current = runtime();
+      await current.session_start({ reason: "resume" }, context("third"));
+      await current.session_shutdown({ reason: "quit" }, context("third"));
+      expect(state.label).toBe(label);
+      expect(state.writes).toEqual(["pi:first"]);
+    } finally {
+      await current.session_shutdown({ reason: "quit" }, context("second"));
+      cleanup();
+    }
   });
 
   test("keeps a user label through Pi runtime replacement", async () => {
