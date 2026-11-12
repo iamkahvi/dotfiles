@@ -4,12 +4,15 @@
   "defaultThinkingLevel": "high",
   "theme": "system",
   "packages": [
-    "npm:pi-ask-user",
+    {
+      "source": "npm:pi-ask-user",
+      "extensions": []
+    },
     "~/dotfiles/pi/common",
     "~/dotfiles/pi/personal"
   ],
   "extensions": [
     "-extensions/omarchy-system-theme.ts"
   ],
-  "lastChangelogVersion": "1.5.1"
+  "lastChangelogVersion": "1.5.2"
 }
