@@ -23,7 +23,7 @@ Each file is the same on all machines, or it branches on one of two axes:
 
 **Agents:** `agents/AGENTS.md`, `pi/{common,personal,work}` packages, `pi/settings.{personal,work}.json`
 
-**Other:** git, karabiner, finicky, scripts, yazi
+**Other:** git, karabiner, finicky, scripts, yazi, obsidian
 
 **Legacy:** `legacy/` holds configs that no setup installs (fish, kitty, hyper, iterm2, i3, nginx, zellij, espanso).
 

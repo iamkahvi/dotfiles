@@ -159,6 +159,7 @@ dotfiles/
 ├── karabiner/karabiner.json           macos     not linked on work Mac (copy exists)
 ├── kitty/                             legacy    linked on work Mac, verify use
 ├── nginx/                             legacy    kahvipatel.com sites. Not in use.
+├── obsidian/templates/                common    Templater new_structure runner and types. Not linked. Copy into each vault by hand.
 ├── pi/
 │   ├── extensions/
 │   │   ├── clear-prompt/              common    (kp/work)
