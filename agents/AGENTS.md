@@ -19,7 +19,14 @@ Length limits (I ask for cuts of 33-50 percent many times):
 
 ## Subagents
 
-Use `tailscale-ai/gpt-6-luna` for subagents. Set the `model` explicitly for every task, including parallel and chain steps and named agent presets.
+Select the subagent model from the `DOTFILES_PROFILE` environment variable. Read it with `echo $DOTFILES_PROFILE` before the first subagent call in a session.
+
+| `DOTFILES_PROFILE` | Subagent `model` |
+|---|---|
+| `work` | `anthropic/claude-opus-5-5:high` |
+| `personal`, or not set | `tailscale-ai/gpt-6-luna` |
+
+Set the `model` explicitly for every task, including parallel and chain steps and named agent presets.
 
 ## General Behaviour
 
