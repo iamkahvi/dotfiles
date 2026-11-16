@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Runs rex/tab-mru.lua. It moves each Rex tab to the front of its session after the tab stays active.
+  setups/install.sh links this file to ~/Library/LaunchAgents and loads it.
+  Rex adds rex to PATH only in its own terminals. Thus the command falls back to the app path.
+  The shell expands $HOME, so this file has no user path.
+  With autostart=false, the script exits when the Rex server is down. KeepAlive starts it again.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>dotfiles.rex-tab-mru</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>-lc</string>
+    <string>rex="$(command -v rex || echo "$HOME/Library/Application Support/com.superlogical.rex/RexServer/Versions/Current/Rex Server.app/Contents/MacOS/rex")"; exec "$rex" do "$HOME/.config/rex/tab-mru.lua" --all --autostart=false</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ThrottleInterval</key>
+  <integer>30</integer>
+  <key>StandardOutPath</key>
+  <string>/tmp/rex-tab-mru.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/rex-tab-mru.log</string>
+</dict>
+</plist>

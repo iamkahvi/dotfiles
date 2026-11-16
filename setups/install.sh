@@ -172,6 +172,12 @@ case "$DOTFILES_PLATFORM" in
     link webstorm/webstorm "$HOME/.local/bin/webstorm"
     link vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
     link vscode/keybindings.json "$HOME/Library/Application Support/Code/User/keybindings.json"
+    link rex/tab-mru.lua "$HOME/.config/rex/tab-mru.lua"
+    link rex/dotfiles.rex-tab-mru.plist "$HOME/Library/LaunchAgents/dotfiles.rex-tab-mru.plist"
+    if ! launchctl print "gui/$(id -u)/dotfiles.rex-tab-mru" >/dev/null 2>&1; then
+      echo "  load:    dotfiles.rex-tab-mru"
+      run launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/dotfiles.rex-tab-mru.plist" || true
+    fi
     ;;
   omarchy)
     link ghostty/config "$HOME/.config/ghostty/config"
