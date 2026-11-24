@@ -111,4 +111,6 @@ esac
 # pnpm end
 
 # mise (observe2 dev toolchain + .env injection)
+# Keep mise shims off PATH. The shims and the tec npm wrapper call each other in a loop.
+export MISE_ACTIVATE_SHIMS=false
 command -v mise >/dev/null 2>&1 && eval "$(mise activate zsh)"
