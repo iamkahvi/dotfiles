@@ -1,6 +1,6 @@
 {
   "defaultProvider": "tailscale-ai",
-  "defaultModel": "gpt-6.1-terra",
+  "defaultModel": "gpt-6.2-sol",
   "defaultThinkingLevel": "high",
   "theme": "system",
   "packages": [
@@ -14,5 +14,5 @@
   "extensions": [
     "-extensions/omarchy-system-theme.ts"
   ],
-  "lastChangelogVersion": "1.5.2"
+  "lastChangelogVersion": "1.6.0"
 }
